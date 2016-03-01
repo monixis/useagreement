@@ -14,33 +14,29 @@
 		<script src="http://localhost/useagreement/js/jquery.signaturepad.min.js"></script>
 		<link rel="stylesheet" href="http://library.marist.edu/css/prettyPhoto.css" type="text/css" media="screen" title="prettyPhoto main stylesheet" charset="utf-8" />
 		<script type="text/javascript">
-		/*$(document).ready(function() {
-				$(".expand").click(function() {
+			
+    		$(document).ready(function(){
+    			$(".expand").click(function() {
 
 					$(".ref_box").slideToggle("normal");
-				});
-				$("a[rel^='prettyPhoto']").prettyPhoto();
-			});
-			*/
-    		$(document).ready(function(){
+				
     			$("#color").addClass("details");			
-			    $("#tfheader").load("http://localhost/useagreement/?c=usragr&m=usragr_model");
-			  });
+			    $("#tfheader").load("http://localhost/useagreement/?c=usragr&m=insert_researcher");
+    			}});
 		</script>
-			<!--<link rel="stylesheet" href="styles/captcha.css" type="text/css" />
+			<link rel="stylesheet" href="styles/captcha.css" type="text/css" />
 	
 		<script type="text/javascript" src="js/jquery.simpleCaptcha-0.2.js"></script>
-		-->
-		<script type="text/javascript" src="js/researchRequest.js"></script>
+		<script type="text/javascript" src="./js/researchRequest.js"></script>
 
 </script>
-		<!--<script type='text/javascript'>
+		<script type='text/javascript'>
 			$(document).ready(function() {
 				$('#captcha1').simpleCaptcha();
 			});
 		</script>
 		
-		--><style type="text/css">
+		<style type="text/css">
 			label { width: 10em; float: left; }
 			label.error, .submitError { float: none; color: red; padding-left: .5em; font-style: italic; }
 			.submit { margin-left: 12em; }
@@ -187,22 +183,17 @@
 													<INPUT TYPE="text" NAME="Inst_Affil" SIZE="60" />
 												</TD>
 											</TR>
-											<TR>
-												<TD class="formLabel">Institute Affiliations(if any):</TD>
-												<td class="ask_input">
-													<INPUT TYPE="text" NAME="Inst_Affil" SIZE="60" />
-												</TD>
-											</TR>
+                                                
 										</TABLE>
 										
 										<table width="600px">
 											<tr>
 												<td>
 													<center>
-														<!------------------COPY---------------------------------------------------------------------><!--
+														<!------------------COPY--------------------------------------------------------------------->
 														<div id='captcha1'></div>
 					
-														--><p style="width: 150px; position:relative; left:50%; margin-left:-77px;">
+														<p style="width: 150px; position:relative; left:50%; margin-left:-77px;">
 					
 															<INPUT name="submit" value="Submit" id="submit" TYPE="submit">
 															<INPUT name="reset" TYPE="reset" id="reset">
@@ -219,8 +210,6 @@
 							</tr>
 
 						</table>
-
-						
 				</div>
 			</div>
 			<div class="bottom_container">
