@@ -35,6 +35,19 @@
 				$('#captcha1').simpleCaptcha();
 			});
 		</script>
+<script type="text/javascript">
+$('#submit').click(function(){
+	var userName = $('input.Name').val();
+	var emailId = $('input.Email').val();
+	$.post("<?php echo base_url("?c=crr&m=insert_researcher"); ?>",{Name: userName, Email: emailId}).done(function(data){
+							if (data == 1){
+									$('#confirmations').append("<img src='./icons/tick.png'/>");
+							}else{
+									$('#confirmations').append("<img src='./icons/error.png'/>");	
+							}
+	});
+});
+</script>
 		
 		<style type="text/css">
 			label { width: 10em; float: left; }
@@ -135,17 +148,17 @@
 											<TR>
 												<TD class="formLabel">Name:</TD>
 												<td class ="ask_input" colspan="3">
-													<INPUT TYPE="text" NAME="Name" SIZE="60" class="ask_text_input" />
+													<INPUT TYPE="text" NAME="Name" id="Name" value="<?php echo set_value('Name');?>" SIZE="60" class="ask_text_input" />
 												</TD>
 											</TR>
 											<TR>
 												<TD class="formLabel">Email Address:</TD>
 												<td class ="ask_input" colspan="3">
-												<INPUT TYPE="text" NAME="Email" SIZE="60" class="ask_text_input" />
+												<INPUT TYPE="text" NAME="Email" id="Email" Valie= "<?php echo set_valueI('Email')?>" SIZE="60" class="ask_text_input" />
 												</TD>
 
 											</TR>
-											<TR>
+											<!--<TR>
 												<TD class="formLabel">Telephone Number:</TD>
 												<td class ="ask_input" colspan="3">
 													<INPUT TYPE="text" NAME="Phone_Num" SIZE="60" class="ask_text_input" />
@@ -177,15 +190,23 @@
 												</TD>
 											</TR>
 											</TR>	
-											<TR>
+										 <TR>
 												<TD class="formLabel">Institute Affiliations(if any):</TD>
 												<td class="ask_input">
 													<INPUT TYPE="text" NAME="Inst_Affil" SIZE="60" />
 												</TD>
 											</TR>
-                                                
+    -->
 										</TABLE>
-										
+																<table style="height: 80%; width:80%;" >
+													<tr>
+								<TD width="15%">&nbsp; </TD>
+							</tr>
+							<tr>
+							<p> Copy Request/Use Agreement Information</p>
+								<td width="75%" align="left">
+						          </TR>
+						            </table>
 										<table width="600px">
 											<tr>
 												<td>
@@ -210,6 +231,7 @@
 							</tr>
 
 						</table>
+
 				</div>
 			</div>
 			<div class="bottom_container">

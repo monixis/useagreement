@@ -18,7 +18,7 @@ class usragr extends CI_Controller {
 		$data['email'] = $emailId;
 		$data['date'] = $date;
 		$this -> load -> model('usragr_model');
-        $result = $this -> usragr_model -> insert_researcher($data, $researcher);
+        $result = $this -> usragr_model -> insert_researcher($userName, $emailId);
 		echo $result;
 		
 	}

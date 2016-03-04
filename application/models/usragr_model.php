@@ -7,17 +7,21 @@ class usragr_model extends CI_Model {
 		// $this->load->database();
 	}
 //Create New Researcher	
- function insert_researcher($data, $table){
+ function insert_researcher($userName,$emailId){
+ 
+   $sql = "INSERT INTO researcher(userName,emailId) VALUES ('$userName', '$emailId')";
+   
+ if ($this->db->simple_query($sql, array($userName, $emailId))){
+					return 1;		
+				}else{
+					return 0;
+				}
 	$this->db->insert($table, $data);	
-		if($this->db->affected_rows()>0)
-		{
-		$researcherId = $row -> $userId;
-			return $researcherId;			
-		}else{
-			return 0;
-			//return $this->db->_error_number();
-		}
- }
+		$query = $this->db->prepare($sql);
+  /*      $parameters = array(':artist' => $userName, ':emailId' => $emailId);
+        $query->execute($parameters);*/
+	
+	}
  
  function update_Researcher($researcherId, $data){
  $this->db->where('userId', $researcherId);
