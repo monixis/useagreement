@@ -1,0 +1,70 @@
+.label {
+	font-size: 16px;
+	font-style: bold;
+	margin-right: 20px;
+}
+.btn {
+	border-radius: 8px;
+	font-family: Georgia;
+	color: #ffffff;
+	font-size: 16px;
+	background: #333;
+	padding: 10px 6px 10px 6px;
+	text-decoration: none;
+}
+.btn:hover {
+	opacity: 0.5;
+	cursor: pointer;
+}
+.textinput {
+	width: 230px;
+	height: 12px;
+	padding: 6px 12px;
+	font-size: 14px;
+	line-height: 1.428571429;
+	color: #555;
+	vertical-align: middle;
+	background-color: #fff;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	display: block;
+	margin-bottom: 10px;
+}
+.textinputinline {
+	width: 200px;
+	height: 12px;
+	padding: 6px 12px;
+	font-size: 14px;
+	line-height: 1.428571429;
+	color: #555;
+	vertical-align: middle;
+	background-color: #fff;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	margin-bottom: 10px;
+}
+#researcherInfo {
+	margin-left: auto;
+	width: 600px;
+}
+h2 {
+	margin-bottom: 10px;
+}
+.formcontents {
+	/*border-bottom: 1px solid;*/
+	padding-bottom: 15px;
+	margin-bottom: 15px;
+}
+
+#buttonAdd-request, #buttonRemove-request {
+	display: inline;
+	background-color: #b31b1b;
+	border-radius: 5px;
+	font-weight: bold;
+	text-align: center;
+	width: 40px;
+	color: #ffffff;
+	font-size: 25px;
+	cursor: pointer;
+	margin-bottom: 10px;
+}
