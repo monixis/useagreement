@@ -79,7 +79,6 @@
 								<label>Add/Remove Requests</label><br/>
 								<button id="buttonAdd-request">+</button>
 								<button id="buttonRemove-request">-</button></br>
-							<!--label class="label">Collection:</label><br/><input type="text" id="datepicker" class="textinput"/-->		
 								<div style="display:none">
 									<div id="request_input0" name="Request_Input[0]" class="clonedInput1" style="border-bottom: 1px solid; padding: 10px;">
 										<label class="label" for="collection">Collection:</label><br/><input type="text" id="request_collection" class="textinput"/>
