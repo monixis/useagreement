@@ -75,17 +75,12 @@
 								<!--p><label class="label">City/State:</label><input type="text" id="citystate" class="textinputinline" style="margin-right: 20px;"/><label class="label">Zip:</label><input type="text" id="zip" class="textinputinline" style="width:125px;"/></p-->
 								<label class="label">Email:</label><br/><input type="text" id="email" class="textinput" />
 								<label class="label">Comments (optional):</label><br/><textarea id="comments" rows="4" cols="50" style="display: block; margin-bottom: 10px;"></textarea>
-							<label class="label" for="dpi">Requested Resolution (dpi):</label><br/>
-											<input type="checkbox" name="dpi" value="72" class="checkbox">72</input>
- 											<input type="checkbox" name="dpi" value="300" class="checkbox">300</input>
- 											<input type="checkbox" name="dpi" value="600" class="checkbox">600</input>
- 											<input type="checkbox" name="dpi" value="1200" class="checkbox">1200</input><br/><br/>
 							</div>
 							<h2>Requests:</h2>
 							<div class="formcontents" id="formcontents">
 								<label>Add/Remove Requests</label><br/>
 								<button id="buttonAdd-request">+</button>
-								<button id="buttonRemove-request">-</button></br>
+								<button id="buttonRemove-request" disabled style="opacity: 0.5;">-</button></br>
 								<!--div style="display:none">
 									<div id="request_input0" name="Request_Input[0]" class="clonedInput1" style="border-bottom: 1px solid; padding: 10px;">
 										<label class="label" for="collection">Collection:</label><br/><input type="text" id="request_collection" class="textinput"/>

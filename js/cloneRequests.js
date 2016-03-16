@@ -3,14 +3,28 @@
  */
 $(document).ready(function() {
 	var requestsCnt = 0;
+	var request_input = "";
     $("#buttonAdd-request").click(function(){
     	requestsCnt = requestsCnt + 1;
-    	var request_input = "request_input" + requestsCnt + "";
-    	
+    	request_input = "request_input" + requestsCnt + "";
     	var requests = "<div id=" + request_input + " style='border-bottom: 1px solid; padding: 10px;'><label class='label' for='collection'>Collection:</label><br/><input type='text' id='request_collection' class='textinput'/><label class='label' for='boxno'>Box Number:</label><br/><input type='text' id='request_boxno' class='textinput'/><label class='label' for='itemno'>Item Numbers:</label><br/><input type='text' id='request_itemno' class='textinput'/><label class='label' for='dpi'>Requested Resolution (dpi):</label><br/><input type='checkbox' name='request_dpi' value='72' class='checkbox'>72</input><input type='checkbox' name='request_dpi' value='300' class='checkbox'>300</input><input type='checkbox' name='request_dpi' value='600' class='checkbox'>600</input><input type='checkbox' name='request_dpi' value='1200' class='checkbox'>1200</input><br/><br/><label class='label' for='format'>Requested File Format:</label><br/><input type='checkbox' name='request_format' value='pdf' class='checkbox'>PDF</input><input type='checkbox' name='request_format' value='jpeg' class='checkbox'>JPEG</input><input type='checkbox' name='request_format' value='tiff' class='checkbox'>TIFF</input><br/><br/><label class='label' for='avformat'>Audio/Video File Format:</label><br/><input type='checkbox' name='request_avformat' value='wav' class='checkbox'>WAV</input><input type='checkbox' name='request_avformat' value='mp3' class='checkbox'>MP3</input><input type='checkbox' name='request_avformat' value='mpeg' class='checkbox'>MPEG</input><input type='checkbox' name='request_avformat' value='hd' class='checkbox'>HD</input><br/><br/><label class='label' for='desc'>Description of Use (Provided by the researcher):</label><br/><textarea id='request_desc' rows='4' cols='4'/></textarea></div><!-- request_input0 -->"
-    	
     	$('div#formcontents').append(requests);
-    	
+    	$('#buttonRemove-request').attr('disabled', false).css('opacity', 1);
+    	/*alert(request_input);*/   
+    });
+    
+    $('#buttonRemove-request').click(function() {
+    	if (confirm("Are you sure you wish to remove a Request?"))
+            {
+             	$("#" + request_input).remove();
+             	requestsCnt = requestsCnt - 1;
+		    	request_input = "request_input" + requestsCnt + "";
+		    	if (requestsCnt == 0){
+		    		$(this).attr('disabled', true).css('opacity', 0.5);
+		    	}else{
+		    		$(this).attr('disabled', false).css('opacity', 1);
+		    	}
+            }
     });
     
  });
