@@ -13,11 +13,19 @@
 		<link rel="stylesheet" type="text/css" href="http://library.marist.edu/archives/mainpage/mainStyles/main.css" />
 		<link rel="stylesheet" type="text/css" href="styles/useagreement.css" />
 		<script type="text/javascript" src="http://library.marist.edu/archives/mainpage/scripts/archivesChildMenu.js"></script> 
-		<script type="text/javascript" src="js/clone-requests.js"></script>
+		<script type="text/javascript" src="js/cloneRequests.js"></script>
 		<script type="text/javascript">
 			$(document).ready(function(){
-				$('#datepicker').datepicker({
-					minDate: '+21'
+				$('#datepicker').datepicker();
+				
+				$('button#initiate').click(function(){
+					alert($("div#request_input2 input#request_collection").val());
+					
+					$.each($("input:checked"), function(){            
+                		alert($(this).val());
+            		});
+            		
+            		
 				});
 				
 			});
@@ -50,16 +58,12 @@
 							<td class = "search_drop_last"><a href="http://site.ebrary.com.online.library.marist.edu/lib/marist/home.action"><img src ="http://library.marist.edu/images/ebrary_small.png" title ="ebrary"></a></td>
 						</tr>
 					</table>
-
 				</div>
-			
 				<div class="content">
 					<p class="breadcrumb">
 						<a href="http://library.marist.edu" class="map_link"><img src="http://library.marist.edu/images/home.png" class="fox2"/></a>
 						> Forms > Reserve Forms 
 					</p>
-					
-					
 					<div id="researcherInfo"><h1 class="page_head" style="float: none;">User Agreement Initiation Form</h1>
 							<h2>Researcher's Information:</h2>
 							<div class="formcontents">
@@ -71,43 +75,44 @@
 								<!--p><label class="label">City/State:</label><input type="text" id="citystate" class="textinputinline" style="margin-right: 20px;"/><label class="label">Zip:</label><input type="text" id="zip" class="textinputinline" style="width:125px;"/></p-->
 								<label class="label">Email:</label><br/><input type="text" id="email" class="textinput" />
 								<label class="label">Comments (optional):</label><br/><textarea id="comments" rows="4" cols="50" style="display: block; margin-bottom: 10px;"></textarea>
-								
+							<label class="label" for="dpi">Requested Resolution (dpi):</label><br/>
+											<input type="checkbox" name="dpi" value="72" class="checkbox">72</input>
+ 											<input type="checkbox" name="dpi" value="300" class="checkbox">300</input>
+ 											<input type="checkbox" name="dpi" value="600" class="checkbox">600</input>
+ 											<input type="checkbox" name="dpi" value="1200" class="checkbox">1200</input><br/><br/>
 							</div>
-							
 							<h2>Requests:</h2>
 							<div class="formcontents" id="formcontents">
 								<label>Add/Remove Requests</label><br/>
 								<button id="buttonAdd-request">+</button>
 								<button id="buttonRemove-request">-</button></br>
-								<div style="display:none">
+								<!--div style="display:none">
 									<div id="request_input0" name="Request_Input[0]" class="clonedInput1" style="border-bottom: 1px solid; padding: 10px;">
 										<label class="label" for="collection">Collection:</label><br/><input type="text" id="request_collection" class="textinput"/>
 										<label class="label" for="boxno">Box Number:</label><br/><input type="text" id="request_boxno" class="textinput"/>
-										<label class="label" for="itemno">Item Number:</label><br/><input type="text" id="request_itemno" class="textinput"/>
+										<label class="label" for="itemno">Item Numbers:</label><br/><input type="text" id="request_itemno" class="textinput"/>
 										<label class="label" for="dpi">Requested Resolution (dpi):</label><br/>
-											<input type="checkbox" name="dpi" value="72">72</input>
- 											<input type="checkbox" name="dpi" value="300">300</input>
- 											<input type="checkbox" name="dpi" value="600">600</input>
- 											<input type="checkbox" name="dpi" value="1200">1200</input><br/><br/>
+											<input type="checkbox" name="dpi" value="72" class="checkbox">72</input>
+ 											<input type="checkbox" name="dpi" value="300" class="checkbox">300</input>
+ 											<input type="checkbox" name="dpi" value="600" class="checkbox">600</input>
+ 											<input type="checkbox" name="dpi" value="1200" class="checkbox">1200</input><br/><br/>
  										<label class="label" for="format">Requested File Format:</label><br/>
-											<input type="checkbox" name="format" value="pdf">PDF</input>
- 											<input type="checkbox" name="format" value="jpeg">JPEG</input>
- 											<input type="checkbox" name="format" value="tiff">TIFF</input><br/><br/>
- 										<label class="label" for="format">Audio/Video File Format:</label><br/>
-											<input type="checkbox" name="avformat" value="wav">WAV</input>
- 											<input type="checkbox" name="avformat" value="mp3">MP3</input>
- 											<input type="checkbox" name="avformat" value="mpeg">MPEG</input>
- 											<input type="checkbox" name="avformat" value="hd">HD</input><br/><br/>	
+											<input type="checkbox" name="format" value="pdf" class="checkbox">PDF</input>
+ 											<input type="checkbox" name="format" value="jpeg" class="checkbox">JPEG</input>
+ 											<input type="checkbox" name="format" value="tiff" class="checkbox">TIFF</input><br/><br/>
+ 										<label class="label" for="avformat">Audio/Video File Format:</label><br/>
+											<input type="checkbox" name="avformat" value="wav" class="checkbox">WAV</input>
+ 											<input type="checkbox" name="avformat" value="mp3" class="checkbox">MP3</input>
+ 											<input type="checkbox" name="avformat" value="mpeg" class="checkbox">MPEG</input>
+ 											<input type="checkbox" name="avformat" value="hd" class="checkbox">HD</input><br/><br/>	
  										<label class="label" for="desc">Description of Use (Provided by the researcher):</label><br/><textarea id="request_desc" rows="4" cols="4"/></textarea>	
 									</div><!-- request_input0 -->
-								</div>
+								<!--/div-->
 							</div> <!-- formcontents -->
 					<button class="btn" type="button" id="initiate">Initiate agreement</button>		
 					</div> <!-- researcherInfo -->
-					
 				</div> <!-- content -->
-			
-		</div>
+			</div>
 		<div class="bottom_container">
 				<p class = "foot">
 					James A. Cannavino Library, 3399 North Road, Poughkeepsie, NY 12601; 845.575.3199
@@ -117,8 +122,5 @@
 					<a href="http://www.marist.edu/disclaimers.html" target="_blank" >Disclaimers</a> | <a href="http://www.marist.edu/privacy.html" target="_blank" >Privacy Policy</a> | <a href="http://library.marist.edu/ack.html?iframe=true&width=50%&height=62%" rel="prettyphoto[iframes]">Acknowledgements</a>
 				</p>
 		</div>
-		
-	
 	</body>
-
 </html>

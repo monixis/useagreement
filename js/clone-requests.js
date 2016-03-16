@@ -1,5 +1,5 @@
 /*
-Author: Weon Yuan
+Author: Monish Singh
 Original Author: Tristan Denyer (based on Charlie Griefer's original clone code)
 Date: August 27, 2013
 */
@@ -36,11 +36,11 @@ $(document).ready(function() {
         	$('.empty').remove();
         }
         
-        if (newNum1 == 10) {
+      /*  if (newNum1 == 10) {
         	$('#buttonAdd-request').attr('disabled', true).prop('value', "+").css('opacity', 0.5);
         	alert("You have reached the maximum limit for Books.");
         }
-        
+        */
         if (!$.trim( $('#content').html() ).length) {
         	$('#submit').attr('disabled', true);
     	} else {
@@ -48,15 +48,15 @@ $(document).ready(function() {
 		}
     });
 	
-	$('#buttonDelete-book').click(function () {
+	$('#buttonRemove-request').click(function () {
     // confirmation
-        if (confirm("Are you sure you wish to remove a Book?"))
+        if (confirm("Are you sure you wish to remove a Request?"))
             {
                 var num1 = ($('.clonedInput1').length) - 1;
                 // how many "duplicatable" input fields we currently have
-                $('#content #book_input' + num1).slideUp('fast', function () {$(this).remove(); 
+                $('#formcontents #request_input' + num1).slideUp('fast', function () {$(this).remove(); 
                 
-                if (!$.trim( $('#content').html() ).length) {
+                if (!$.trim( $('#formcontents').html() ).length) {
 		        	$('#submit').attr('disabled', true);
 		    	} else {
 					$('#submit').attr('disabled', false);
@@ -72,10 +72,12 @@ $(document).ready(function() {
         return false;
              // remove the last element
     // enable the "add" button
-        $('#buttonAdd-book').attr('disabled', false).css('opacity', 1);
+        $('#buttonAdd-request').attr('disabled', false).css('opacity', 1);
         
         
     });
 	
-    $('#buttonDelete-book').attr('disabled', true).css('opacity', 0.5);
+    $('#buttonRemove-request').attr('disabled', true).css('opacity', 0.5);
+    
+       
 });
