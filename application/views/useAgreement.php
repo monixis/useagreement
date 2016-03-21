@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title>Reserve Forms</title>
+		<title>Use Agreement Form</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="shortcut icon" href="http://library.marist.edu/archives/icon/box.png" />
 		<link rel="stylesheet" type="text/css" href="http://library.marist.edu/css/library.css" />
@@ -25,10 +25,9 @@
                 		alert($(this).val());
             		});
             		
-            		
 				});
 				
-				$('div#request_input').clone();
+				$('div#request_input').clone();			
 			});
 		</script>
 	
@@ -65,7 +64,7 @@
 						<a href="http://library.marist.edu" class="map_link"><img src="http://library.marist.edu/images/home.png" class="fox2"/></a>
 						> Forms > Reserve Forms 
 					</p>
-					<div id="researcherInfo"><h1 class="page_head" style="float: none;">User Agreement Initiation Form</h1>
+					<div id="researcherInfo"><h1 class="page_head" style="float: none;">Use Agreement Form</h1>
 							<h2>Researcher's Information:</h2>
 							<div class="formcontents">
 								<label class="label">Date:</label><br/><input type="text" id="datepicker" class="textinput" style="width: 100px;"/>		
@@ -77,6 +76,23 @@
 								<label class="label">Email:</label><br/><input type="text" id="email" class="textinput" />
 								<label class="label">Comments (optional):</label><br/><textarea id="comments" rows="4" cols="50" style="display: block; margin-bottom: 10px;"></textarea>
 							</div>
+							<h2>Conditions of use</h2>
+							<div class="formcontents" style="height: 100px; border:1px solid black; overflow-y: auto; padding: 10px;">
+								<ul>
+									<li>(1) To use the image(s), audio, or video only for the purpose or project stated above. Later and different use constitutes reuse and is
+prohibited. Subsequent requests for permission to reuse image(s), audio, or video must be made in writing. A reuse fee may apply</li><br/>
+								<li>(2) To give proper credit for the image(s), audio, or video. Unless otherwise stated on the photographic copy, the credit line should
+read: James A. Cannavino Library, Archives & Special Collections, Marist College, USA. When the name of the photographer
+or collection is supplied, this should also be included in the credit. The placement of credit should be as follows:</li>
+								</ul>
+							</div>
+							<p><label style="font-weight: bold;">Copyright Notice: </label>The individual requesting reproductions expressly assumes the responsibility for compliance with all pertinent provisions of
+the Copyright Act, 17 U.S.C. ss101 et seq. The patron further agrees to indemnify and hold harmless the Marist College Archives & Special
+Collections and its staff in connection with any disputes arising from the Copyright Act, over the reproduction of material at the request of the
+patron.</p>
+							<input type="checkbox" value="Accept" class="checkbox">I accept and agree with the conditions of use.</input><br/>
+							<label>Applicant's Initials</label><input type="text" id="name" class="textinput"/>
+							
 							<h2>Requests:</h2>
 							<div class="formcontents" id="formcontents">
 								<label>Add/Remove Requests</label><br/>
