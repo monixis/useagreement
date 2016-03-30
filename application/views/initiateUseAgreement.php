@@ -17,17 +17,80 @@
 		<script type="text/javascript">
 			$(document).ready(function(){
 				$('#datepicker').datepicker();
-				
 				$('button#initiate').click(function(){
-					alert($("div#request_input2 input#request_collection").val());
-					
-					$.each($("input:checked"), function(){            
-                		alert($(this).val());
-            		});
-            		
-            		
+					var date = $('input#datepicker').val();
+					var userName = $('input#name').val();
+					var address = $('input#address').val();
+					var citystate = $('input#citystate').val();
+					var zipCode = $('input#zip').val();
+					var emailId = $('input#email').val();
+					var comments = $('textarea#comments').val();
+					var phoneNumber = $('input#phoneNo').val();
+					var requestCount= $("#formcontents > div").length-1 ;
+					var requestList= [];
+					//alert (requestCount);
+					//iterating multiple requests.
+					for(var i=1; i<=requestCount; i++) {
+						var checked = [];
+						var imageResolutions = "";
+						var fileFormats = "";
+						var avFormats = "";
+						var str1 = "div#request_input";
+						var str2 = str1.concat(i);
+						var request = [];
+						var reqCollection = $(str2.concat(" input#request_collection")).val();
+						var boxNumber = $(str2.concat(" input#request_boxno")).val();
+						var itemNumber = $(str2.concat(" input#request_itemno")).val();
+						$.each($(str2.concat(" input:checked[name='dpi']")), function () {
+							imageResolutions = imageResolutions.concat($(this).val());
+							imageResolutions = imageResolutions.concat(":");
+						});
+						imageResolutions = imageResolutions.slice(0, -1);
+
+						$.each($(str2.concat(" input:checked[name= 'format']")), function () {
+							checked.push($(this).val());
+							fileFormats = fileFormats.concat($(this).val());
+							fileFormats = fileFormats.concat(":");
+						});
+						fileFormats = fileFormats.slice(0, -1);
+
+						$.each($(str2.concat(" input:checked[name= 'avformat']")), function () {
+							checked.push($(this).val());
+							avFormats = avFormats.concat($(this).val());
+							avFormats = avFormats.concat(":");
+						});
+						avFormats = avFormats.slice(0, -1);
+						request.push(reqCollection);
+						request.push(boxNumber);
+						request.push(itemNumber);
+						request.push(imageResolutions);
+						request.push(fileFormats);
+						request.push(avFormats);
+						requestList.push(request);
+					}
+					//alert(requestList);
+					$.post("<?php echo base_url("?c=usragr&m=insertNewResearcher");?>", {
+						date:date,
+						userName: userName,
+						address : address,
+						zipCode : zipCode,
+						citystate: citystate,
+						emailId: emailId,
+						comments:comments,
+						phoneNumber:phoneNumber,
+						requestCount:requestCount,
+						requestList:requestList
+					}).done(function (userId) {
+						if (userId > 0) {
+							alert("Form initiated successfully. UserId:"  + userId);
+
+						}else
+						{
+							alert("Falied to initiaite the use agreement form");
+						}
+					});
 				});
-				
+
 				$('div#request_input').clone();
 			});
 		</script>
@@ -73,6 +136,7 @@
 								<label class="label">Address:</label><br/><input type="text" id="address" class="textinput" />
 								<label class="label">City/State:</label><br/><input type="text" id="citystate" class="textinput" />
 								<label class="label">Zip:</label><br/><input type="text" id="zip" class="textinput" />
+								<label class="label">Phone Number:</label></br><input type="text" id="phoneNo" class="textinput" />
 								<!--p><label class="label">City/State:</label><input type="text" id="citystate" class="textinputinline" style="margin-right: 20px;"/><label class="label">Zip:</label><input type="text" id="zip" class="textinputinline" style="width:125px;"/></p-->
 								<label class="label">Email:</label><br/><input type="text" id="email" class="textinput" />
 								<label class="label">Comments (optional):</label><br/><textarea id="comments" rows="4" cols="50" style="display: block; margin-bottom: 10px;"></textarea>
@@ -100,10 +164,12 @@
  											<input type="checkbox" name="avformat" value="mp3" class="checkbox">MP3</input>
  											<input type="checkbox" name="avformat" value="mpeg" class="checkbox">MPEG</input>
  											<input type="checkbox" name="avformat" value="hd" class="checkbox">HD</input><br/><br/>	
- 										<label class="label" for="desc">Description of Use (Provided by the researcher):</label><br/><textarea id="request_desc" rows="4" cols="4"/></textarea>	
+ 										<label class="label" for="desc">Description of Use (Provided by the researcher):</label><br/><textarea id="request_desc" rows="4" cols="4"/></textarea>
+
 								</div><!-- request_input template -->
+
 							</div> <!-- formcontents -->
-					<button class="btn" type="button" id="initiate">Initiate agreement</button>		
+					  <button class="btn" type="button" id="initiate">Initiate agreement</button>
 					</div> <!-- researcherInfo -->
 				</div> <!-- content -->
 			</div>
