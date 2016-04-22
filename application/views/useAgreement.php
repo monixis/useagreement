@@ -11,9 +11,9 @@
 	  	<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 		<link rel="stylesheet" type="text/css" href="http://library.marist.edu/archives/mainpage/mainStyles/style.css" />
 		<link rel="stylesheet" type="text/css" href="http://library.marist.edu/archives/mainpage/mainStyles/main.css" />
-		<link rel="stylesheet" type="text/css" href="/useagreement_develop/styles/useagreement.css" />
+		<link rel="stylesheet" type="text/css" href="styles/useagreement.css" />
 		<script type="text/javascript" src="http://library.marist.edu/archives/mainpage/scripts/archivesChildMenu.js"></script> 
-		<script type="text/javascript" src="/useagreement_develop/js/cloneRequests.js"></script>
+		<script type="text/javascript" src="js/cloneRequests.js"></script>
 		<?php
 		$userId= $_GET['userId'];
 		$sizeofRequests = sizeof($requests);
@@ -247,6 +247,9 @@
 					});//end of result $.post
 				});//end of submit function
 				$('div#request_input').clone();
+				
+				
+				
 
 			});// end of document function
 		</script>
@@ -294,7 +297,7 @@
 								<label class="label">Comments (optional):</label><br/><textarea id="comments" rows="4" cols="50" style="display: block; margin-bottom: 10px;" ><?php echo $comments; ?></textarea>
 							</div>
 							<h2>Conditions of use</h2>
-							<div class="formcontents" style="height: 100px; border:1px solid black; overflow-y: auto; padding: 10px;">
+							<div class="formcontents" style="height: 100px; border:4px solid #ff8c1a; overflow-y: auto; padding: 10px; margin-bottom: -7px;">
 								<ul>
 									<li>(1) To use the image(s), audio, or video only for the purpose or project stated above. Later and different use constitutes reuse and is
                                         prohibited. Subsequent requests for permission to reuse image(s), audio, or video must be made in writing. A reuse fee may apply</li><br/>
@@ -303,11 +306,11 @@
                                         or collection is supplied, this should also be included in the credit. The placement of credit should be as follows:</li>
 								</ul>
 							</div>
-							<p><label style="font-weight: bold;">Copyright Notice: </label>The individual requesting reproductions expressly assumes the responsibility for compliance with all pertinent provisions of
+							<p style="background: #ff8c1a;"><label style="font-weight: bold;">Copyright Notice: </label>The individual requesting reproductions expressly assumes the responsibility for compliance with all pertinent provisions of
                                      the Copyright Act, 17 U.S.C. ss101 et seq. The patron further agrees to indemnify and hold harmless the Marist College Archives & Special
                                      Collections and its staff in connection with any disputes arising from the Copyright Act, over the reproduction of material at the request of the
 								     patron.</p>
-							<input type="checkbox" value="Accept" class="checkbox">I accept and agree with the conditions of use.</input><br/>
+							<input type="checkbox" value="Accept" class="checkbox" id="checkbox">I accept and agree with the conditions of use.</input><br/><br/>
 							<label>Applicant's Initials</label><input type="text" id="name" class="textinput"/>
 
 

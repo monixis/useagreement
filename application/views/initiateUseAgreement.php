@@ -16,9 +16,48 @@
 		<script type="text/javascript" src="js/cloneRequests.js"></script>
 		<script type="text/javascript">
 			$(document).ready(function(){
+				
 				$('#datepicker').datepicker();
+				$("#datepicker").datepicker( "setDate", new Date());
+				$('div#request_input').clone();	
+		
+				var inputname = 0;
+				var inputemail = 0;
+				
+			/* Validation */		
+				$('input#name').keydown(function(e){
+					if((e.which == 9) && ($(this).val().length == 0)){
+						$(this).css('border','1px solid red');
+						inputname = 0;
+					}else{
+						$(this).css('border','1px solid #ccc');
+						inputname = 1;
+					}
+				});
+				
+				$('input#email').keydown(function(e){
+					var filter = /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+					if((e.which == 9) && ($(this).val().length == 0)){
+						$(this).css('border','1px solid red');
+						inputemail = 0;
+					}else if (filter.test($(this).val())){
+						$(this).css('border','1px solid #ccc');
+						inputemail = 1;
+					}
+					else{
+						$(this).css('border','1px solid red');
+						inputemail = 0;
+					}	
+				});
+			/* validation ends */
+				
 				$('button#initiate').click(function(){
-					var date = $('input#datepicker').val();
+					if (inputname == 0){
+						$('input#name').css('border','1px solid red');
+					}else if (inputemail == 0){
+						$('input#email').css('border','1px solid red');
+					}else{
+					var date = $('input#datepicker').val();	
 					var userName = $('input#name').val();
 					var address = $('input#address').val();
 					var citystate = $('input#citystate').val();
@@ -82,16 +121,17 @@
 						requestList:requestList
 					}).done(function (userId) {
 						if (userId > 0) {
-							alert("Form initiated successfully. UserId:"  + userId);
-
+							$('#requestStatus').show().css('background','#66cc00').append("#" + userId + ": A User Agreement Form has been sent to "+ userName);
 						}else
 						{
-							alert("Falied to initiaite the use agreement form");
+							$('#requestStatus').show().css('background','#b31b1b').append("Something wrong with the form. Contact Administrator");
+					
 						}
 					});
+					}
 				});
-
-				$('div#request_input').clone();
+				
+			
 			});
 		</script>
 	
@@ -129,6 +169,10 @@
 						> Forms > Reserve Forms 
 					</p>
 					<div id="researcherInfo"><h1 class="page_head" style="float: none;">User Agreement Initiation Form</h1>
+						
+					<div id="requestStatus" style="width: auto; height:30px; margin-bottom: 7px; margin-top: -15px; color:#000000; font-size: 12pt; text-align: center; padding-top: 10px; display: none;">
+						
+					</div>	
 							<h2>Researcher's Information:</h2>
 							<div class="formcontents">
 								<label class="label">Date:</label><br/><input type="text" id="datepicker" class="textinput" style="width: 100px;"/>		
@@ -182,8 +226,5 @@
 					<a href="http://www.marist.edu/disclaimers.html" target="_blank" >Disclaimers</a> | <a href="http://www.marist.edu/privacy.html" target="_blank" >Privacy Policy</a> | <a href="http://library.marist.edu/ack.html?iframe=true&width=50%&height=62%" rel="prettyphoto[iframes]">Acknowledgements</a>
 				</p>
 		</div>
-		<script>
-			
-		</script>
 	</body>
 </html>
