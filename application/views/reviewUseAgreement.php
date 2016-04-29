@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
-    <title>Use Agreement Form</title>
+    <title>Use Agreement Admin Form</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link rel="shortcut icon" href="http://library.marist.edu/archives/icon/box.png" />
     <link rel="stylesheet" type="text/css" href="http://library.marist.edu/css/library.css" />
@@ -11,9 +11,9 @@
     <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
     <link rel="stylesheet" type="text/css" href="http://library.marist.edu/archives/mainpage/mainStyles/style.css" />
     <link rel="stylesheet" type="text/css" href="http://library.marist.edu/archives/mainpage/mainStyles/main.css" />
-    <link rel="stylesheet" type="text/css" href="/useagreement/styles/useagreement.css" />
+    <link rel="stylesheet" type="text/css" href="styles/useagreement.css" />
     <script type="text/javascript" src="http://library.marist.edu/archives/mainpage/scripts/archivesChildMenu.js"></script>
-    <script type="text/javascript" src="/useagreement/js/cloneRequests.js"></script>
+    <script type="text/javascript" src="js/cloneRequests.js"></script>
     <?php
     $userId= $_GET['userId'];
     //researcher info
@@ -28,10 +28,30 @@
     $phoneNumber = $researcher[7];
     $status = $researcher[8];
     $instructions = $researcher[9];
+    $fileAttachment = $researcher[10];
+    $userInitials = $researcher[11];
+    $termsAndConditions = $researcher[12];
+    if($status == 0){
+        $formStatus = "Initiated";
+    }elseif($status == 1){
+
+        $formStatus = "Disapproved";
+    }
+    elseif($status == 2){
+        $formStatus = "Submitted";
+    }
+    elseif($status == 3){
+
+        $formStatus = "Approved";
+    }
     ?>
     <script type="text/javascript">
         $(document).ready(function(){
+            <?php  if($status == 0 ) {?>
+            document.getElementById("approve").disabled = true;
+            document.getElementById("disapprove").disabled = true;
 
+            <?php } ?>
             $('#datepicker').datepicker();
             var requestsCnt = 0;
             var reqSize = "<?php echo sizeof($requests)?>";
@@ -42,6 +62,10 @@
                 request_input = "request_input" + requestsCnt + "";
                 var requests = "<div id=" + request_input + " style='border-bottom: 1px solid; padding: 10px;'>" + fields;
                 $('div#formcontents').append(requests);
+            }
+            var tNc = '<?php echo $termsAndConditions?>';
+            if(tNc =="true"){
+                $('#accept').prop('checked',true)    ;
             }
             requestsCnt = 0;
             <?php if($sizeofRequests>0){ ?>
@@ -65,10 +89,13 @@
             requestIds.push(str2.concat(" input:not(:checked)[name='avformat'][value='mp3']"));
             requestIds.push(str2.concat(" input:not(:checked)[name='avformat'][value='mpeg']"));
             requestIds.push(str2.concat(" input:not(:checked)[name='avformat'][value='hd']"));
+            requestIds.push(str2.concat(" textarea#request_desc"));
             $(requestIds[0]).val('<?php echo $request[1]?>');
             $(requestIds[1]).val('<?php echo $request[2]?>');
             $(requestIds[2]).val('<?php echo $request[3]?>');
-            <?php foreach($request[4] as $dpi) {?>
+            $(requestIds[14]).val('<?php echo $request[4]?>');
+
+        <?php foreach($request[5] as $dpi) {?>
 
             if("<?php echo $dpi ?>" == "72"){
                 $(requestIds[3]).attr('checked',true);
@@ -80,7 +107,7 @@
                 $(requestIds[6]).attr('checked',true);
             }
             <?php }?>
-            <?php foreach($request[5] as $format) {?>
+            <?php foreach($request[6] as $format) {?>
 
             if("<?php echo $format ?>" == "pdf"){
                 $(requestIds[7]).attr('checked',true);
@@ -90,7 +117,7 @@
                 $(requestIds[9]).attr('checked',true);
             }
             <?php }?>
-            <?php foreach($request[6] as $avformat) {?>
+            <?php foreach($request[7] as $avformat) {?>
 
             if("<?php echo $avformat ?>" == "wav"){
                 $(requestIds[10]).attr('checked',true);
@@ -287,7 +314,12 @@
                 <a href="http://library.marist.edu" class="map_link"><img src="http://library.marist.edu/images/home.png" class="fox2"/></a>
                 > Forms > Reserve Forms
             </p>
-            <div id="researcherInfo"><h1 class="page_head" style="float: none;">Use Agreement Form</h1>
+            <div id="researcherInfo"><h1 class="page_head" style="float: none;">Use Agreement Admin Form</h1>
+                <div id="statusInfo">
+
+                    <h3 align="right">Status: <?php echo $formStatus ?></h3>
+
+                </div>
                 <h2>Researcher's Information:</h2>
                 <div class="formcontents">
                     <label class="label">Date:</label><br/><input type="text" id="datepicker" class="textinput" value = "<?php echo $date; ?>" style="width: 100px;"/>
@@ -315,8 +347,8 @@
                     the Copyright Act, 17 U.S.C. ss101 et seq. The patron further agrees to indemnify and hold harmless the Marist College Archives & Special
                     Collections and its staff in connection with any disputes arising from the Copyright Act, over the reproduction of material at the request of the
                     patron.</p>
-                <input type="checkbox" value="Accept" class="checkbox">I accept and agree with the conditions of use.</input><br/>
-                <label>Applicant's Initials</label><input type="text" id="name" class="textinput"/>
+                <input type="checkbox" value="Accept" id="accept" name = "accept" class="checkbox">I accept and agree with the conditions of use.</input><br/>
+                <label>Applicant's Initials</label><input type="text" id="name" class="textinput" value = "<?php echo $userInitials ?>"/>
 
 
                 <h2>Requests:</h2>
@@ -345,10 +377,15 @@
                         <label class="label" for="desc">Description of Use (Provided by the researcher):</label><br/><textarea id="request_desc" rows="4" cols="4"/></textarea>
                     </div><!-- request_input template -->
                 </div> <!-- formcontents -->
-                <div id ="instructions">
-                    <label class="label">Instructions (For Office Use Only):</label><br/><textarea id="instructions" rows="4" cols="50" style="display: block; margin-bottom: 10px;" ><?php echo $instructions; ?></textarea>
+                <div id='attachment'>
+                    <h3 style="color:green"> Attachments: </h3></br>
+                    <label class="label"> <?php echo $fileAttachment;?></label></br><!--label ><!--?php echo $fileAttachment; ?></label-->
 
                 </div>
+                <div id ="instructions">
+                    </br><label class="label">Instructions For Researcher:</label><br/><textarea id="instructions" rows="4" cols="50" style="display: block; margin-bottom: 10px;" ><?php echo $instructions; ?></textarea>
+                </div>
+
                 <button class="btn" type="submit" id="approve">Approve</button>
                 <button class="btn" type="button" id="disapprove">Disapprove</button></br>
 

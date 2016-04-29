@@ -14,11 +14,8 @@
 | path to your installation.
 |
 */
-<<<<<<< HEAD
 $config['base_url']	= 'http://localhost/useagreement/';
-=======
-$config['base_url']	= 'http://dev.library.marist.edu/Dheeraj/useagreement/';
->>>>>>> origin/develop_v1.0
+
 
 /*
 |--------------------------------------------------------------------------
