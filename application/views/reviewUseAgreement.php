@@ -31,6 +31,9 @@
     $fileAttachment = $researcher[10];
     $userInitials = $researcher[11];
     $termsAndConditions = $researcher[12];
+    $emailSubject = $researcher[13];
+    $receiver = $researcher[14];
+    $requestAddedBy = $researcher[15];
     if($status == 0){
         $formStatus = "Initiated";
     }elseif($status == 1){
@@ -52,6 +55,7 @@
             document.getElementById("disapprove").disabled = true;
 
             <?php } ?>
+            $('select#request_added_by').val("<?php echo $requestAddedBy?>");
             $('#datepicker').datepicker();
             var requestsCnt = 0;
             var reqSize = "<?php echo sizeof($requests)?>";
@@ -331,24 +335,19 @@
                     <!--p><label class="label">City/State:</label><input type="text" id="citystate" class="textinputinline" style="margin-right: 20px;"/><label class="label">Zip:</label><input type="text" id="zip" class="textinputinline" style="width:125px;"/></p-->
                     <label class="label">Email:</label><br/><input type="text" id="email" class="textinput" value = "<?php echo $emailId; ?>" />
                     <label class="label">Comments (optional):</label><br/><textarea id="comments" rows="4" cols="50" style="display: block; margin-bottom: 10px;" ><?php echo $comments; ?></textarea>
+                    <label class="label">Email Subject:</label><br/><input type="text" id="email_subject" class="textinput" value = "<?php echo $emailSubject;?>"/>
+                    <label class="label">Receiver:</label><br/><input type="text" id="receiver" class="textinput" value = "<?php echo $receiver; ?>"/>
+                    <label class="label" for="requestAddedby"> Request Added By:</label><br/><select id ="request_added_by" class="dropdn" >
+                        <option value="Archivist" class="selectinput">Archivist</option>
+                        <option value="Researcher" class="selectinput">Researcher</option>
+                        <option value="Email" class="selectinput">Email</option>
+                      </select></br></br>
+                    <input type="checkbox" value="Accept" id="accept" name = "accept" class="checkbox">I accept and agree with the conditions of use.</input></br></br>
+                    <label>Applicant's Initials</label><input type="text" id="name" class="textinput" value = "<?php echo $userInitials ?>"/>
                 </div>
 
-                <h2>Conditions of use</h2>
-                <div class="formcontents" style="height: 100px; border:1px solid black; overflow-y: auto; padding: 10px;">
-                    <ul>
-                        <li>(1) To use the image(s), audio, or video only for the purpose or project stated above. Later and different use constitutes reuse and is
-                            prohibited. Subsequent requests for permission to reuse image(s), audio, or video must be made in writing. A reuse fee may apply</li><br/>
-                        <li>(2) To give proper credit for the image(s), audio, or video. Unless otherwise stated on the photographic copy, the credit line should
-                            read: James A. Cannavino Library, Archives & Special Collections, Marist College, USA. When the name of the photographer
-                            or collection is supplied, this should also be included in the credit. The placement of credit should be as follows:</li>
-                    </ul>
-                </div>
-                <p><label style="font-weight: bold;">Copyright Notice: </label>The individual requesting reproductions expressly assumes the responsibility for compliance with all pertinent provisions of
-                    the Copyright Act, 17 U.S.C. ss101 et seq. The patron further agrees to indemnify and hold harmless the Marist College Archives & Special
-                    Collections and its staff in connection with any disputes arising from the Copyright Act, over the reproduction of material at the request of the
-                    patron.</p>
-                <input type="checkbox" value="Accept" id="accept" name = "accept" class="checkbox">I accept and agree with the conditions of use.</input><br/>
-                <label>Applicant's Initials</label><input type="text" id="name" class="textinput" value = "<?php echo $userInitials ?>"/>
+
+
 
 
                 <h2>Requests:</h2>

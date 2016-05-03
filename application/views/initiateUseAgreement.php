@@ -66,6 +66,9 @@
 					var comments = $('textarea#comments').val();
 					var phoneNumber = $('input#phoneNo').val();
 					var requestCount= $("#formcontents > div").length-1 ;
+					var emailSubject = $('input#email_subject').val();
+					var receivedBy = 	$('input#receiver').val();
+					var requestAddedBy= $('select#request_added_by').val();
 					var requestList= [];
 					//alert (requestCount);
 					//iterating multiple requests.
@@ -120,7 +123,10 @@
 						emailId: emailId,
 						comments:comments,
 						phoneNumber:phoneNumber,
+						emailSubject:emailSubject,
+						receivedBy:receivedBy,
 						requestCount:requestCount,
+						requestAddedBy:requestAddedBy,
 						requestList:requestList
 					}).done(function (userId) {
 						if (userId > 0) {
@@ -187,6 +193,17 @@
 					<!--p><label class="label">City/State:</label><input type="text" id="citystate" class="textinputinline" style="margin-right: 20px;"/><label class="label">Zip:</label><input type="text" id="zip" class="textinputinline" style="width:125px;"/></p-->
 					<label class="label">Email:</label><br/><input type="text" id="email" class="textinput" />
 					<label class="label">Comments (optional):</label><br/><textarea id="comments" rows="4" cols="50" style="display: block; margin-bottom: 10px;"></textarea>
+
+					<label class="label">Email Subject:</label><br/><input type="text" id="email_subject" class="textinput"/>
+					<label class="label">Receiver:</label><br/><input type="text" id="receiver" class="textinput"/>
+					<label class="label" for="requestAddedby"> Request Added By:</label><br/><select id ="request_added_by" class="dropdn" >
+						<option value="Archivist" class="selectinput">Archivist</option>
+						<option value="Researcher" class="selectinput">Researcher</option>
+						<option value="Email" class="selectinput">Email</option>
+
+					</select><!--input type="text" id="request_collection" class="textinput"/-->
+
+
 				</div>
 				<h2>Requests:</h2>
 				<div class="formcontents" id="formcontents">
