@@ -49,6 +49,7 @@
 						inputemail = 0;
 					}
 				});
+
 			/* validation ends */
 
 				$('button#initiate').click(function(){
@@ -182,6 +183,7 @@
 				<div id="requestStatus" style="width: auto; height:30px; margin-bottom: 7px; margin-top: -15px; color:#000000; font-size: 12pt; text-align: center; padding-top: 10px; display: none;">
 
 				</div>
+
 				<h2>Researcher's Information:</h2>
 				<div class="formcontents">
 					<label class="label">Date:</label><br/><input type="text" id="datepicker" class="textinput" style="width: 100px;"/>
@@ -192,11 +194,10 @@
 					<label class="label">Phone Number:</label></br><input type="text" id="phoneNo" class="textinput" />
 					<!--p><label class="label">City/State:</label><input type="text" id="citystate" class="textinputinline" style="margin-right: 20px;"/><label class="label">Zip:</label><input type="text" id="zip" class="textinputinline" style="width:125px;"/></p-->
 					<label class="label">Email:</label><br/><input type="text" id="email" class="textinput" />
-					<label class="label">Comments (optional):</label><br/><textarea id="comments" rows="4" cols="50" style="display: block; margin-bottom: 10px;"></textarea>
 
 					<label class="label">Email Subject:</label><br/><input type="text" id="email_subject" class="textinput"/>
 					<label class="label">Receiver:</label><br/><input type="text" id="receiver" class="textinput"/>
-					<label class="label" for="requestAddedby"> Request Added By:</label><br/><select id ="request_added_by" class="dropdn" >
+					<label class="label" for="requestAddedby"> Request Added By:</label><br/><select id ="request_added_by" >
 						<option value="Archivist" class="selectinput">Archivist</option>
 						<option value="Researcher" class="selectinput">Researcher</option>
 						<option value="Email" class="selectinput">Email</option>
@@ -211,7 +212,7 @@
 					<button id="buttonAdd-request">+</button>
 					<button id="buttonRemove-request" disabled style="opacity: 0.5;">-</button></br>
 					<div id="request_input" style="border-bottom: 1px solid; padding: 10px; display: none;">
-						<label class="label" for="collection">Collection:</label><br/><select id ="collection" class="dropdn" >
+						<label class="label" for="collection">Collection:</label><br/><select id ="collection" >
 							<option value="Lowell Thomas Papers" class="selectinput">Lowell Thomas Papers</option>
 							<option value="Lowell Thomas Capital Cities" class="selectinput">Lowell Thomas Capital Cities</option>
 							<option value="Emmy Award Winning Video Collection">Emmy Award Winning Video Collection</option>
@@ -290,12 +291,14 @@
 						<label class="label" for="desc">Description of Use (Provided by the researcher):</label><br/><textarea id="request_desc" rows="4" cols="4"/></textarea>
 
 					</div><!-- request_input template -->
-
 				</div> <!-- formcontents -->
+				<label class="label">Comments (optional):</label><br/><textarea id="comments" rows="4" cols="50" style="display: block; margin-bottom: 10px;"></textarea>
+
 				<button class="btn" type="button" id="initiate">Initiate agreement</button>
 			</div> <!-- researcherInfo -->
 		</div> <!-- content -->
 	</div>
+
 	<div class="bottom_container">
 		<p class = "foot">
 			James A. Cannavino Library, 3399 North Road, Poughkeepsie, NY 12601; 845.575.3199

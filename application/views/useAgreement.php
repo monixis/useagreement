@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	<style>
+		table, tr {
+			border: 1px solid red;
+		}
+	</style>
 	<title>Use Agreement Form</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<link rel="shortcut icon" href="http://library.marist.edu/archives/icon/box.png" />
@@ -23,18 +28,18 @@
 	$address =$researcher[2];
 	$emailId = $researcher[3];
 	$zipCode = $researcher[4];
-	$comments = $researcher[5];
-	$date = $researcher[6];
-	$phoneNumber = $researcher[7];
-	$status = $researcher[8];
-	$instructions = $researcher[9];
-	$attachment = $researcher[10];
-	$userInitials = $researcher[11];
-	$termsAndCond = $researcher[12];
+	$date = $researcher[5];
+	$phoneNumber = $researcher[6];
+	$status = $researcher[7];
+	$attachment = $researcher[8];
+	$userInitials = $researcher[9];
+	$termsAndCond = $researcher[10];
+	$requestAddedBy = $researcher[11];
+
+
 	if($status == 0){
 		$formStatus = "Initiated";
 	}elseif($status == 1){
-
 		$formStatus = "Disapproved";
 	}
 	elseif($status == 2){
@@ -46,27 +51,75 @@
 	}
 	$researcherUrl = base_url("index.php/usragr/getResearcher?userId=").$userId;
 	?>
+
 	<script type="text/javascript">
 		$(document).ready(function(){
+			var text_max = 140;
+			$('#textarea_feedback').html(text_max + ' characters remaining');
+
+			$('#message').keyup(function() {
+				var text_length = $('#message').val().length;
+				var text_remaining = text_max - text_length;
+
+				$('#textarea_feedback').html(text_remaining + ' characters remaining');
+			});
+
+
 			<?php  if($status == 2 || $status ==3 ) {?>
 			document.getElementById("submit").disabled = true;
 			document.getElementById("save").disabled = true;
 
 			<?php } ?>
-			<?php  if($instructions == null ) {?>
 
-			document.getElementById("instructions").style.display = "none";
-			<?php }?>
+
+			<?php if ($status == 3) {?>
+
+			//document.getElementById("formcontents").style.display = "none";
+			document.getElementById("save").style.display = "none";
+			document.getElementById("submit").style.display = "none";
+			document.getElementById("uploaded_file").style.display = "none";
+			document.getElementById("messages").style.display = "none";
+
+			//document.getElementById("submitInfo").style.display = "none";
+
+			<?php } ?>
+
+			/* Validation */
+			$('input#name').keydown(function(e){
+				if((e.which == 9) && ($(this).val().length == 0)){
+					$(this).css('border','1px solid red');
+					inputname = 0;
+				}else{
+					$(this).css('border','1px solid #ccc');
+					inputname = 1;
+				}
+			});
+
+			$('input#email').keydown(function(e){
+				var filter = /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+				if((e.which == 9) && ($(this).val().length == 0)){
+					$(this).css('border','1px solid red');
+					inputemail = 0;
+				}else if (filter.test($(this).val())){
+					$(this).css('border','1px solid #ccc');
+					inputemail = 1;
+				}
+				else{
+					$(this).css('border','1px solid red');
+					inputemail = 0;
+				}
+			});
+			/* validation ends */
 			$('#datepicker').datepicker();
 			var requestsCnt = 0;
 			var reqSize = "<?php echo sizeof($requests)?>";
 			var fields = $('div#request_input').html();
-				for (var j = 0; j < reqSize; j++) {
-					var request_input = "";
-					requestsCnt = requestsCnt + 1;
-					request_input = "request_input" + requestsCnt + "";
-					var requests = "<div id=" + request_input + " style='border-bottom: 1px solid; padding: 10px;'>" + fields;
-					$('div#formcontents').append(requests);
+			for (var j = 0; j < reqSize; j++) {
+				var request_input = "";
+				requestsCnt = requestsCnt + 1;
+				request_input = "request_input" + requestsCnt + "";
+				var requests = "<div id=" + request_input + " style='border-bottom: 1px solid; padding: 10px;'>" + fields;
+				$('div#formcontents').append(requests);
 
 			}
 			requestsCnt = 0;
@@ -77,69 +130,69 @@
 			}
 			<?php if($sizeofRequests>0){ ?>
 			<?php foreach($requests as $request){ ?>
-			  var requestId= '<?php echo $request[0]?>';
-				requestsCnt++;
-				var str1 = "div#request_input";
-				var str2 = str1.concat(requestsCnt);
-				var requestIds = [];
-				requestIds.push(str2.concat(" select#collection"));
-				requestIds.push(str2.concat(" input#request_boxno"));
-				requestIds.push(str2.concat(" input#request_itemno"));
-				requestIds.push(str2.concat(" input:not(:checked)[name='dpi'][value='72']"));
-				requestIds.push(str2.concat(" input:not(:checked)[name='dpi'][value='300']"));
-				requestIds.push(str2.concat(" input:not(:checked)[name='dpi'][value='600']"));
-				requestIds.push(str2.concat(" input:not(:checked)[name='dpi'][value='1200']"));
-				requestIds.push(str2.concat(" input:not(:checked)[name='format'][value='pdf']"));
-				requestIds.push(str2.concat(" input:not(:checked)[name='format'][value='jpeg']"));
-				requestIds.push(str2.concat(" input:not(:checked)[name='format'][value='tiff']"));
-				requestIds.push(str2.concat(" input:not(:checked)[name='avformat'][value='wav']"));
-				requestIds.push(str2.concat(" input:not(:checked)[name='avformat'][value='mp3']"));
-				requestIds.push(str2.concat(" input:not(:checked)[name='avformat'][value='mpeg']"));
-				requestIds.push(str2.concat(" input:not(:checked)[name='avformat'][value='hd']"));
-				requestIds.push(str2.concat(" textarea#request_desc"));
+			var requestId= '<?php echo $request[0]?>';
+			requestsCnt++;
+			var str1 = "div#request_input";
+			var str2 = str1.concat(requestsCnt);
+			var requestIds = [];
+			requestIds.push(str2.concat(" select#collection"));
+			requestIds.push(str2.concat(" input#request_boxno"));
+			requestIds.push(str2.concat(" input#request_itemno"));
+			requestIds.push(str2.concat(" input:not(:checked)[name='dpi'][value='72']"));
+			requestIds.push(str2.concat(" input:not(:checked)[name='dpi'][value='300']"));
+			requestIds.push(str2.concat(" input:not(:checked)[name='dpi'][value='600']"));
+			requestIds.push(str2.concat(" input:not(:checked)[name='dpi'][value='1200']"));
+			requestIds.push(str2.concat(" input:not(:checked)[name='format'][value='pdf']"));
+			requestIds.push(str2.concat(" input:not(:checked)[name='format'][value='jpeg']"));
+			requestIds.push(str2.concat(" input:not(:checked)[name='format'][value='tiff']"));
+			requestIds.push(str2.concat(" input:not(:checked)[name='avformat'][value='wav']"));
+			requestIds.push(str2.concat(" input:not(:checked)[name='avformat'][value='mp3']"));
+			requestIds.push(str2.concat(" input:not(:checked)[name='avformat'][value='mpeg']"));
+			requestIds.push(str2.concat(" input:not(:checked)[name='avformat'][value='hd']"));
+			requestIds.push(str2.concat(" textarea#request_desc"));
 
-				$(requestIds[0]).val('<?php echo $request[1]?>');
-				$(requestIds[1]).val('<?php echo $request[2]?>');
-				$(requestIds[2]).val('<?php echo $request[3]?>');
-				$(requestIds[14]).val('<?php echo $request[4]?>');
+			$(requestIds[0]).val('<?php echo $request[1]?>');
+			$(requestIds[1]).val('<?php echo $request[2]?>');
+			$(requestIds[2]).val('<?php echo $request[3]?>');
+			$(requestIds[14]).val('<?php echo $request[4]?>');
 
-				<?php foreach($request[5] as $dpi) {?>
+			<?php foreach($request[5] as $dpi) {?>
 
-				if ("<?php echo $dpi ?>" == "72") {
-					$(requestIds[3]).attr('checked', true);
-				} else if ("<?php echo $dpi ?>" == "300") {
-					$(requestIds[4]).attr('checked', true);
-				} else if ("<?php echo $dpi ?>" == "600") {
-					$(requestIds[5]).attr('checked', true);
-				} else if ("<?php echo $dpi ?>" == "1200") {
-					$(requestIds[6]).attr('checked', true);
-				}
-				<?php }?>
-				<?php foreach($request[6] as $format) {?>
+			if ("<?php echo $dpi ?>" == "72") {
+				$(requestIds[3]).attr('checked', true);
+			} else if ("<?php echo $dpi ?>" == "300") {
+				$(requestIds[4]).attr('checked', true);
+			} else if ("<?php echo $dpi ?>" == "600") {
+				$(requestIds[5]).attr('checked', true);
+			} else if ("<?php echo $dpi ?>" == "1200") {
+				$(requestIds[6]).attr('checked', true);
+			}
+			<?php }?>
+			<?php foreach($request[6] as $format) {?>
 
-				if ("<?php echo $format ?>" == "pdf") {
-					$(requestIds[7]).attr('checked', true);
-				} else if ("<?php echo $format ?>" == "jpeg") {
-					$(requestIds[8]).attr('checked', true);
-				} else if ("<?php echo $format ?>" == "tiff") {
-					$(requestIds[9]).attr('checked', true);
-				}
-				<?php }?>
-				<?php foreach($request[7] as $avformat) {?>
+			if ("<?php echo $format ?>" == "pdf") {
+				$(requestIds[7]).attr('checked', true);
+			} else if ("<?php echo $format ?>" == "jpeg") {
+				$(requestIds[8]).attr('checked', true);
+			} else if ("<?php echo $format ?>" == "tiff") {
+				$(requestIds[9]).attr('checked', true);
+			}
+			<?php }?>
+			<?php foreach($request[7] as $avformat) {?>
 
-				if ("<?php echo $avformat ?>" == "wav") {
-					$(requestIds[10]).attr('checked', true);
-				} else if ("<?php echo $avformat ?>" == "mp3") {
-					$(requestIds[11]).attr('checked', true);
-				} else if ("<?php echo $avformat ?>" == "mpeg") {
-					$(requestIds[12]).attr('checked', true);
-				} else if ("<?php echo $avformat ?>" == "hd") {
-					$(requestIds[13]).attr('checked', true);
-				}
-				<?php }?>
+			if ("<?php echo $avformat ?>" == "wav") {
+				$(requestIds[10]).attr('checked', true);
+			} else if ("<?php echo $avformat ?>" == "mp3") {
+				$(requestIds[11]).attr('checked', true);
+			} else if ("<?php echo $avformat ?>" == "mpeg") {
+				$(requestIds[12]).attr('checked', true);
+			} else if ("<?php echo $avformat ?>" == "hd") {
+				$(requestIds[13]).attr('checked', true);
+			}
+			<?php }?>
 
 			<?php } ?>
-		    <?php } ?>
+			<?php } ?>
 			//alert(requestsCnt);
 			$('button#save').click(function(){
 				var date = $('input#datepicker').val();
@@ -148,15 +201,14 @@
 				var citystate = $('input#citystate').val();
 				var zipCode = $('input#zip').val();
 				var emailId = $('input#email').val();
-				var comments = $('textarea#comments').val();
 				var phoneNumber = $('input#phoneNo').val();
 				var requestCount= $("#formcontents > div").length-1;
 				var file = $('input#uploaded_file')[0].files[0];
 				var userInitials = $('input#initials').val();
 				var termsAndConditions = "false";
-
+				var message = $('textarea#message').val();
 				if($('#accept').prop('checked')){
-					 termsAndConditions = "true";
+					termsAndConditions = "true";
 				}
 				var files =[];
 				files.push(file);
@@ -209,24 +261,27 @@
 					zipCode : zipCode,
 					citystate: citystate,
 					emailId: emailId,
-					comments:comments,
 					phoneNumber:phoneNumber,
 					userInitials:userInitials ,
 					termsAndConditions:termsAndConditions,
 					requestCount:requestCount,
-					requestList:requestList
+					requestList:requestList,
+					message:message
 				}).done(function (userId) {
 					if (userId > 0) {
+						$('#requestStatus').show().css('background','#66cc00').append("#" + userId + ": Form saved successfully. Please submit for approval");
 
-						alert("Form saved successfully for UserId:"  + userId);
+						//	alert("Form saved successfully for UserId:"  + userId);
 
 					}else
 					{
-						alert("Falied to save use agreement form"+userId);
+						$('#requestStatus').show().css('background','#b31b1b').append("Something wrong with the form. Contact Administrator");
+						// alert("Falied to save use agreement form"+userId);
 					}
 				});
 			});
 			$('button#submit').click(function(){
+
 				<?php  if($status == 0 || $status == 1) {?>
 				var date = $('input#datepicker').val();
 				var userName = $('input#name').val();
@@ -234,13 +289,13 @@
 				var citystate = $('input#citystate').val();
 				var zipCode = $('input#zip').val();
 				var emailId = $('input#email').val();
-				var comments = $('textarea#comments').val();
 				var phoneNumber = $('input#phoneNo').val();
 				var requestCount = $("#formcontents > div").length - 1;
 				var file = $('input#uploaded_file')[0].files[0];
 				var userInitials = $('input#initials').val();
 				var termsAndConditions = "false";
-
+				var message = $('textarea#message').val();
+				var instructions = $('textarea#instructions').val();
 				if($('#accept').prop('checked')){
 					termsAndConditions = "true";
 				}
@@ -261,6 +316,7 @@
 					var boxNumber = $(str2.concat(" input#request_boxno")).val();
 					var itemNumber = $(str2.concat(" input#request_itemno")).val();
 					var descOfUse = $(str2.concat(" textarea#request_desc")).val();
+
 					$.each($(str2.concat(" input:checked[name='dpi']")), function () {
 						imageResolutions = imageResolutions.concat($(this).val());
 						imageResolutions = imageResolutions.concat(":");
@@ -278,7 +334,14 @@
 						avFormats = avFormats.concat($(this).val());
 						avFormats = avFormats.concat(":");
 					});
+
 					avFormats = avFormats.slice(0, -1);
+					if(reqCollection == 0 || descOfUse == 0){
+						$(reqCollection).css('border','1px solid red');
+
+						$(descOfUse).css('border','1px solid red');
+
+					}
 					request.push(reqCollection);
 					request.push(boxNumber);
 					request.push(itemNumber);
@@ -296,19 +359,25 @@
 					zipCode: zipCode,
 					citystate: citystate,
 					emailId: emailId,
-					comments: comments,
 					phoneNumber: phoneNumber,
 					userInitials:userInitials ,
 					termsAndConditions:termsAndConditions ,
 					requestCount: requestCount,
-					requestList: requestList
+					requestList: requestList,
+					message:message,
+					instructions:instructions
 				}).done(function (userId) {
 					if (userId > 0) {
-						alert("Form Submitted successfully for UserId:" + userId);
+
+						$('#requestStatus').show().css('background','#66cc00').append("#" + userId + ": Form submitted successfully. We'll get back to you shortly");
+
+						//alert("Form Submitted successfully for UserId:" + userId);
 					} else {
-						alert("Falied to Submit use agreement form" + userId);
+						$('#requestStatus').show().css('background','#b31b1b').append("Something wrong with the form. Contact Administrator");
+
 					}
 				});
+
 				var m_data = new FormData();
 				m_data.append('user_name', $('input#name').val());
 				m_data.append('user_email', $('input#email').val());
@@ -376,19 +445,45 @@
 
 			<div id="researcherInfo"><h1 class="page_head" style="float: none;">Use Agreement Form</h1>
 
-
-
-
+				<div id="requestStatus" style="width: auto; height:30px; margin-bottom: 7px; margin-top: -15px; color:#000000; font-size: 12pt; text-align: center; padding-top: 10px; display: none;">
+				</div>
 				<div id="statusInfo">
 
 					<h3 align="right">Status: <?php echo $formStatus ?></h3>
 
-				</div>
-				<div id="instructions"  >
-					<label class="label" style="color: #b31b1b">Instructions for Researcher : </label><br/><textarea id="instructions" rows="5" cols="2000" style="display: inline-block; border-color: #b31b1b; margin-bottom: 10px; " ><?php echo $instructions; ?></textarea>
+				</div></br>
+				<?php if ($status != 3) {?>
+				<?php
 
-				</div >
 
+				if(sizeof($chatList)>0){
+					?>
+					<h3 align="left">Comments:</h3>
+				<?php  }?></br>
+				<div>
+
+				<table class="" aria-relevant="text"  >
+
+					<tbody>
+					<?php foreach ($chatList as $chat){ ?>
+						<tr>
+							<?php echo "<td ><strong>".$chat['commentType'] . "</strong></p></td>";?>
+							<?php echo "<td ><strong>DATE</strong></p></td>";?>
+							<?php echo "<td ><strong>TIME</strong></p></td>";?>
+
+						</tr>
+						<tr>
+							<?php echo "<td aria-autocomplete='inline'>".$chat['comment'] . "</td>";?>
+							<?php echo "<td aria-autocomplete='inline'>".$chat['comment_add_date'] . "</td>";?>
+							<?php echo "<td>".$chat['comment_add_time'] . "</td>";?>
+						</tr>
+					<?php } ?>
+					</tbody>
+
+
+				</table>
+              </div>
+             <?php } ?>
 				<h2>Researcher's Information:</h2>
 				<div class="formcontents">
 					<label class="label">Date:</label><br/><input type="text" id="datepicker" class="textinput" value = "<?php echo $date; ?>" style="width: 100px;"/>
@@ -399,7 +494,7 @@
 					<label class="label">Phone Number:</label><br/><input type="text" id="phoneNo" class="textinput" value = "<?php echo $phoneNumber; ?>" />
 					<!--p><label class="label">City/State:</label><input type="text" id="citystate" class="textinputinline" style="margin-right: 20px;"/><label class="label">Zip:</label><input type="text" id="zip" class="textinputinline" style="width:125px;"/></p-->
 					<label class="label">Email:</label><br/><input type="text" id="email" class="textinput" value = "<?php echo $emailId; ?>" />
-					<label class="label">Comments (optional):</label><br/><textarea id="comments" rows="4" cols="50" style="display: block; margin-bottom: 10px;" ><?php echo $comments; ?></textarea>
+					<!--label class="label">Comments (optional):</label><br/><textarea id="comments" rows="4" cols="50" style="display: block; margin-bottom: 10px;" --><!--?php echo $comments; ?--><!--/textarea-->
 				</div>
 
 				<h2>Conditions of use</h2>
@@ -420,13 +515,13 @@
 				<label>Applicant's Initials</label><input type="text" id="initials" value ="<?php echo $userInitials ?>" class="textinput"/>
 
 
-				<h2>Requests:</h2>
+				<h2 id = "requests">Requests:</h2>
 				<div class="formcontents" id="formcontents">
 					<label>Add/Remove Requests</label><br/>
 					<button id="buttonAdd-request" >+</button>
 					<button id="buttonRemove-request" disabled style="opacity: 0.5;">-</button></br>
 					<div id="request_input" style="border-bottom: 1px solid; padding: 10px; display: none;">
-						<label class="label" for="collection">Collection:</label><br/><select id ="collection" class="dropdn" >
+						<label class="label" for="collection">Collection:</label><br/><select id ="collection"  >
 							<option value="Lowell Thomas Papers" class="selectinput">Lowell Thomas Papers</option>
 							<option value="Lowell Thomas Capital Cities" class="selectinput">Lowell Thomas Capital Cities</option>
 							<option value="Emmy Award Winning Video Collection">Emmy Award Winning Video Collection</option>
@@ -504,12 +599,25 @@
 						<input type="checkbox" name="avformat" value="hd" class="checkbox">HD</input><br/><br/>
 						<label class="label" for="desc">Description of Use (Provided by the researcher):</label><br/><textarea id="request_desc" rows="4" cols="4"/></textarea>
 					</div><!-- request_input template -->
-				</div> <!-- formcontents -->
 
+				</div> <!-- formcontents -->
+				<?php if($attachment !=null){?>
+				<div id='attachment'>
+					<h3 style="color:green"> Attachments: </h3></br>
+					<label class="label"> <?php echo $attachment;?></label></br><!--label ><!--?php echo $fileAttachment; ?></label-->
+
+				</div>
+				<?php } ?>
+				</br>
+				<div id="messages"  >
+					<label class="label" >Message (If any) : </label><br/>
+					<div id="textarea_feedback"></div><textarea maxlength="140"  id="message" rows="5" cols="2000" style="display: inline-block;  margin-bottom: 10px; " ><?php echo null ; ?></textarea>
+				</div >
 
 				<input class='btn' type="file" name="uploaded_file" id="uploaded_file">
 				<button class="btn" type="submit" id="submit">Submit</button>
-				<button class="btn" type="button" id="save">Save</button><p>Please Submit the form for approval (or) Save your work and Submit later.</p>
+				<button class="btn" type="button" id="save">Save</button>
+
 			</div> <!-- researcherInfo -->
 
 		</div> <!-- content -->
