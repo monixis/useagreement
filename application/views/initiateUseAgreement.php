@@ -20,6 +20,7 @@
 				$('#datepicker').datepicker();
 				$("#datepicker").datepicker( "setDate", new Date());
 				$('div#request_input').clone();
+				$('div#requests').hide();
 
 				var inputname = 0;
 				var inputemail = 0;
@@ -51,7 +52,14 @@
 				});
 
 			/* validation ends */
-
+				$('#request_added_by').change(function(){
+					if($(this).val() == 'Archivist'){
+						$('div#requests').show();
+					}else{
+						$('div#requests').hide();
+					}
+				});
+				
 				$('button#initiate').click(function(){
 					if (inputname == 0){
 						$('input#name').css('border','1px solid red');
@@ -137,6 +145,7 @@
 							$('#requestStatus').show().css('background','#b31b1b').append("Something wrong with the form. Contact Administrator");
 
 						}
+						$("html, body").animate({ scrollTop: 0}, 600);
 					});
 				}
 			});
@@ -197,22 +206,22 @@
 
 					<label class="label">Email Subject:</label><br/><input type="text" id="email_subject" class="textinput"/>
 					<label class="label">Receiver:</label><br/><input type="text" id="receiver" class="textinput"/>
-					<label class="label" for="requestAddedby"> Request Added By:</label><br/><select id ="request_added_by" >
-						<option value="Archivist" class="selectinput">Archivist</option>
-						<option value="Researcher" class="selectinput">Researcher</option>
+					<label class="label" for="requestAddedby"> Request Added By:</label><br/>
+					<select id ="request_added_by" >
 						<option value="Email" class="selectinput">Email</option>
-
+						<option value="Researcher" class="selectinput">Researcher</option>
+						<option value="Archivist" class="selectinput">Archivist</option>
 					</select><!--input type="text" id="request_collection" class="textinput"/-->
-
-
 				</div>
-				<h2>Requests:</h2>
+				<div id="requests">
+					<h2>Requests:</h2>
 				<div class="formcontents" id="formcontents">
-					<label>Add/Remove Requests</label><br/>
+					<h3>Add/Remove Requests</h3><br/>
 					<button id="buttonAdd-request">+</button>
 					<button id="buttonRemove-request" disabled style="opacity: 0.5;">-</button></br>
 					<div id="request_input" style="border-bottom: 1px solid; padding: 10px; display: none;">
-						<label class="label" for="collection">Collection:</label><br/><select id ="collection" >
+						<label class="label" for="collection">Collection:</label><br/>
+						<select id ="collection" style="width: 500px;" >
 							<option value="Lowell Thomas Papers" class="selectinput">Lowell Thomas Papers</option>
 							<option value="Lowell Thomas Capital Cities" class="selectinput">Lowell Thomas Capital Cities</option>
 							<option value="Emmy Award Winning Video Collection">Emmy Award Winning Video Collection</option>
@@ -272,7 +281,7 @@
 							<option value="Other">Other</option>
 
 						</select><!--input type="text" id="request_collection" class="textinput"/-->
-						</br><label class="label" for="boxno">Box Number:</label><br/><input type="text" id="request_boxno" class="textinput"/>
+						</br></br><label class="label" for="boxno">Box Number:</label><br/><input type="text" id="request_boxno" class="textinput"/>
 						<label class="label" for="itemno">Item Numbers:</label><br/><input type="text" id="request_itemno" class="textinput"/>
 						<label class="label" for="dpi">Requested Resolution (dpi):</label><br/>
 						<input type="checkbox" name="dpi" value="72" class="checkbox">72</input>
@@ -292,9 +301,11 @@
 
 					</div><!-- request_input template -->
 				</div> <!-- formcontents -->
-				<label class="label">Comments (optional):</label><br/><textarea id="comments" rows="4" cols="50" style="display: block; margin-bottom: 10px;"></textarea>
+				</div>
+				
+				<label class="label">Optional Message (This will be part of the email sent to the researcher):</label><br/><textarea id="comments" rows="8" cols="75" style="display: block; margin-bottom: 10px;"></textarea>
 
-				<button class="btn" type="button" id="initiate">Initiate agreement</button>
+				<button class="btn" type="button" id="initiate">Initiate Use Agreement &amp; Send email</button>
 			</div> <!-- researcherInfo -->
 		</div> <!-- content -->
 	</div>
@@ -308,5 +319,6 @@
 			<a href="http://www.marist.edu/disclaimers.html" target="_blank" >Disclaimers</a> | <a href="http://www.marist.edu/privacy.html" target="_blank" >Privacy Policy</a> | <a href="http://library.marist.edu/ack.html?iframe=true&width=50%&height=62%" rel="prettyphoto[iframes]">Acknowledgements</a>
 		</p>
 	</div>
+	
 </body>
 </html>

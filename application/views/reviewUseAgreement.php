@@ -6,6 +6,37 @@
             border: 1px solid black;
             background-color: transparent;
         }
+        
+        h4{
+			margin-bottom: 5px;
+		}
+		
+		.accordion {
+ 			font-family: Arial;
+  			color: #000000;
+  			font-size: 15px;
+  			background: #b31b1b;
+  			padding: 10px 20px 10px 11px;
+  			text-decoration: none;
+		}
+
+		.accordion:hover {
+  			opacity: 0.5;
+  			text-decoration: none;
+  			cursor: pointer;
+		}
+		
+		.conversations{
+    		line-height:24pt;
+    		border: solid 1px #e0e0e0;
+    		margin-bottom: 5px;
+    		padding: 3px;
+		}
+
+		.conversations:nth-child(odd) {
+    	background: #e0e0e0;
+		}
+        
     </style>
     <title>Use Agreement Admin Form</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -56,7 +87,7 @@
     ?>
     <script type="text/javascript">
         $(document).ready(function(){
-
+			$('#1-contents, #3-contents, #formcontents').hide();
             var inst = 0;
             $('textarea#instructions').keydown(function(e){
                 if((e.which == 9) && ($(this).val().length == 0)){
@@ -229,18 +260,13 @@
                     }).done(function (userId) {
                         if (userId > 0) {
                             $('#requestStatus').show().css('background', '#66cc00').append("#" + userId + ":User Agreement Form has been disapproved and an email sent to " + userName);
-
-                            // alert("Disapproved:"  + userId);
-
                         } else {
                             $('#requestStatus').show().css('background', '#b31b1b').append("Something wrong with the form. Contact Administrator");
-
                         }
+                        $("html, body").animate({ scrollTop: 0}, 600);
                     });
                 }
                 });
-
-
 
             $('button#approve').click(function(){
                 var date = $('input#datepicker').val();
@@ -314,6 +340,7 @@
                         $('#requestStatus').show().css('background','#b31b1b').append("Something wrong with the form. Contact Administrator");
 
                     }
+                    $("html, body").animate({ scrollTop: 0}, 600);
                 });
 
             });//end of submit function
@@ -356,14 +383,10 @@
                 <div id="requestStatus" style="width: auto; height:30px; margin-bottom: 7px; margin-top: -15px; color:#000000; font-size: 12pt; text-align: center; padding-top: 10px; display: none;">
                 </div>
                 <div id="statusInfo">
-
                     <h3 align="right">Status: <?php echo $formStatus ?></h3>
-
-                </div>
-
-
-                <h2>Researcher's Information:</h2>
-                <div class="formcontents">
+                </div><br/><br/>
+             <h4 id="2" class="accordion">Section 1: Researcher's Information:</h4>
+               <div class="formcontents" id="2-contents">
                     <label class="label">Date:</label><br/><input type="text" id="datepicker" class="textinput" value = "<?php echo $date; ?>" style="width: 100px;"/>
                     <label class="label">Researcher's Name:</label><br/><input type="text" id="name" class="textinput" value = "<?php echo $userName; ?>"/>
                     <label class="label">Address:</label><br/><input type="text" id="address" class="textinput" value = "<?php echo $address; ?>" />
@@ -379,9 +402,12 @@
                         <option value="Researcher" class="selectinput">Researcher</option>
                         <option value="Email" class="selectinput">Email</option>
                       </select></br></br>
-                    <h2>Conditions of use</h2>
-                    <div class="formcontents" style="height: 100px; border:1px solid black; overflow-y: auto; padding: 10px;">
-                        <ul>
+                 </div>     
+                      
+                   <h4 id="3" class="accordion">Section 2: Conditions of use</h2>
+                   <div id="3-contents" class="formcontents">
+					<div style="height: 100px; border-bottom: 1px solid #e0e0e0; border-width: 75%; overflow-y: auto; padding: 10px; margin-bottom: 1px;">
+				    <ul>
                             <li>(1) To use the image(s), audio, or video only for the purpose or project stated above. Later and different use constitutes reuse and is
                                 prohibited. Subsequent requests for permission to reuse image(s), audio, or video must be made in writing. A reuse fee may apply</li><br/>
                             <li>(2) To give proper credit for the image(s), audio, or video. Unless otherwise stated on the photographic copy, the credit line should
@@ -397,9 +423,13 @@
                     <label>Applicant's Initials</label><input type="text" id="name" class="textinput" value = "<?php echo $userInitials ?>"/>
                 </div>
 
-                <h2  id="requests">Requests:</h2>
-                <div class="formcontents" id="formcontents">
-                    <label>Add/Remove Requests</label><br/>
+                <h4 id ="requests" class="accordion">Section 3: Requests:</h4>
+	                <div class="formcontents" id="formcontents">
+                   		 <div id='attachment'>
+                    		<h3 style="color:#b31b1b">Attached files:</h3></br>
+                    		<label class="label"> <?php echo $fileAttachment;?></label></br><!--label ><!--?php echo $fileAttachment; ?></label-->
+		                </div></br>
+                    <h3>Add/Remove Requests (Optional)</h3><br/>
                     <button id="buttonAdd-request" >+</button>
                     <button id="buttonRemove-request" disabled style="opacity: 0.5;">-</button></br>
                     <div id="request_input" style="border-bottom: 1px solid; padding: 10px; display: none;">
@@ -423,39 +453,35 @@
                         <label class="label" for="desc">Description of Use (Provided by the researcher):</label><br/><textarea id="request_desc" rows="4" cols="4"/></textarea>
                     </div><!-- request_input template -->
                 </div> <!-- formcontents -->
-                <div id='attachment'>
-                    <h3 style="color:green"> Attachments: </h3></br>
-                    <label class="label"> <?php echo $fileAttachment;?></label></br><!--label ><!--?php echo $fileAttachment; ?></label-->
+                <?php
+				if(sizeof($chatList)>0){
+					?>
+				<h4 align="left" id="1" class="accordion">Conversations</h4>
+				<?php  }?>
+				<div id="1-contents">
 
-                </div>
-                </br>
-                <?php if(sizeof($chatList)>0){
-                ?>
-                <h3 align="left">Comments:</h3></br>
+				<!--table style="border: none; margin-top: -10px; margin-bottom: 10px; padding-left: 15px;"-->
+					<?php foreach ($chatList as $chat){ ?>
+						<!--tr>
+							<?php echo "<td ><strong>".$chat['commentType'] . "</strong></p></td>";?>
+							<?php echo "<td ><strong>DATE</strong></p></td>";?>
+							<?php echo "<td ><strong>TIME</strong></p></td>";?>
 
-                <table>
-
-                    <tbody>
-                    <?php foreach ($chatList as $chat){ ?>
-                        <tr>
-                            <?php echo "<td ><strong>".$chat['commentType'] . "</strong></p></td>";?>
-                            <?php echo "<td ><strong>DATE</strong></p></td>";?>
-                            <?php echo "<td ><strong>TIME</strong></p></td>";?>
-
-                        </tr>
-                        <tr>
-                            <?php echo "<td>".$chat['comment'] . "</td>";?>
-                            <?php echo "<td aria-autocomplete='inline'>".$chat['comment_add_date'] . "</td>";?>
-                            <?php echo "<td>".$chat['comment_add_time'] . "</td>";?>
-                        </tr>
-                    <?php } ?>
-                    </tbody>
-
-
-                </table>
-                <?php  }?>
+						</tr>
+						<tr>
+							<?php echo "<td aria-autocomplete='inline'>".$chat['comment'] . "</td>";?>
+							<?php echo "<td aria-autocomplete='inline'>".$chat['comment_add_date'] . "</td>";?>
+							<?php echo "<td>".$chat['comment_add_time'] . "</td>";?>
+						</tr-->
+						<div class="conversations">
+							<strong><?php echo "<td>".$chat['commentType']." - ". $chat['comment_add_date']." ". $chat['comment_add_time'] .": </td>";?></strong><br/>
+							<?php echo "<td aria-autocomplete='inline'>".$chat['comment'] . "</td>";?>
+						</div>
+						
+					<?php } ?>
+              </div>
                 <div id ="instructions">
-                    </br><label class="label">Instructions For Researcher:</label><br/><textarea id="instructions" rows="4" cols="50" style="display: block; margin-bottom: 10px;" ></textarea>
+                    </br><label class="label">Optional Message (This will be part of the email sent to the researcher):</label><br/><textarea id="instructions" rows="8" cols="75" style="display: block; margin-bottom: 10px;" ></textarea>
                 </div>
 
                 <button class="btn" type="submit" id="approve">Approve</button>
@@ -474,6 +500,21 @@
             <a href="http://www.marist.edu/disclaimers.html" target="_blank" >Disclaimers</a> | <a href="http://www.marist.edu/privacy.html" target="_blank" >Privacy Policy</a> | <a href="http://library.marist.edu/ack.html?iframe=true&width=50%&height=62%" rel="prettyphoto[iframes]">Acknowledgements</a>
         </p>
     </div>
+    <script>
+		$('h4').click(function(){
+			var div =$(this).attr('id');
+			if(div == '1'){
+				$('div#1-contents').toggle();
+			}else if (div == '2'){
+				$('div#2-contents').toggle();
+			}else if (div == '3'){
+				$('div#3-contents').toggle();
+			}else if (div == 'requests'){
+				$('div#formcontents').toggle();
+			}				
+			
+		});
+	</script>
 </body>
 
 </html>

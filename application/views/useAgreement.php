@@ -5,7 +5,38 @@
 		table, tr {
 			border: 1px solid red;
 		}
+		
+		h4{
+			margin-bottom: 5px;
+		}
+		
+		.accordion {
+ 			font-family: Arial;
+  			color: #000000;
+  			font-size: 15px;
+  			background: #b31b1b;
+  			padding: 10px 20px 10px 11px;
+  			text-decoration: none;
+		}
+
+		.accordion:hover {
+  			opacity: 0.5;
+  			text-decoration: none;
+  			cursor: pointer;
+		}
+		
+		.conversations{
+    		line-height:24pt;
+    		border: solid 1px #e0e0e0;
+    		margin-bottom: 5px;
+    		padding: 3px;
+		}
+
+		.conversations:nth-child(odd) {
+    	background: #e0e0e0;
+		}
 	</style>
+	
 	<title>Use Agreement Form</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<link rel="shortcut icon" href="http://library.marist.edu/archives/icon/box.png" />
@@ -13,12 +44,13 @@
 	<link rel="stylesheet" type="text/css" href="http://library.marist.edu/css/library_child.css" />
 	<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 	<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+	<script type="text/javascript" src="js/cloneRequests.js"></script>
 	<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 	<link rel="stylesheet" type="text/css" href="http://library.marist.edu/archives/mainpage/mainStyles/style.css" />
 	<link rel="stylesheet" type="text/css" href="http://library.marist.edu/archives/mainpage/mainStyles/main.css" />
 	<link rel="stylesheet" type="text/css" href="styles/useagreement.css" />
 	<script type="text/javascript" src="http://library.marist.edu/archives/mainpage/scripts/archivesChildMenu.js"></script>
-	<script type="text/javascript" src="js/cloneRequests.js"></script>
+	
 	<?php
 	$userId= $_GET['userId'];
 	//researcher info
@@ -35,7 +67,6 @@
 	$userInitials = $researcher[9];
 	$termsAndCond = $researcher[10];
 	$requestAddedBy = $researcher[11];
-
 
 	if($status == 0){
 		$formStatus = "Initiated";
@@ -54,6 +85,7 @@
 
 	<script type="text/javascript">
 		$(document).ready(function(){
+			$('#2-contents, #3-contents, #formcontents').hide();
 			var text_max = 140;
 			$('#textarea_feedback').html(text_max + ' characters remaining');
 
@@ -63,17 +95,14 @@
 
 				$('#textarea_feedback').html(text_remaining + ' characters remaining');
 			});
-
-
+			
 			<?php  if($status == 2 || $status ==3 ) {?>
 			document.getElementById("submit").disabled = true;
 			document.getElementById("save").disabled = true;
-
+			
 			<?php } ?>
 
-
 			<?php if ($status == 3) {?>
-
 			//document.getElementById("formcontents").style.display = "none";
 			document.getElementById("save").style.display = "none";
 			document.getElementById("submit").style.display = "none";
@@ -270,9 +299,7 @@
 				}).done(function (userId) {
 					if (userId > 0) {
 						$('#requestStatus').show().css('background','#66cc00').append("#" + userId + ": Form saved successfully. Please submit for approval");
-
 						//	alert("Form saved successfully for UserId:"  + userId);
-
 					}else
 					{
 						$('#requestStatus').show().css('background','#b31b1b').append("Something wrong with the form. Contact Administrator");
@@ -368,14 +395,12 @@
 					instructions:instructions
 				}).done(function (userId) {
 					if (userId > 0) {
-
 						$('#requestStatus').show().css('background','#66cc00').append("#" + userId + ": Form submitted successfully. We'll get back to you shortly");
-
 						//alert("Form Submitted successfully for UserId:" + userId);
 					} else {
 						$('#requestStatus').show().css('background','#b31b1b').append("Something wrong with the form. Contact Administrator");
-
 					}
+					$("html, body").animate({ scrollTop: 0}, 600);
 				});
 
 				var m_data = new FormData();
@@ -444,29 +469,25 @@
 			</p>
 
 			<div id="researcherInfo"><h1 class="page_head" style="float: none;">Use Agreement Form</h1>
-
+				
 				<div id="requestStatus" style="width: auto; height:30px; margin-bottom: 7px; margin-top: -15px; color:#000000; font-size: 12pt; text-align: center; padding-top: 10px; display: none;">
 				</div>
 				<div id="statusInfo">
 
 					<h3 align="right">Status: <?php echo $formStatus ?></h3>
 
-				</div></br>
+				</div></br></br>
 				<?php if ($status != 3) {?>
 				<?php
-
-
 				if(sizeof($chatList)>0){
 					?>
-					<h3 align="left">Comments:</h3>
-				<?php  }?></br>
-				<div>
+				<h4 align="left" id="1" class="accordion">Conversations</h4>
+				<?php  }?>
+				<div id="1-contents">
 
-				<table class="" aria-relevant="text"  >
-
-					<tbody>
+				<!--table style="border: none; margin-top: -10px; margin-bottom: 10px; padding-left: 15px;"-->
 					<?php foreach ($chatList as $chat){ ?>
-						<tr>
+						<!--tr>
 							<?php echo "<td ><strong>".$chat['commentType'] . "</strong></p></td>";?>
 							<?php echo "<td ><strong>DATE</strong></p></td>";?>
 							<?php echo "<td ><strong>TIME</strong></p></td>";?>
@@ -476,16 +497,17 @@
 							<?php echo "<td aria-autocomplete='inline'>".$chat['comment'] . "</td>";?>
 							<?php echo "<td aria-autocomplete='inline'>".$chat['comment_add_date'] . "</td>";?>
 							<?php echo "<td>".$chat['comment_add_time'] . "</td>";?>
-						</tr>
+						</tr-->
+						<div class="conversations">
+							<strong><?php echo "<td>".$chat['commentType']." - ". $chat['comment_add_date']." ". $chat['comment_add_time'] .": </td>";?></strong><br/>
+							<?php echo "<td aria-autocomplete='inline'>".$chat['comment'] . "</td>";?>
+						</div>
+						
 					<?php } ?>
-					</tbody>
-
-
-				</table>
               </div>
              <?php } ?>
-				<h2>Researcher's Information:</h2>
-				<div class="formcontents">
+				<h4 id="2" class="accordion">Section 1: Researcher's Information:</h4>
+				<div class="formcontents" id="2-contents">
 					<label class="label">Date:</label><br/><input type="text" id="datepicker" class="textinput" value = "<?php echo $date; ?>" style="width: 100px;"/>
 					<label class="label">Researcher's Name:</label><br/><input type="text" id="name" class="textinput" value = "<?php echo $userName; ?>"/>
 					<label class="label">Address:</label><br/><input type="text" id="address" class="textinput" value = "<?php echo $address; ?>" />
@@ -497,8 +519,9 @@
 					<!--label class="label">Comments (optional):</label><br/><textarea id="comments" rows="4" cols="50" style="display: block; margin-bottom: 10px;" --><!--?php echo $comments; ?--><!--/textarea-->
 				</div>
 
-				<h2>Conditions of use</h2>
-				<div class="formcontents" style="height: 100px; border:1px solid black; overflow-y: auto; padding: 10px;">
+				<h4 id="3" class="accordion">Section 2: Conditions of use</h2>
+				<div id="3-contents" class="formcontents">
+				<div style="height: 100px; border-bottom: 1px solid #e0e0e0; border-width: 75%; overflow-y: auto; padding: 10px; margin-bottom: 1px;">
 					<ul>
 						<li>(1) To use the image(s), audio, or video only for the purpose or project stated above. Later and different use constitutes reuse and is
 							prohibited. Subsequent requests for permission to reuse image(s), audio, or video must be made in writing. A reuse fee may apply</li><br/>
@@ -511,17 +534,27 @@
 					the Copyright Act, 17 U.S.C. ss101 et seq. The patron further agrees to indemnify and hold harmless the Marist College Archives & Special
 					Collections and its staff in connection with any disputes arising from the Copyright Act, over the reproduction of material at the request of the
 					patron.</p>
-				<input type="checkbox" id="accept" value="Accept"  name = "accept" class="checkbox">I accept and agree with the conditions of use.</input><br/>
-				<label>Applicant's Initials</label><input type="text" id="initials" value ="<?php echo $userInitials ?>" class="textinput"/>
-
-
-				<h2 id = "requests">Requests:</h2>
+				<input type="checkbox" id="accept" value="Accept"  name = "accept" class="checkbox">I accept and agree with the conditions of use.</input><br/><br/>
+				<label>Applicant's Initials:</label><input type="text" id="initials" value ="<?php echo $userInitials ?>" class="textinput"/>
+				</div>	
+				
+				<h4 id ="requests" class="accordion">Section 3: Requests:</h2>
 				<div class="formcontents" id="formcontents">
-					<label>Add/Remove Requests</label><br/>
+					<?php if($attachment !=null){?>
+					<div id='attachment'>
+						<h3 style="color:#b31b1b">Attached files:</h3></br>
+						<label class="label"> <?php echo $attachment;?></label></br><!--label ><!--?php echo $fileAttachment; ?></label-->
+					</div>
+					<?php } ?>
+				</br>
+				<h3>Attachements (if any):</h3></br>
+				<input class='btn' type="file" name="uploaded_file" id="uploaded_file"><br/><br/>
+				<h3>Add/Remove Requests (Optional):</h3><br/>
 					<button id="buttonAdd-request" >+</button>
-					<button id="buttonRemove-request" disabled style="opacity: 0.5;">-</button></br>
+					<button id="buttonRemove-request" disabled style="opacity: 0.5;">-</button>
 					<div id="request_input" style="border-bottom: 1px solid; padding: 10px; display: none;">
-						<label class="label" for="collection">Collection:</label><br/><select id ="collection"  >
+						<label class="label" for="collection">Collection:</label><br/>
+						<select id ="collection" style="width: 500px;" >
 							<option value="Lowell Thomas Papers" class="selectinput">Lowell Thomas Papers</option>
 							<option value="Lowell Thomas Capital Cities" class="selectinput">Lowell Thomas Capital Cities</option>
 							<option value="Emmy Award Winning Video Collection">Emmy Award Winning Video Collection</option>
@@ -579,8 +612,7 @@
 							<option value="Geraldine Geller Collection">Geraldine Geller Collection</option>
 							<option value="Blaise Pascal Collection">Blaise Pascal Collection</option>
 							<option value="Other">Other</option>
-
-						</select><br>
+						</select></br></br>
 						<label class="label" for="boxno">Box Number:</label><br/><input type="text" id="request_boxno" class="textinput" <!--value="--><--?php /*echo $boxNumber */?> "/>
 						<label class="label" for="itemno">Item Numbers:</label><br/><input type="text" id="request_itemno" class="textinput" <!--value="--><--?php /*echo $itemNumber */?> "/>
 						<label class="label" for="dpi">Requested Resolution (dpi):</label><br/>
@@ -599,22 +631,14 @@
 						<input type="checkbox" name="avformat" value="hd" class="checkbox">HD</input><br/><br/>
 						<label class="label" for="desc">Description of Use (Provided by the researcher):</label><br/><textarea id="request_desc" rows="4" cols="4"/></textarea>
 					</div><!-- request_input template -->
-
 				</div> <!-- formcontents -->
-				<?php if($attachment !=null){?>
-				<div id='attachment'>
-					<h3 style="color:green"> Attachments: </h3></br>
-					<label class="label"> <?php echo $attachment;?></label></br><!--label ><!--?php echo $fileAttachment; ?></label-->
-
-				</div>
-				<?php } ?>
-				</br>
+				
 				<div id="messages"  >
 					<label class="label" >Message (If any) : </label><br/>
 					<div id="textarea_feedback"></div><textarea maxlength="140"  id="message" rows="5" cols="2000" style="display: inline-block;  margin-bottom: 10px; " ><?php echo null ; ?></textarea>
 				</div >
 
-				<input class='btn' type="file" name="uploaded_file" id="uploaded_file">
+				
 				<button class="btn" type="submit" id="submit">Submit</button>
 				<button class="btn" type="button" id="save">Save</button>
 
@@ -633,7 +657,19 @@
 		</p>
 	</div>
 	<script>
-
+		$('h4').click(function(){
+			var div =$(this).attr('id');
+			if(div == '1'){
+				$('div#1-contents').toggle();
+			}else if (div == '2'){
+				$('div#2-contents').toggle();
+			}else if (div == '3'){
+				$('div#3-contents').toggle();
+			}else if (div == 'requests'){
+				$('div#formcontents').toggle();
+			}				
+			
+		});
 	</script>
 </body>
 </html>
