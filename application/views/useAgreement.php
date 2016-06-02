@@ -5,36 +5,7 @@
 		table, tr {
 			border: 1px solid red;
 		}
-		
-		h4{
-			margin-bottom: 5px;
-		}
-		
-		.accordion {
- 			font-family: Arial;
-  			color: #000000;
-  			font-size: 15px;
-  			background: #b31b1b;
-  			padding: 10px 20px 10px 11px;
-  			text-decoration: none;
-		}
-
-		.accordion:hover {
-  			opacity: 0.5;
-  			text-decoration: none;
-  			cursor: pointer;
-		}
-		
-		.conversations{
-    		line-height:24pt;
-    		border: solid 1px #e0e0e0;
-    		margin-bottom: 5px;
-    		padding: 3px;
-		}
-
-		.conversations:nth-child(odd) {
-    	background: #e0e0e0;
-		}
+	
 	</style>
 	
 	<title>Use Agreement Form</title>
@@ -71,7 +42,7 @@
 	if($status == 0){
 		$formStatus = "Initiated";
 	}elseif($status == 1){
-		$formStatus = "Disapproved";
+		$formStatus = "Rejected";
 	}
 	elseif($status == 2){
 		$formStatus = "Submitted";
@@ -85,6 +56,8 @@
 
 	<script type="text/javascript">
 		$(document).ready(function(){
+			var inputemail = 1;
+			var inputaccept = 0;
 			$('#2-contents, #3-contents, #formcontents').hide();
 			var text_max = 140;
 			$('#textarea_feedback').html(text_max + ' characters remaining');
@@ -117,13 +90,19 @@
 			$('input#name').keydown(function(e){
 				if((e.which == 9) && ($(this).val().length == 0)){
 					$(this).css('border','1px solid red');
-					inputname = 0;
 				}else{
 					$(this).css('border','1px solid #ccc');
-					inputname = 1;
 				}
 			});
-
+			
+			$('input#initials').keydown(function(e){
+				if((e.which == 9) && ($(this).val().length == 0)){
+					$(this).css('border','1px solid red');
+				}else{
+					$(this).css('border','1px solid #ccc');
+				}
+			});
+						
 			$('input#email').keydown(function(e){
 				var filter = /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
 				if((e.which == 9) && ($(this).val().length == 0)){
@@ -137,6 +116,17 @@
 					$(this).css('border','1px solid red');
 					inputemail = 0;
 				}
+			});
+			
+			$('input#accept[type="checkbox"]').click(function(){
+				 if($(this).prop("checked") == true){
+                $('#accept-cond').css({'color':'green', 'font-weight':'bold'});
+                inputaccept = 1
+            }
+            else if($(this).prop("checked") == false){
+                $('#accept-cond').css({'color':'#b31b1b', 'font-weight':'bold'});
+                inputaccept = 0;
+            }
 			});
 			/* validation ends */
 			$('#datepicker').datepicker();
@@ -307,8 +297,26 @@
 					}
 				});
 			});
+			
 			$('button#submit').click(function(){
-
+				//validations
+				if ($('input#name').val() == ""){
+						$('input#name').css('border','1px solid red');
+						$('div#2-contents').show();
+						$("html, body").animate({ scrollTop: 0}, 600);
+					}else if (inputemail == 0){
+						$('input#email').css('border','1px solid red');
+						$('div#2-contents').show();
+						$("html, body").animate({ scrollTop: 0}, 600);
+					}else if ($('input#initials').val() == "" ){
+						$('input#initials').css('border','1px solid red');
+						$('div#3-contents').show();
+					}else if ($(this).prop("checked") == false){
+						 $('#accept-cond').css({'color':'#b31b1b', 'font-weight':'bold'});
+						 $('div#3-contents').show();
+					}
+					else{
+				
 				<?php  if($status == 0 || $status == 1) {?>
 				var date = $('input#datepicker').val();
 				var userName = $('input#name').val();
@@ -432,10 +440,10 @@
 				<?php }else{ ?>
 				alert("you cannot edit the form..! as the form submitted already");
 				<?php } ?>
-			});//end of submit function
+				}	
+			}); //end of submit function
 			$('div#request_input').clone();
-		});
-		//});// end of document function
+		}); // end of document function
 	</script>
 </head>
 <body>
@@ -470,7 +478,7 @@
 
 			<div id="researcherInfo"><h1 class="page_head" style="float: none;">Use Agreement Form</h1>
 				
-				<div id="requestStatus" style="width: auto; height:30px; margin-bottom: 7px; margin-top: -15px; color:#000000; font-size: 12pt; text-align: center; padding-top: 10px; display: none;">
+				<div id="requestStatus" style="width: auto; height:40px; margin-bottom: 7px; margin-top: -15px; color:#000000; font-size: 12pt; text-align: center; padding-top: 10px; display: none;">
 				</div>
 				<div id="statusInfo">
 
@@ -534,7 +542,8 @@
 					the Copyright Act, 17 U.S.C. ss101 et seq. The patron further agrees to indemnify and hold harmless the Marist College Archives & Special
 					Collections and its staff in connection with any disputes arising from the Copyright Act, over the reproduction of material at the request of the
 					patron.</p>
-				<input type="checkbox" id="accept" value="Accept"  name = "accept" class="checkbox">I accept and agree with the conditions of use.</input><br/><br/>
+					<input type="checkbox" id="accept" value="Accept"  name = "accept" class="checkbox"><span id="accept-cond" style="color: #b31b1b; font-weight: bold;">I accept and agree with the conditions of use.</span></input>	
+				<br/><br/>
 				<label>Applicant's Initials:</label><input type="text" id="initials" value ="<?php echo $userInitials ?>" class="textinput"/>
 				</div>	
 				

@@ -7,36 +7,6 @@
             background-color: transparent;
         }
         
-        h4{
-			margin-bottom: 5px;
-		}
-		
-		.accordion {
- 			font-family: Arial;
-  			color: #000000;
-  			font-size: 15px;
-  			background: #b31b1b;
-  			padding: 10px 20px 10px 11px;
-  			text-decoration: none;
-		}
-
-		.accordion:hover {
-  			opacity: 0.5;
-  			text-decoration: none;
-  			cursor: pointer;
-		}
-		
-		.conversations{
-    		line-height:24pt;
-    		border: solid 1px #e0e0e0;
-    		margin-bottom: 5px;
-    		padding: 3px;
-		}
-
-		.conversations:nth-child(odd) {
-    	background: #e0e0e0;
-		}
-        
     </style>
     <title>Use Agreement Admin Form</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -70,7 +40,6 @@
     $receiver = $researcher[12];
     $requestAddedBy = $researcher[13];
 
-
     if($status == 0){
         $formStatus = "Initiated";
     }elseif($status == 1){
@@ -87,6 +56,35 @@
     ?>
     <script type="text/javascript">
         $(document).ready(function(){
+        	  
+        	  var inputemail = 0;
+
+			/* Validation */
+				$('input#name').keydown(function(e){
+					if((e.which == 9) && ($(this).val().length == 0)){
+						$(this).css('border','1px solid red');
+					}else{
+						$(this).css('border','1px solid #ccc');
+					}
+				});
+
+				$('input#email').keydown(function(e){
+					var filter = /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+					if((e.which == 9) && ($(this).val().length == 0)){
+						$(this).css('border','1px solid red');
+						inputemail = 0;
+					}else if (filter.test($(this).val())){
+						$(this).css('border','1px solid #ccc');
+						inputemail = 1;
+					}
+					else{
+						$(this).css('border','1px solid red');
+						inputemail = 0;
+					}
+				});
+
+			/* validation ends */
+        	
 			$('#1-contents, #3-contents, #formcontents').hide();
             var inst = 0;
             $('textarea#instructions').keydown(function(e){
@@ -192,7 +190,12 @@
             <?php }?>
             //alert(requestsCnt);
             $('button#disapprove').click(function(){
-                if ($('textarea#instructions').val()== 0){
+            	if ($('input#name').val() == ""){
+						$('input#name').css('border','1px solid red');
+					}else if ($('input#email').val() == ""){
+						$('input#email').css('border','1px solid red');
+					}else{
+						 if ($('textarea#instructions').val()== 0){
                     $('textarea#instructions').css('border','1px solid red');
                 }else {
                     var date = $('input#datepicker').val();
@@ -266,10 +269,16 @@
                         $("html, body").animate({ scrollTop: 0}, 600);
                     });
                 }
+					}
                 });
 
             $('button#approve').click(function(){
-                var date = $('input#datepicker').val();
+            	if ($('input#name').val() == ""){
+						$('input#name').css('border','1px solid red');
+					}else if ($('input#email').val() == ""){
+						$('input#email').css('border','1px solid red');
+					}else{
+						  var date = $('input#datepicker').val();
                 var userName = $('input#name').val();
                 var address = $('input#address').val();
                 var citystate = $('input#citystate').val();
@@ -342,7 +351,8 @@
                     }
                     $("html, body").animate({ scrollTop: 0}, 600);
                 });
-
+						
+					}
             });//end of submit function
             $('div#request_input').clone();
 
@@ -380,7 +390,7 @@
                 > Forms > Reserve Forms
             </p>
             <div id="researcherInfo"><h1 class="page_head" style="float: none;">Use Agreement Admin Form</h1>
-                <div id="requestStatus" style="width: auto; height:30px; margin-bottom: 7px; margin-top: -15px; color:#000000; font-size: 12pt; text-align: center; padding-top: 10px; display: none;">
+                <div id="requestStatus" style="width: auto; height:40px; margin-bottom: 7px; margin-top: -15px; color:#000000; font-size: 12pt; text-align: center; padding-top: 10px; display: none;">
                 </div>
                 <div id="statusInfo">
                     <h3 align="right">Status: <?php echo $formStatus ?></h3>
@@ -419,8 +429,8 @@
                         the Copyright Act, 17 U.S.C. ss101 et seq. The patron further agrees to indemnify and hold harmless the Marist College Archives & Special
                         Collections and its staff in connection with any disputes arising from the Copyright Act, over the reproduction of material at the request of the
                         patron.</p>
-                    <input type="checkbox" value="Accept" id="accept" name = "accept" class="checkbox">I accept and agree with the conditions of use.</input></br></br>
-                    <label>Applicant's Initials</label><input type="text" id="name" class="textinput" value = "<?php echo $userInitials ?>"/>
+                    <input type="checkbox" value="Accept" id="accept" name = "accept" class="checkbox" disabled="disabled"><span id="accept-cond" style="color: green; font-weight: bold"> I accept and agree with the conditions of use.</span></input></br></br>
+                    <label>Applicant's Initials</label><input type="text" id="name" class="textinput" value = "<?php echo $userInitials ?>" readonly/>
                 </div>
 
                 <h4 id ="requests" class="accordion">Section 3: Requests:</h4>
@@ -458,7 +468,7 @@
 					?>
 				<h4 align="left" id="1" class="accordion">Conversations</h4>
 				<?php  }?>
-				<div id="1-contents">
+				<div id="1-contents" style="height: 235px; overflow: auto;">
 
 				<!--table style="border: none; margin-top: -10px; margin-bottom: 10px; padding-left: 15px;"-->
 					<?php foreach ($chatList as $chat){ ?>
@@ -485,7 +495,7 @@
                 </div>
 
                 <button class="btn" type="submit" id="approve">Approve</button>
-                <button class="btn" type="button" id="disapprove">Disapprove</button></br>
+                <button class="btn" type="button" id="disapprove">Return for review</button></br>
 
             </div> <!-- researcherInfo -->
         </div> <!-- content -->

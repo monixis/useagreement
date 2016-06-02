@@ -93,3 +93,34 @@ h2 {
 	margin-right: 5px;
 }
 
+h4{
+	margin-bottom: 5px;
+}
+		
+.accordion {
+	font-family: Arial;
+	color: #000000;
+	font-size: 15px;
+	background: #b31b1b;
+	padding: 10px 20px 10px 11px;
+	text-decoration: none;
+}
+
+.accordion:hover {
+	opacity: 0.5;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.conversations{
+	line-height:24pt;
+	border: solid 1px #e0e0e0;
+	margin-bottom: 5px;
+	padding: 3px;
+}
+
+.conversations:nth-child(odd) {
+   	background: #e0e0e0;
+}
+		
+

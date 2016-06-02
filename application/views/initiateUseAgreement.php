@@ -22,17 +22,14 @@
 				$('div#request_input').clone();
 				$('div#requests').hide();
 
-				var inputname = 0;
 				var inputemail = 0;
 
 			/* Validation */
 				$('input#name').keydown(function(e){
 					if((e.which == 9) && ($(this).val().length == 0)){
 						$(this).css('border','1px solid red');
-						inputname = 0;
 					}else{
 						$(this).css('border','1px solid #ccc');
-						inputname = 1;
 					}
 				});
 
@@ -61,7 +58,7 @@
 				});
 				
 				$('button#initiate').click(function(){
-					if (inputname == 0){
+					if ($('input#name').val() == ""){
 						$('input#name').css('border','1px solid red');
 					}else if (inputemail == 0){
 						$('input#email').css('border','1px solid red');
@@ -189,7 +186,7 @@
 			</p>
 			<div id="researcherInfo"><h1 class="page_head" style="float: none;">User Agreement Initiation Form</h1>
 
-				<div id="requestStatus" style="width: auto; height:30px; margin-bottom: 7px; margin-top: -15px; color:#000000; font-size: 12pt; text-align: center; padding-top: 10px; display: none;">
+				<div id="requestStatus" style="width: auto; height:40px; margin-bottom: 7px; margin-top: -15px; color:#000000; font-size: 12pt; text-align: center; padding-top: 10px; display: none;">
 
 				</div>
 
