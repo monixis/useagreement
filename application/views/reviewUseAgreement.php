@@ -6,7 +6,7 @@
             border: 1px solid black;
             background-color: transparent;
         }
-        
+
     </style>
     <title>Use Agreement Admin Form</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -44,7 +44,7 @@
         $formStatus = "Initiated";
     }elseif($status == 1){
 
-        $formStatus = "Disapproved";
+        $formStatus = "Rejected";
     }
     elseif($status == 2){
         $formStatus = "Submitted";
@@ -56,47 +56,17 @@
     ?>
     <script type="text/javascript">
         $(document).ready(function(){
-        	  
-        	  var inputemail = 0;
 
-			/* Validation */
-				$('input#name').keydown(function(e){
-					if((e.which == 9) && ($(this).val().length == 0)){
-						$(this).css('border','1px solid red');
-					}else{
-						$(this).css('border','1px solid #ccc');
-					}
-				});
+            var inputemail = 0;
 
-				$('input#email').keydown(function(e){
-					var filter = /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
-					if((e.which == 9) && ($(this).val().length == 0)){
-						$(this).css('border','1px solid red');
-						inputemail = 0;
-					}else if (filter.test($(this).val())){
-						$(this).css('border','1px solid #ccc');
-						inputemail = 1;
-					}
-					else{
-						$(this).css('border','1px solid red');
-						inputemail = 0;
-					}
-				});
 
-			/* validation ends */
-        	
-			$('#1-contents, #3-contents, #formcontents').hide();
+
+            /* validation ends */
+
+            $('#1-contents, #3-contents, #formcontents').hide();
             var inst = 0;
-            $('textarea#instructions').keydown(function(e){
-                if((e.which == 9) && ($(this).val().length == 0)){
-                    $(this).css('border','1px solid red');
-                    inst = 0;
-                }else{
-                    $(this).css('border','1px solid #ccc');
-                    inst = 1;
-                }
-            });
-         <!--?php if ($requestAddedBy == "Email") {?-->
+
+            <!--?php if ($requestAddedBy == "Email") {?-->
 
             //document.getElementById("formcontents").style.display = "none";
             //document.getElementById("approve").style.display = "none";
@@ -122,6 +92,11 @@
             var tNc = '<?php echo $termsAndConditions?>';
             if(tNc =="true"){
                 $('#accept').prop('checked',true)    ;
+                $('#accept-cond').css({'color':'green', 'font-weight':'bold'});
+
+            }else{
+                $('#accept-cond').css({'color':'#b31b1b', 'font-weight':'bold'});
+
             }
             requestsCnt = 0;
             <?php if($sizeofRequests>0){ ?>
@@ -151,7 +126,7 @@
             $(requestIds[2]).val('<?php echo $request[3]?>');
             $(requestIds[14]).val('<?php echo $request[4]?>');
 
-        <?php foreach($request[5] as $dpi) {?>
+            <?php foreach($request[5] as $dpi) {?>
 
             if("<?php echo $dpi ?>" == "72"){
                 $(requestIds[3]).attr('checked',true);
@@ -190,14 +165,98 @@
             <?php }?>
             //alert(requestsCnt);
             $('button#disapprove').click(function(){
-            	if ($('input#name').val() == ""){
-						$('input#name').css('border','1px solid red');
-					}else if ($('input#email').val() == ""){
-						$('input#email').css('border','1px solid red');
-					}else{
-						 if ($('textarea#instructions').val()== 0){
-                    $('textarea#instructions').css('border','1px solid red');
-                }else {
+                if ($('input#name').val() == ""){
+                    $('input#name').css('border','1px solid red');
+                }else if ($('input#email').val() == ""){
+                    $('input#email').css('border','1px solid red');
+                }else{
+                    if ($('textarea#instructions').val()== 0){
+                        $('textarea#instructions').css('border','1px solid red');
+                    }else {
+                        var date = $('input#datepicker').val();
+                        var userName = $('input#name').val();
+                        var address = $('input#address').val();
+                        var citystate = $('input#citystate').val();
+                        var zipCode = $('input#zip').val();
+                        var emailId = $('input#email').val();
+                        var comments = $('textarea#comments').val();
+                        var phoneNumber = $('input#phoneNo').val();
+                        var requestCount = $("#formcontents > div").length - 1;
+                        var instructions = $('textarea#instructions').val();
+                        var requestList = [];
+
+                        //iterating multiple requests.
+                        for (var i = 1; i <= requestCount; i++) {
+                            var checked = [];
+                            var imageResolutions = "";
+                            var fileFormats = "";
+                            var avFormats = "";
+                            var str1 = "div#request_input";
+                            var str2 = str1.concat(i);
+                            var request = [];
+                            var reqCollection = $(str2.concat(" input#request_collection")).val();
+                            var boxNumber = $(str2.concat(" input#request_boxno")).val();
+                            var itemNumber = $(str2.concat(" input#request_itemno")).val();
+                            $.each($(str2.concat(" input:checked[name='dpi']")), function () {
+                                imageResolutions = imageResolutions.concat($(this).val());
+                                imageResolutions = imageResolutions.concat(":");
+                            });
+                            imageResolutions = imageResolutions.slice(0, -1);
+                            $.each($(str2.concat(" input:checked[name= 'format']")), function () {
+                                checked.push($(this).val());
+                                fileFormats = fileFormats.concat($(this).val());
+                                fileFormats = fileFormats.concat(":");
+                            });
+                            fileFormats = fileFormats.slice(0, -1);
+
+                            $.each($(str2.concat(" input:checked[name= 'avformat']")), function () {
+                                checked.push($(this).val());
+                                avFormats = avFormats.concat($(this).val());
+                                avFormats = avFormats.concat(":");
+                            });
+                            avFormats = avFormats.slice(0, -1);
+                            request.push(reqCollection);
+                            request.push(boxNumber);
+                            request.push(itemNumber);
+                            request.push(imageResolutions);
+                            request.push(fileFormats);
+                            request.push(avFormats);
+                            requestList.push(request);
+                        }
+                        $.post("<?php echo base_url("?c=usragr&m=disapproveRequest&userId=" . $userId);?>", {
+                            date: date,
+                            userName: userName,
+                            address: address,
+                            zipCode: zipCode,
+                            citystate: citystate,
+                            emailId: emailId,
+                            comments: comments,
+                            phoneNumber: phoneNumber,
+                            requestCount: requestCount,
+                            requestList: requestList,
+                            instructions: instructions
+                        }).done(function (userId) {
+                            if (userId > 0) {
+                                $('#requestStatus').show().css('background', '#66cc00').append("#" + userId + ":User Agreement Form has been disapproved and an email sent to " + userName);
+                                $('#stat').show().css("font-weight","Bold").append("Status: Rejected");
+                                $('#statusInfo').html().replace(/<br\s?\/?>/,'');
+                                $('#statusInfo').hide();
+                            } else {
+                                $('#requestStatus').show().css('background', '#b31b1b').append("Something wrong with the form. Contact Administrator");
+
+                            }
+                            $("html, body").animate({ scrollTop: 0}, 600);
+                        });
+                    }
+                }
+            });
+
+            $('button#approve').click(function(){
+                if ($('input#name').val() == ""){
+                    $('input#name').css('border','1px solid red');
+                }else if ($('input#email').val() == ""){
+                    $('input#email').css('border','1px solid red');
+                }else{
                     var date = $('input#datepicker').val();
                     var userName = $('input#name').val();
                     var address = $('input#address').val();
@@ -206,10 +265,9 @@
                     var emailId = $('input#email').val();
                     var comments = $('textarea#comments').val();
                     var phoneNumber = $('input#phoneNo').val();
-                    var requestCount = $("#formcontents > div").length - 1;
-                    var instructions = $('textarea#instructions').val();
+                    var instructions =  $('textarea#instructions').val();
+                    var requestCount = $("#formcontents > div").length - 1
                     var requestList = [];
-
                     //iterating multiple requests.
                     for (var i = 1; i <= requestCount; i++) {
                         var checked = [];
@@ -248,7 +306,7 @@
                         request.push(avFormats);
                         requestList.push(request);
                     }
-                    $.post("<?php echo base_url("?c=usragr&m=disapproveRequest&userId=" . $userId);?>", {
+                    $.post("<?php echo base_url("?c=usragr&m=approveRequest&userId=" . $userId);?>", {
                         date: date,
                         userName: userName,
                         address: address,
@@ -259,100 +317,24 @@
                         phoneNumber: phoneNumber,
                         requestCount: requestCount,
                         requestList: requestList,
-                        instructions: instructions
+                        instructions:instructions
                     }).done(function (userId) {
                         if (userId > 0) {
-                            $('#requestStatus').show().css('background', '#66cc00').append("#" + userId + ":User Agreement Form has been disapproved and an email sent to " + userName);
+
+                            $('#requestStatus').show().css('background','#66cc00').append("#" + userId + ": User Agreement Form has been approved and confirmation mail sent to "+ userName);
+                            $('#stat').show().append("Status: Approved");
+                            var htmlcleaned = $('#statusInfo h3').html().replace(/<br\s?\/?>/,'');
+                            $('#statusInfo h3').html(htmlcleaned);
+                            $('#statusInfo').hide();
+
                         } else {
-                            $('#requestStatus').show().css('background', '#b31b1b').append("Something wrong with the form. Contact Administrator");
+                            $('#requestStatus').show().css('background','#b31b1b').append("Something wrong with the form. Contact Administrator");
+
                         }
                         $("html, body").animate({ scrollTop: 0}, 600);
                     });
+
                 }
-					}
-                });
-
-            $('button#approve').click(function(){
-            	if ($('input#name').val() == ""){
-						$('input#name').css('border','1px solid red');
-					}else if ($('input#email').val() == ""){
-						$('input#email').css('border','1px solid red');
-					}else{
-						  var date = $('input#datepicker').val();
-                var userName = $('input#name').val();
-                var address = $('input#address').val();
-                var citystate = $('input#citystate').val();
-                var zipCode = $('input#zip').val();
-                var emailId = $('input#email').val();
-                var comments = $('textarea#comments').val();
-                var phoneNumber = $('input#phoneNo').val();
-                var instructions =  $('textarea#instructions').val();
-                var requestCount = $("#formcontents > div").length - 1
-                var requestList = [];
-                //iterating multiple requests.
-                for (var i = 1; i <= requestCount; i++) {
-                    var checked = [];
-                    var imageResolutions = "";
-                    var fileFormats = "";
-                    var avFormats = "";
-                    var str1 = "div#request_input";
-                    var str2 = str1.concat(i);
-                    var request = [];
-                    var reqCollection = $(str2.concat(" input#request_collection")).val();
-                    var boxNumber = $(str2.concat(" input#request_boxno")).val();
-                    var itemNumber = $(str2.concat(" input#request_itemno")).val();
-                    $.each($(str2.concat(" input:checked[name='dpi']")), function () {
-                        imageResolutions = imageResolutions.concat($(this).val());
-                        imageResolutions = imageResolutions.concat(":");
-                    });
-                    imageResolutions = imageResolutions.slice(0, -1);
-                    $.each($(str2.concat(" input:checked[name= 'format']")), function () {
-                        checked.push($(this).val());
-                        fileFormats = fileFormats.concat($(this).val());
-                        fileFormats = fileFormats.concat(":");
-                    });
-                    fileFormats = fileFormats.slice(0, -1);
-
-                    $.each($(str2.concat(" input:checked[name= 'avformat']")), function () {
-                        checked.push($(this).val());
-                        avFormats = avFormats.concat($(this).val());
-                        avFormats = avFormats.concat(":");
-                    });
-                    avFormats = avFormats.slice(0, -1);
-                    request.push(reqCollection);
-                    request.push(boxNumber);
-                    request.push(itemNumber);
-                    request.push(imageResolutions);
-                    request.push(fileFormats);
-                    request.push(avFormats);
-                    requestList.push(request);
-                }
-                $.post("<?php echo base_url("?c=usragr&m=approveRequest&userId=" . $userId);?>", {
-                    date: date,
-                    userName: userName,
-                    address: address,
-                    zipCode: zipCode,
-                    citystate: citystate,
-                    emailId: emailId,
-                    comments: comments,
-                    phoneNumber: phoneNumber,
-                    requestCount: requestCount,
-                    requestList: requestList,
-                    instructions:instructions
-                }).done(function (userId) {
-                    if (userId > 0) {
-
-                        $('#requestStatus').show().css('background','#66cc00').append("#" + userId + ": User Agreement Form has been approved and confirmation mail sent to "+ userName);
-
-
-                    } else {
-                        $('#requestStatus').show().css('background','#b31b1b').append("Something wrong with the form. Contact Administrator");
-
-                    }
-                    $("html, body").animate({ scrollTop: 0}, 600);
-                });
-						
-					}
             });//end of submit function
             $('div#request_input').clone();
 
@@ -391,33 +373,35 @@
             </p>
             <div id="researcherInfo"><h1 class="page_head" style="float: none;">Use Agreement Admin Form</h1>
                 <div id="requestStatus" style="width: auto; height:40px; margin-bottom: 7px; margin-top: -15px; color:#000000; font-size: 12pt; text-align: center; padding-top: 10px; display: none;">
-                </div>
+                </div></br>
                 <div id="statusInfo">
-                    <h3 align="right">Status: <?php echo $formStatus ?></h3>
-                </div><br/><br/>
-             <h4 id="2" class="accordion">Section 1: Researcher's Information:</h4>
-               <div class="formcontents" id="2-contents">
-                    <label class="label">Date:</label><br/><input type="text" id="datepicker" class="textinput" value = "<?php echo $date; ?>" style="width: 100px;"/>
-                    <label class="label">Researcher's Name:</label><br/><input type="text" id="name" class="textinput" value = "<?php echo $userName; ?>"/>
-                    <label class="label">Address:</label><br/><input type="text" id="address" class="textinput" value = "<?php echo $address; ?>" />
-                    <label class="label">City/State:</label><br/><input type="text" id="citystate" class="textinput" value = "<?php echo $citystate; ?>" />
-                    <label class="label">Zip:</label><br/><input type="text" id="zip" class="textinput" value = "<?php echo $zipCode; ?>" />
-                    <label class="label">Phone Number:</label><br/><input type="text" id="phoneNo" class="textinput" value = "<?php echo $phoneNumber; ?>" />
+                    <h3 align="right">Status: <?php echo $formStatus ?></h3></br></br>
+                </div>
+                <div id="stat" style="width: auto; height:40px; margin-bottom: 7px; margin-top: -15px; font-size: 12pt; text-align: right; padding-top: 10px; display: none;">
+                </div>
+                <h4 id="2" class="accordion">Section 1: Researcher's Information:</h4>
+                <div class="formcontents" id="2-contents" aria-readonly="true">
+                    <label class="label">Date:</label><br/><input type="text" id="datepicker" class="textinput"  value = "<?php echo $date; ?>" style="width: 100px;"readonly/>
+                    <label class="label">Researcher's Name:</label><br/><input type="text" id="name" class="textinput" value = "<?php echo $userName; ?>"readonly/>
+                    <label class="label">Address:</label><br/><textarea class="readonlytext" readonly><?php echo $address; ?></textarea>
+                    <label class="label">City/State:</label><br/><textarea  class="readonlytext" readonly><?php echo $citystate; ?></textarea>
+                    <label class="label">Zip:</label><br/><input type="text" id="zip" class="textinput" value = "<?php echo $zipCode; ?>" readonly/>
+                    <label class="label">Phone Number:</label><br/><input type="text" id="phoneNo" class="textinput" value = "<?php echo $phoneNumber; ?>" readonly/>
                     <!--p><label class="label">City/State:</label><input type="text" id="citystate" class="textinputinline" style="margin-right: 20px;"/><label class="label">Zip:</label><input type="text" id="zip" class="textinputinline" style="width:125px;"/></p-->
-                    <label class="label">Email:</label><br/><input type="text" id="email" class="textinput" value = "<?php echo $emailId; ?>" />
-                    <label class="label">Email Subject:</label><br/><input type="text" id="email_subject" class="textinput" value = "<?php echo $emailSubject;?>"/>
-                    <label class="label">Receiver:</label><br/><input type="text" id="receiver" class="textinput" value = "<?php echo $receiver; ?>"/>
-                    <label class="label" for="requestAddedby"> Request Added By:</label><br/><select id ="request_added_by"  >
-                        <option value="Archivist" class="selectinput">Archivist</option>
-                        <option value="Researcher" class="selectinput">Researcher</option>
-                        <option value="Email" class="selectinput">Email</option>
-                      </select></br></br>
-                 </div>     
-                      
-                   <h4 id="3" class="accordion">Section 2: Conditions of use</h2>
-                   <div id="3-contents" class="formcontents">
-					<div style="height: 100px; border-bottom: 1px solid #e0e0e0; border-width: 75%; overflow-y: auto; padding: 10px; margin-bottom: 1px;">
-				    <ul>
+                    <label class="label">Email:</label><br/><input type="text" id="email" class="textinput" value = "<?php echo $emailId; ?>" readonly/>
+                    <label class="label">Email Subject:</label><br/><input type="text" id="email_subject" class="textinput" value = "<?php echo $emailSubject;?>"readonly/>
+                    <label class="label">Receiver:</label><br/><input type="text" id="receiver" class="textinput" value = "<?php echo $receiver; ?>"readonly/>
+                    <label class="label" for="requestAddedby"> Request Added By:</label><br/><input type="text" id="receiver" class="textinput" value = "<?php echo $requestAddedBy; ?>"readonly/>
+                    <!-- <option value="Archivist" class="selectinput" >Archivist</option>
+                     <option value="Researcher" class="selectinput">Researcher</option>
+                     <option value="Email" class="selectinput">Email</option>
+                   </select>--></br></br>
+                </div>
+
+                <h4 id="3" class="accordion">Section 2: Conditions of use</h4>
+                <div id="3-contents" class="formcontents">
+                    <div style="height: 100px; border-bottom: 1px solid #e0e0e0; border-width: 75%; overflow-y: auto; padding: 10px; margin-bottom: 1px;">
+                        <ul>
                             <li>(1) To use the image(s), audio, or video only for the purpose or project stated above. Later and different use constitutes reuse and is
                                 prohibited. Subsequent requests for permission to reuse image(s), audio, or video must be made in writing. A reuse fee may apply</li><br/>
                             <li>(2) To give proper credit for the image(s), audio, or video. Unless otherwise stated on the photographic copy, the credit line should
@@ -434,14 +418,14 @@
                 </div>
 
                 <h4 id ="requests" class="accordion">Section 3: Requests:</h4>
-	                <div class="formcontents" id="formcontents">
-                   		 <div id='attachment'>
-                    		<h3 style="color:#b31b1b">Attached files:</h3></br>
-                    		<label class="label"> <?php echo $fileAttachment;?></label></br><!--label ><!--?php echo $fileAttachment; ?></label-->
-		                </div></br>
-                    <h3>Add/Remove Requests (Optional)</h3><br/>
-                    <button id="buttonAdd-request" >+</button>
-                    <button id="buttonRemove-request" disabled style="opacity: 0.5;">-</button></br>
+                <div class="formcontents" id="formcontents">
+                    <div id='attachment'>
+                        <h3 style="color:#b31b1b">Attached files:</h3></br>
+                        <label class="label"> <?php echo $fileAttachment;?></label></br><!--label ><!--?php echo $fileAttachment; ?></label-->
+                    </div></br>
+                    <h3>Requests</h3><br/>
+                    <!--button id="buttonAdd-request" >+</button>
+                    <!--button id="buttonRemove-request" disabled style="opacity: 0.5;">-</button--></br>
                     <div id="request_input" style="border-bottom: 1px solid; padding: 10px; display: none;">
                         <label class="label" for="collection">Collection:</label><br/><input type="text" id="request_collection" class="textinput" <!--value="--><--?php /*echo $collection */?> "/>
                         <label class="label" for="boxno">Box Number:</label><br/><input type="text" id="request_boxno" class="textinput" <!--value="--><--?php /*echo $boxNumber */?> "/>
@@ -464,15 +448,15 @@
                     </div><!-- request_input template -->
                 </div> <!-- formcontents -->
                 <?php
-				if(sizeof($chatList)>0){
-					?>
-				<h4 align="left" id="1" class="accordion">Conversations</h4>
-				<?php  }?>
-				<div id="1-contents" style="height: 235px; overflow: auto;">
+                if(sizeof($chatList)>0){
+                    ?>
+                    <h4 align="left" id="1" class="accordion">Conversations</h4>
+                <?php  }?>
+                <div id="1-contents" style="height: 235px; overflow: auto;">
 
-				<!--table style="border: none; margin-top: -10px; margin-bottom: 10px; padding-left: 15px;"-->
-					<?php foreach ($chatList as $chat){ ?>
-						<!--tr>
+                    <!--table style="border: none; margin-top: -10px; margin-bottom: 10px; padding-left: 15px;"-->
+                    <?php foreach ($chatList as $chat){ ?>
+                        <!--tr>
 							<?php echo "<td ><strong>".$chat['commentType'] . "</strong></p></td>";?>
 							<?php echo "<td ><strong>DATE</strong></p></td>";?>
 							<?php echo "<td ><strong>TIME</strong></p></td>";?>
@@ -483,13 +467,13 @@
 							<?php echo "<td aria-autocomplete='inline'>".$chat['comment_add_date'] . "</td>";?>
 							<?php echo "<td>".$chat['comment_add_time'] . "</td>";?>
 						</tr-->
-						<div class="conversations">
-							<strong><?php echo "<td>".$chat['commentType']." - ". $chat['comment_add_date']." ". $chat['comment_add_time'] .": </td>";?></strong><br/>
-							<?php echo "<td aria-autocomplete='inline'>".$chat['comment'] . "</td>";?>
-						</div>
-						
-					<?php } ?>
-              </div>
+                        <div class="conversations">
+                            <strong><?php echo "<td>".$chat['commentType']." - ". $chat['comment_add_date']." ". $chat['comment_add_time'] .": </td>";?></strong><br/>
+                            <?php echo "<td aria-autocomplete='inline'>".$chat['comment'] . "</td>";?>
+                        </div>
+
+                    <?php } ?>
+                </div>
                 <div id ="instructions">
                     </br><label class="label">Optional Message (This will be part of the email sent to the researcher):</label><br/><textarea id="instructions" rows="8" cols="75" style="display: block; margin-bottom: 10px;" ></textarea>
                 </div>
@@ -511,20 +495,20 @@
         </p>
     </div>
     <script>
-		$('h4').click(function(){
-			var div =$(this).attr('id');
-			if(div == '1'){
-				$('div#1-contents').toggle();
-			}else if (div == '2'){
-				$('div#2-contents').toggle();
-			}else if (div == '3'){
-				$('div#3-contents').toggle();
-			}else if (div == 'requests'){
-				$('div#formcontents').toggle();
-			}				
-			
-		});
-	</script>
+        $('h4').click(function(){
+            var div =$(this).attr('id');
+            if(div == '1'){
+                $('div#1-contents').toggle();
+            }else if (div == '2'){
+                $('div#2-contents').toggle();
+            }else if (div == '3'){
+                $('div#3-contents').toggle();
+            }else if (div == 'requests'){
+                $('div#formcontents').toggle();
+            }
+
+        });
+    </script>
 </body>
 
 </html>
