@@ -42,7 +42,7 @@
 	if($status == 0){
 		$formStatus = "Initiated";
 	}elseif($status == 1){
-		$formStatus = "Rejected";
+		$formStatus = "Returned";
 	}
 	elseif($status == 2){
 		$formStatus = "Submitted";
@@ -313,6 +313,7 @@
 						$('#requestStatus').show().css('background','#b31b1b').append("Something wrong with the form. Contact Administrator");
 						// alert("Falied to save use agreement form"+userId);
 					}
+					$("html, body").animate({ scrollTop: 0}, 600);
 				});
 			});
 

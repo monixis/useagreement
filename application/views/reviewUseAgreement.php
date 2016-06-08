@@ -44,7 +44,7 @@
         $formStatus = "Initiated";
     }elseif($status == 1){
 
-        $formStatus = "Rejected";
+        $formStatus = "Returned";
     }
     elseif($status == 2){
         $formStatus = "Submitted";
@@ -454,7 +454,7 @@
                     ?>
                     <h4 align="left" id="1" class="accordion">Conversations</h4>
                 <?php  }?>
-                <div id="1-contents" style="height: 235px; overflow: auto;">
+                <div id="1-contents">
 
                     <!--table style="border: none; margin-top: -10px; margin-bottom: 10px; padding-left: 15px;"-->
                     <?php foreach ($chatList as $chat){ ?>
