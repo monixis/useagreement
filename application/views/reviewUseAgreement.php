@@ -423,7 +423,9 @@
                         <h3 style="color:#b31b1b">Attached files:</h3></br>
                         <label class="label"> <?php echo $fileAttachment;?></label></br><!--label ><!--?php echo $fileAttachment; ?></label-->
                     </div></br>
+                    <?php if($sizeofRequests>0){?>
                     <h3>Requests</h3><br/>
+                    <?php } ?>
                     <!--button id="buttonAdd-request" >+</button>
                     <!--button id="buttonRemove-request" disabled style="opacity: 0.5;">-</button--></br>
                     <div id="request_input" style="border-bottom: 1px solid; padding: 10px; display: none;">
