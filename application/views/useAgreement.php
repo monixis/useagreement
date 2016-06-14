@@ -72,21 +72,18 @@
 			<?php  if($status == 2 || $status ==3 ) {?>
 			document.getElementById("save").style.display = "none";
 			document.getElementById("submit").style.display = "none";
-			//document.getElementById("submit").disabled = true;
-			//document.getElementById("save").disabled = true;
-
 			<?php } ?>
 
 			<?php if ($status == 3) {?>
-			//document.getElementById("formcontents").style.display = "none";
-			document.getElementById("save").style.display = "none";
+		/*	document.getElementById("save").style.display = "none";
 			document.getElementById("submit").style.display = "none";
 			document.getElementById("uploaded_file").style.display = "none";
 			document.getElementById("messages").style.display = "none";
             document.getElementById("att").style.display="none";
 			document.getElementById("buttonAdd-request").style.display="none";
 			document.getElementById("buttonRemove-request").style.display="none";
-			document.getElementById("addOrRem").style.display="none";
+			document.getElementById("addOrRem").style.display="none";*/
+			
 	        <?php if($sizeofRequests>0){ ?>
 			for(var i=0;i <= <?php echo $sizeofRequests?>;i++ ){
 
