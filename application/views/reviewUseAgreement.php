@@ -389,9 +389,6 @@
                     <label class="label">Phone Number:</label><br/><input type="text" id="phoneNo" class="textinput" value = "<?php echo $phoneNumber; ?>" readonly/>
                     <!--p><label class="label">City/State:</label><input type="text" id="citystate" class="textinputinline" style="margin-right: 20px;"/><label class="label">Zip:</label><input type="text" id="zip" class="textinputinline" style="width:125px;"/></p-->
                     <label class="label">Email:</label><br/><input type="text" id="email" class="textinput" value = "<?php echo $emailId; ?>" readonly/>
-                    <label class="label">Email Subject:</label><br/><input type="text" id="email_subject" class="textinput" value = "<?php echo $emailSubject;?>"readonly/>
-                    <label class="label">Receiver:</label><br/><input type="text" id="receiver" class="textinput" value = "<?php echo $receiver; ?>"readonly/>
-                    <label class="label" for="requestAddedby"> Request Added By:</label><br/><input type="text" id="receiver" class="textinput" value = "<?php echo $requestAddedBy; ?>"readonly/>
                     <!-- <option value="Archivist" class="selectinput" >Archivist</option>
                      <option value="Researcher" class="selectinput">Researcher</option>
                      <option value="Email" class="selectinput">Email</option>
@@ -429,24 +426,24 @@
                     <!--button id="buttonAdd-request" >+</button>
                     <!--button id="buttonRemove-request" disabled style="opacity: 0.5;">-</button--></br>
                     <div id="request_input" style="border-bottom: 1px solid; padding: 10px; display: none;">
-                        <label class="label" for="collection">Collection:</label><br/><input type="text" id="request_collection" class="textinput" <!--value="--><--?php /*echo $collection */?> "/>
-                        <label class="label" for="boxno">Box Number:</label><br/><input type="text" id="request_boxno" class="textinput" <!--value="--><--?php /*echo $boxNumber */?> "/>
-                        <label class="label" for="itemno">Item Numbers:</label><br/><input type="text" id="request_itemno" class="textinput" <!--value="--><--?php /*echo $itemNumber */?> "/>
+                        <label class="label" for="collection">Collection:</label><br/><input type="text" id="request_collection" class="textinput" readonly <!--value="--><--?php /*echo $collection */?> "/>
+                        <label class="label" for="boxno">Box Number:</label><br/><input type="text" id="request_boxno" class="textinput" readonly<!--value="--><--?php /*echo $boxNumber */?> "/>
+                        <label class="label" for="itemno">Item Numbers:</label><br/><input type="text" id="request_itemno" class="textinput" readonly<!--value="--><--?php /*echo $itemNumber */?> "/>
                         <label class="label" for="dpi">Requested Resolution (dpi):</label><br/>
-                        <input type="checkbox" name="dpi" value="72" class="checkbox">72</input>
-                        <input type="checkbox" name="dpi" value="300" class="checkbox">300</input>
-                        <input type="checkbox" name="dpi" value="600" class="checkbox">600</input>
-                        <input type="checkbox" name="dpi" value="1200" class="checkbox">1200</input><br/><br/>
+                        <input type="checkbox" name="dpi" value="72" class="checkbox" disabled>72</input>
+                        <input type="checkbox" name="dpi" value="300" class="checkbox"disabled>300</input>
+                        <input type="checkbox" name="dpi" value="600" class="checkbox"disabled>600</input>
+                        <input type="checkbox" name="dpi" value="1200" class="checkbox"disabled>1200</input><br/><br/>
                         <label class="label" for="format">Requested File Format:</label><br/>
-                        <input type="checkbox" name="format" value="pdf" class="checkbox">PDF</input>
-                        <input type="checkbox" name="format" value="jpeg" class="checkbox">JPEG</input>
-                        <input type="checkbox" name="format" value="tiff" class="checkbox">TIFF</input><br/><br/>
+                        <input type="checkbox" name="format" value="pdf" class="checkbox"disabled>PDF</input>
+                        <input type="checkbox" name="format" value="jpeg" class="checkbox"disabled>JPEG</input>
+                        <input type="checkbox" name="format" value="tiff" class="checkbox"disabled>TIFF</input><br/><br/>
                         <label class="label" for="avformat">Audio/Video File Format:</label><br/>
-                        <input type="checkbox" name="avformat" value="wav" class="checkbox">WAV</input>
-                        <input type="checkbox" name="avformat" value="mp3" class="checkbox">MP3</input>
-                        <input type="checkbox" name="avformat" value="mpeg" class="checkbox">MPEG</input>
-                        <input type="checkbox" name="avformat" value="hd" class="checkbox">HD</input><br/><br/>
-                        <label class="label" for="desc">Description of Use (Provided by the researcher):</label><br/><textarea id="request_desc" rows="4" cols="4"/></textarea>
+                        <input type="checkbox" name="avformat" value="wav" class="checkbox"disabled>WAV</input>
+                        <input type="checkbox" name="avformat" value="mp3" class="checkbox"disabled>MP3</input>
+                        <input type="checkbox" name="avformat" value="mpeg" class="checkbox"disabled>MPEG</input>
+                        <input type="checkbox" name="avformat" value="hd" class="checkbox"disabled>HD</input><br/><br/>
+                        <label class="label" for="desc">Description of Use (Provided by the researcher):</label><br/><textarea id="request_desc" rows="4" cols="4" readonly/></textarea>
                     </div><!-- request_input template -->
                 </div> <!-- formcontents -->
                 <?php

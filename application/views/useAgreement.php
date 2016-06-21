@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/html">
+<html lang="en" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
 <head>
 	<style>
 		table, tr {
@@ -37,7 +37,6 @@
 	$attachment = $researcher[8];
 	$userInitials = $researcher[9];
 	$termsAndCond = $researcher[10];
-	$requestAddedBy = $researcher[11];
 
 	if($status == 0){
 		$formStatus = "Initiated";
@@ -578,7 +577,7 @@
 							the Copyright Act, 17 U.S.C. ss101 et seq. The patron further agrees to indemnify and hold harmless the Marist College Archives & Special
 							Collections and its staff in connection with any disputes arising from the Copyright Act, over the reproduction of material at the request of the
 							patron.</p>
-						<?php if ($status ==3) { ?>
+						<?php if ($status ==2 || $status ==3) { ?>
 
 						<input type="checkbox" id="accept" value="Accept"  name = "accept" class="checkbox" disabled="disabled"><span id="accept-cond" style="color: #b31b1b; font-weight: bold;">I accept and agree with the conditions of use.</span></input>
 						<br/><br/>
@@ -594,14 +593,13 @@
 					</div>
 
 					<h4 id ="requests" class="accordion">Section 3: Requests:</h2>
+						<?php if($attachment !=null){?>
+							</br><div id='attachment'>
+								<h3 style="color:#b31b1b">Attached files:</h3></br>
+								<label class="label"> <?php echo $attachment;?></label></br><!--label ><!--?php echo $fileAttachment; ?></label-->
+							</div></br></br>
+						<?php } ?>
 						<div class="formcontents" id="formcontents">
-							<?php if($attachment !=null){?>
-								<div id='attachment'>
-									<h3 style="color:#b31b1b">Attached files:</h3></br>
-									<label class="label"> <?php echo $attachment;?></label></br><!--label ><!--?php echo $fileAttachment; ?></label-->
-								</div>
-							<?php } ?>
-							</br>
 							<h3 id="att">Attachements (if any):</h3></br>
 							<h3 id="requestsReadOnly" style="display:none"> Requests:</h3></br>
 							<input class='btn' type="file" name="uploaded_file" id="uploaded_file"><br/>
@@ -609,7 +607,7 @@
 							<button id="buttonAdd-request" >+</button>
 							<button id="buttonRemove-request" disabled style="opacity: 0.5;">-</button>
 							<div id="request_input" style="border-bottom: 1px solid; padding: 10px; display: none;">
-								<?php if ($status ==3) { ?>
+								<?php if ($status ==2 || $status ==3) { ?>
 
 								<label class="label" for="collection">Collection:</label><br/>
 								<select id ="collection" style="width: 500px;"  disabled="disabled" >

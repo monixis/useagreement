@@ -20,7 +20,6 @@
 			$('#datepicker').datepicker();
 			$("#datepicker").datepicker( "setDate", new Date());
 			$('div#request_input').clone();
-			$('div#requests').hide();
 
 			var inputemail = 0;
 
@@ -72,9 +71,6 @@
 					var comments = $('textarea#comments').val();
 					var phoneNumber = $('input#phoneNo').val();
 					var requestCount= $("#formcontents > div").length-1 ;
-					var emailSubject = $('input#email_subject').val();
-					var receivedBy = 	$('input#receiver').val();
-					var requestAddedBy= $('select#request_added_by').val();
 					var requestList= [];
 					//alert (requestCount);
 					//iterating multiple requests.
@@ -129,14 +125,36 @@
 						emailId: emailId,
 						comments:comments,
 						phoneNumber:phoneNumber,
-						emailSubject:emailSubject,
-						receivedBy:receivedBy,
 						requestCount:requestCount,
-						requestAddedBy:requestAddedBy,
 						requestList:requestList
 					}).done(function (userId) {
 						if (userId > 0) {
 							$('#requestStatus').show().css('background','#66cc00').append("#" + userId + ": A User Agreement Form has been sent to "+ userName);
+
+						var m_data = new FormData();
+							m_data.append('user_name', $('input#name').val());
+							m_data.append('user_email', $('input#email').val());
+							m_data.append('phone_number', $('input#phoneNo').val());
+							m_data.append('file_attach', $('input#uploaded_file')[0].files[0]);
+							m_data.append('date', $('input#datepicker').val());
+							m_data.append('comments',$('textarea#comments').val());
+							$.ajax({
+								type: "POST",
+								url: "<?php echo base_url("?c=usragr&m=InitiateWithMailAttachment&userId=");?>"+userId,
+								data: m_data,
+								processData: false,
+								contentType: false,
+								cache: false,
+								success: function (response) {
+									//load json data from server and output message
+									if (response.type == 'error') { //load json data from server and output message
+										output = '<div class="error">' + response.text + '</div>';
+									} else {
+										output = '<div class="success">' + response.text + '</div>';
+									}
+									$("#contact_form #contact_results").hide().html(output).slideDown();
+								}
+							});
 						}else
 						{
 							$('#requestStatus').show().css('background','#b31b1b').append("Something wrong with the form. Contact Administrator");
@@ -200,20 +218,13 @@
 					<label class="label">Phone Number:</label></br><input type="text" id="phoneNo" class="textinput" />
 					<!--p><label class="label">City/State:</label><input type="text" id="citystate" class="textinputinline" style="margin-right: 20px;"/><label class="label">Zip:</label><input type="text" id="zip" class="textinputinline" style="width:125px;"/></p-->
 					<label class="label">Email:</label><br/><input type="text" id="email" class="textinput" />
-
-					<label class="label">Email Subject:</label><br/><input type="text" id="email_subject" class="textinput"/>
-					<label class="label">Receiver:</label><br/><input type="text" id="receiver" class="textinput"/>
-					<label class="label" for="requestAddedby"> Request Added By:</label><br/>
-					<select id ="request_added_by" >
-						<option value="Email" class="selectinput">Email</option>
-						<option value="Researcher" class="selectinput">Researcher</option>
-						<option value="Archivist" class="selectinput">Archivist</option>
-					</select><!--input type="text" id="request_collection" class="textinput"/-->
+				<!--input type="text" id="request_collection" class="textinput"/-->
 				</div>
 				<div id="requests">
 					<h2>Requests:</h2>
 					<div class="formcontents" id="formcontents">
 						<h3>Add/Remove Requests</h3><br/>
+						<input class='btn' type="file" name="uploaded_file" id="uploaded_file"><br/></br>
 						<button id="buttonAdd-request">+</button>
 						<button id="buttonRemove-request" disabled style="opacity: 0.5;">-</button></br>
 						<div id="request_input" style="border-bottom: 1px solid; padding: 10px; display: none;">
