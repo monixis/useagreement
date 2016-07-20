@@ -19,6 +19,8 @@
     <link rel="stylesheet" type="text/css" href="http://library.marist.edu/archives/mainpage/mainStyles/style.css" />
     <link rel="stylesheet" type="text/css" href="http://library.marist.edu/archives/mainpage/mainStyles/main.css" />
     <link rel="stylesheet" type="text/css" href="styles/useagreement.css" />
+    <script src="js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="styles/progress-wizard.min.css" />
     <script type="text/javascript" src="http://library.marist.edu/archives/mainpage/scripts/archivesChildMenu.js"></script>
     <script type="text/javascript" src="js/cloneRequests.js"></script>
     <?php
@@ -56,6 +58,31 @@
     ?>
     <script type="text/javascript">
         $(document).ready(function(){
+            if("<?php echo $status ?>" ==0){
+                document.getElementById('step1').className='warning';
+                document.getElementById("approve").style.display = "none";
+                document.getElementById("disapprove").style.display = "none";
+            }else if("<?php echo $status ?>" ==1){
+                document.getElementById('step1').className='danger';
+                document.getElementById('step2').className='danger';
+                document.getElementById('step3').className='danger';
+                document.getElementById('step4').className='';
+                document.getElementById("approve").style.display = "none";
+                document.getElementById("disapprove").style.display = "none";
+            }else if("<?php echo $status ?>" ==2){
+                document.getElementById('step1').className='warning';
+                document.getElementById('step2').className='warning';
+                document.getElementById('step3').className='';
+                document.getElementById('step3').className='';
+            }else if("<?php echo $status ?>" ==3){
+                document.getElementById('step1').className='completed';
+                document.getElementById('step2').className='completed';
+                document.getElementById('step3').className='completed';
+                document.getElementById('step4').className='completed';
+                document.getElementById("approve").style.display = "none";
+                document.getElementById("disapprove").style.display = "none";
+
+            }
 
             var inputemail = 0;
 
@@ -238,9 +265,13 @@
                         }).done(function (userId) {
                             if (userId > 0) {
                                 $('#requestStatus').show().css('background', '#66cc00').append("#" + userId + ":User Agreement Form has been disapproved and an email sent to " + userName);
-                                $('#stat').show().css("font-weight","Bold").append("Status: Rejected");
-                                $('#statusInfo').html().replace(/<br\s?\/?>/,'');
-                                $('#statusInfo').hide();
+                           //     $('#stat').show().css("font-weight","Bold").append("Status: Rejected");
+                                document.getElementById('step1').className='danger';
+                                document.getElementById('step2').className='danger';
+                                document.getElementById('step3').className='danger';
+                                document.getElementById('step4').className='';
+                              //  $('#statusInfo').html().replace(/<br\s?\/?>/,'');
+                              //  $('#statusInfo').hide();
                             } else {
                                 $('#requestStatus').show().css('background', '#b31b1b').append("Something wrong with the form. Contact Administrator");
 
@@ -322,10 +353,14 @@
                         if (userId > 0) {
 
                             $('#requestStatus').show().css('background','#66cc00').append("#" + userId + ": User Agreement Form has been approved and confirmation mail sent to "+ userName);
-                            $('#stat').show().append("Status: Approved");
-                            var htmlcleaned = $('#statusInfo h3').html().replace(/<br\s?\/?>/,'');
-                            $('#statusInfo h3').html(htmlcleaned);
-                            $('#statusInfo').hide();
+                           // $('#stat').show().append("Status: Approved");
+                            document.getElementById('step1').className='completed';
+                            document.getElementById('step2').className='completed';
+                            document.getElementById('step3').className='completed';
+                            document.getElementById('step4').className='completed';
+                            //var htmlcleaned = $('#statusInfo h3').html().replace(/<br\s?\/?>/,'');
+                          //  $('#statusInfo h3').html(htmlcleaned);
+                           // $('#statusInfo').hide();
 
                         } else {
                             $('#requestStatus').show().css('background','#b31b1b').append("Something wrong with the form. Contact Administrator");
@@ -371,14 +406,33 @@
                 <a href="http://library.marist.edu" class="map_link"><img src="http://library.marist.edu/images/home.png" class="fox2"/></a>
                 > Forms > Reserve Forms
             </p>
-            <div id="researcherInfo"><h1 class="page_head" style="float: none;">Use Agreement Admin Form</h1>
+            <div id="researcherInfo"><h1 class="page_head" align="center" style="float: none;">Use Agreement Admin Form</h1>
                 <div id="requestStatus" style="width: auto; height:40px; margin-bottom: 7px; margin-top: -15px; color:#000000; font-size: 12pt; text-align: center; padding-top: 10px; display: none;">
                 </div></br>
-                <div id="statusInfo">
-                    <h3 align="right">Status: <?php echo $formStatus ?></h3></br></br>
+                <ul class="progress-indicator">
+                    <li id="step1" class="">
+                        <span class="bubble"></span>
+                        Initiated <br>
+                    </li>
+                    <li id="step2" class="">
+                        <span class="bubble"></span>
+                        Submitted <br>
+                    </li>
+                    <li id="step3"  class="">
+                        <span class="bubble"></span>
+                        Returned <br>
+                    </li>
+                    <li id="step4" class="">
+                        <span class="bubble"></span>
+                        Approved
+                    </li>
+
+                </ul></br>
+<!--                <div id="statusInfo">
+                    <h3 align="right">Status: <!--?php /*echo $formStatus */?></h3></br></br>
                 </div>
                 <div id="stat" style="width: auto; height:40px; margin-bottom: 7px; margin-top: -15px; font-size: 12pt; text-align: right; padding-top: 10px; display: none;">
-                </div>
+                </div>-->
                 <h4 id="2" class="accordion">Section 1: Researcher's Information:</h4>
                 <div class="formcontents" id="2-contents" aria-readonly="true">
                     <label class="label">Date:</label><br/><input type="text" id="datepicker" class="textinput"  value = "<?php echo $date; ?>" style="width: 100px;"readonly/>

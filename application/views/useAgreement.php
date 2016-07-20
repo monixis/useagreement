@@ -20,6 +20,7 @@
 	<link rel="stylesheet" type="text/css" href="http://library.marist.edu/archives/mainpage/mainStyles/style.css" />
 	<link rel="stylesheet" type="text/css" href="http://library.marist.edu/archives/mainpage/mainStyles/main.css" />
 	<link rel="stylesheet" type="text/css" href="styles/useagreement.css" />
+	<link rel="stylesheet" type="text/css" href="styles/progress-wizard.min.css" />
 	<script type="text/javascript" src="http://library.marist.edu/archives/mainpage/scripts/archivesChildMenu.js"></script>
 
 	<?php
@@ -55,6 +56,26 @@
 
 	<script type="text/javascript">
 		$(document).ready(function(){
+			if("<?php echo $status ?>" ==0){
+				document.getElementById('step1').className='warning';
+			}else if("<?php echo $status ?>" ==1){
+				document.getElementById('step1').className='danger';
+				document.getElementById('step2').className='danger';
+				document.getElementById('step3').className='danger';
+				document.getElementById('step4').className='';
+
+			}else if("<?php echo $status ?>" ==2){
+				document.getElementById('step1').className='warning';
+				document.getElementById('step2').className='warning';
+				document.getElementById('step3').className='';
+				document.getElementById('step3').className='';
+			}else if("<?php echo $status ?>"==3){
+				document.getElementById('step1').className='completed';
+				document.getElementById('step2').className='completed';
+				document.getElementById('step3').className='completed';
+				document.getElementById('step4').className='completed';
+
+			}
 			var inputemail = 1;
 			var inputaccept = 0;
 			$('#2-contents, #3-contents, #formcontents').hide();
@@ -420,10 +441,13 @@
 						if (userId > 0) {
 
 							$('#requestStatus').show().css('background','#66cc00').append("#" + userId + ": Form submitted successfully. We'll get back to you shortly");
-							$('#stat').show().css("font-weight","Bold").append("Status: Submitted");
-							$('#statusInfo').html().replace(/<br\s?\/?>/,'');
-							$('#statusInfo').hide();
-
+					//		$('#stat').show().css("font-weight","Bold").append("Status: Submitted");
+							//$('#statusInfo').html().replace(/<br\s?\/?>/,'');
+							//$('#statusInfo').hide();
+							document.getElementById('step1').className='warning';
+							document.getElementById('step2').className='warning';
+							document.getElementById('step3').className='';
+							document.getElementById('step3').className='';
 							//alert("Form Submitted successfully for UserId:" + userId);
 						} else {
 							$('#requestStatus').show().css('background','#b31b1b').append("Something wrong with the form. Contact Administrator");
@@ -500,14 +524,32 @@
 
 				<div id="requestStatus" style="width: auto; height:40px; margin-bottom: 7px; margin-top: -15px; color:#000000; font-size: 12pt; text-align: center; padding-top: 10px; display: none;">
 				</div></br>
+				<ul class="progress-indicator">
+					<li id="step1" class="">
+						<span class="bubble"></span>
+						Initiated <br>
+					</li>
+					<li id="step2" class="">
+						<span class="bubble"></span>
+						Submitted <br>
+					</li>
+					<li id="step3"  class="">
+						<span class="bubble"></span>
+						Returned <br>
+					</li>
+					<li id="step4" class="">
+						<span class="bubble"></span>
+						Approved
+					</li>
 
-				<div id="statusInfo">
+				</ul></br>
+<!--				<div id="statusInfo">
 
-					<h3 align="right">Status: <?php echo $formStatus ?></h3></br></br>
+					<h3 align="right">Status: <?php /*echo $formStatus */?></h3></br></br>
 
-				</div>
-				<div id="stat" style="width: auto; height:40px; margin-bottom: 7px; margin-top: -15px; font-size: 12pt; text-align: right; padding-top: 10px; display: none;">
-				</div>
+				</div>-->
+<!--				<div id="stat" style="width: auto; height:40px; margin-bottom: 7px; margin-top: -15px; font-size: 12pt; text-align: right; padding-top: 10px; display: none;">
+				</div>-->
 				<?php if ($status != 3) {?>
 					<?php
 					if(sizeof($chatList)>0){
