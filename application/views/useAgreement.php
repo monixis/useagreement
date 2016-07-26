@@ -38,7 +38,7 @@
 	$attachment = $researcher[8];
 	$userInitials = $researcher[9];
 	$termsAndCond = $researcher[10];
-
+	$attachemntLink = $researcher[12];
 	if($status == 0){
 		$formStatus = "Initiated";
 	}elseif($status == 1){
@@ -74,6 +74,17 @@
 				document.getElementById('step2').className='completed';
 				document.getElementById('step3').className='completed';
 				document.getElementById('step4').className='completed';
+
+			}
+			else if("<?php echo $status ?>"==4){
+				document.getElementById('step1').className='completed';
+				document.getElementById('step2').className='completed';
+				document.getElementById('step3').className='completed';
+				document.getElementById('step4').className='completed';
+				document.getElementById('step5').className='completed';
+				document.getElementById("submit").style.display = "none";
+				document.getElementById("save").style.display = "none";
+
 
 			}
 			var inputemail = 1;
@@ -541,7 +552,10 @@
 						<span class="bubble"></span>
 						Approved
 					</li>
-
+					<li id="step5" class="">
+						<span class="bubble"></span>
+						Completed
+					</li>
 				</ul></br>
 <!--				<div id="statusInfo">
 
@@ -637,14 +651,15 @@
 					<h4 id ="requests" class="accordion">Section 3: Requests:</h2>
 						<?php if($attachment !=null){?>
 							</br><div id='attachment'>
-								<h3 style="color:#b31b1b">Attached files:</h3></br>
-								<label class="label"> <?php echo $attachment;?></label></br><!--label ><!--?php echo $fileAttachment; ?></label-->
+								<h3 style="color:#b31b1b">Attached files:</h3></br></br>
+							 <a href="<?php echo $attachemntLink;?>"><?php echo $attachment ?></a></br><!--label ><!--?php echo $fileAttachment; ?></label-->
 							</div></br></br>
 						<?php } ?>
 						<div class="formcontents" id="formcontents">
 							<h3 id="att">Attachements (if any):</h3></br>
 							<h3 id="requestsReadOnly" style="display:none"> Requests:</h3></br>
-							<input class='btn' type="file" name="uploaded_file" id="uploaded_file"><br/>
+							<input class='btn' type="file" name="uploaded_file" id="uploaded_file"><br/></br>
+							<h3 align="center">(OR)</h3><br/></br>
 							<h3 id="addOrRem">Add/Remove Requests (Optional):</h3><br/>
 							<button id="buttonAdd-request" >+</button>
 							<button id="buttonRemove-request" disabled style="opacity: 0.5;">-</button>

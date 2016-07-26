@@ -130,7 +130,6 @@
 					}).done(function (userId) {
 						if (userId > 0) {
 							$('#requestStatus').show().css('background','#66cc00').append("#" + userId + ": A User Agreement Form has been sent to "+ userName);
-
 						var m_data = new FormData();
 							m_data.append('user_name', $('input#name').val());
 							m_data.append('user_email', $('input#email').val());
@@ -223,8 +222,10 @@
 				<div id="requests">
 					<h2>Requests:</h2>
 					<div class="formcontents" id="formcontents">
-						<h3>Add/Remove Requests</h3><br/>
-						<input class='btn' type="file" name="uploaded_file" id="uploaded_file"><br/></br>
+						<h3>Add Attachment</h3><br/></br>
+						<input align="center" class='btn' type="file" name="uploaded_file" id="uploaded_file"><br/></br>
+						<h3 align="center">(OR)</h3><br/>
+						<h3>Add/Remove Requests</h3><br/></br>
 						<button id="buttonAdd-request">+</button>
 						<button id="buttonRemove-request" disabled style="opacity: 0.5;">-</button></br>
 						<div id="request_input" style="border-bottom: 1px solid; padding: 10px; display: none;">

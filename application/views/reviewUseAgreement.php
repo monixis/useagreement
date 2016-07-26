@@ -41,6 +41,8 @@
     $emailSubject = $researcher[11];
     $receiver = $researcher[12];
     $requestAddedBy = $researcher[13];
+    $attachmnetLink = $researcher[14];
+    $copies_sent = $researcher[15];
 
     if($status == 0){
         $formStatus = "Initiated";
@@ -57,11 +59,25 @@
     }
     ?>
     <script type="text/javascript">
+        updateList = function() {
+            var input = document.getElementById('upload');
+            var output = document.getElementById('fileList');
+
+            output.innerHTML = '<ul>';
+            for (var i = 0; i < input.files.length; ++i) {
+                output.innerHTML += '<li>' + input.files.item(i).name + '</li>';
+            }
+            output.innerHTML += '</ul>';
+        }
         $(document).ready(function(){
+
             if("<?php echo $status ?>" ==0){
                 document.getElementById('step1').className='warning';
                 document.getElementById("approve").style.display = "none";
                 document.getElementById("disapprove").style.display = "none";
+                document.getElementById("complete").style.display="none";
+                document.getElementById("4").style.display="none";
+
             }else if("<?php echo $status ?>" ==1){
                 document.getElementById('step1').className='danger';
                 document.getElementById('step2').className='danger';
@@ -69,11 +85,20 @@
                 document.getElementById('step4').className='';
                 document.getElementById("approve").style.display = "none";
                 document.getElementById("disapprove").style.display = "none";
+                document.getElementById("complete").style.display="none";
+                document.getElementById("4").style.display="none";
+
+
             }else if("<?php echo $status ?>" ==2){
                 document.getElementById('step1').className='warning';
                 document.getElementById('step2').className='warning';
                 document.getElementById('step3').className='';
                 document.getElementById('step3').className='';
+                document.getElementById("complete").style.display="none";
+
+                document.getElementById("4").style.display="none";
+
+
             }else if("<?php echo $status ?>" ==3){
                 document.getElementById('step1').className='completed';
                 document.getElementById('step2').className='completed';
@@ -81,11 +106,43 @@
                 document.getElementById('step4').className='completed';
                 document.getElementById("approve").style.display = "none";
                 document.getElementById("disapprove").style.display = "none";
+                document.getElementById("instructions").style.display="none";
 
+
+            }else if("<?php echo $status ?>"==4){
+                document.getElementById('step1').className='completed';
+                document.getElementById('step2').className='completed';
+                document.getElementById('step3').className='completed';
+                document.getElementById('step4').className='completed';
+                document.getElementById('step5').className='completed';
+                document.getElementById("approve").style.display = "none";
+                document.getElementById("disapprove").style.display = "none";
+                document.getElementById("complete").style.display = "none";
+                document.getElementById("instructions").style.display="none";
+                document.getElementById("message").style.display = "none";
+
+              //  $('#requestStatus').style.display="none";
+                <?php if($copies_sent != null){ ?>
+                <?php
+
+                $filesUploaded = explode('||',$copies_sent );
+
+                ?>
+                var output = document.getElementById('copies_sent');
+                output.innerHTML = '<ul>';
+            <?php foreach($filesUploaded as $fileUploaded){  ?>
+
+
+                var fileupload = "<?php echo $fileUploaded; ?>";
+                    output.innerHTML += '<li><a href=' + fileupload + '> ' + fileupload + '</a></li></br>';
+                   <?php } ?>
+                output.innerHTML += '</ul>';
+
+
+            <?php }?>
             }
 
             var inputemail = 0;
-
 
 
             /* validation ends */
@@ -118,7 +175,7 @@
             }
             var tNc = '<?php echo $termsAndConditions?>';
             if(tNc =="true"){
-                $('#accept').prop('checked',true)    ;
+                $('#accept').prop('checked',true);
                 $('#accept-cond').css({'color':'green', 'font-weight':'bold'});
 
             }else{
@@ -370,7 +427,37 @@
                     });
 
                 }
-            });//end of submit function
+            });//end of approve function
+            $('button#complete').click(function() {
+
+                var m_data = new FormData();
+                m_data.append('user_name', $('input#name').val());
+                m_data.append('user_email', $('input#email').val());
+                m_data.append('instructions', $('textarea#instructions').val());
+                m_data.append('file_attach', $('input#uploaded_file')[0].files[0]);
+                m_data.append('file_attach', $('input#uploaded_file')[1].files[1]);
+                m_data.append('file_attach', $('input#uploaded_file')[2].files[2]);
+
+                m_data.append('date', $('input#datepicker').val());
+                $.ajax({
+                    type: "POST",
+                    url: "<?php echo base_url("?c=usragr&m=mailAttachment&userId=" . $userId);?>",
+                    data: m_data,
+                    processData: false,
+                    contentType: false,
+                    cache: false,
+                    success: function (response) {
+                        //load json data from server and output message
+                        if (response.type == 'error') { //load json data from server and output message
+                            output = '<div class="error">' + response.text + '</div>';
+                        } else {
+                            output = '<div class="success">' + response.text + '</div>';
+                        }
+                        $("#contact_form #contact_results").hide().html(output).slideDown();
+                    }
+                });
+            });
+
             $('div#request_input').clone();
 
         });
@@ -426,8 +513,12 @@
                         <span class="bubble"></span>
                         Approved
                     </li>
-
-                </ul></br>
+                    <li id="step5" class="">
+                        <span class="bubble"></span>
+                        Completed
+                    </li>
+                </ul></br></br>
+                <div id="confirmations"></div></br></br>
 <!--                <div id="statusInfo">
                     <h3 align="right">Status: <!--?php /*echo $formStatus */?></h3></br></br>
                 </div>
@@ -472,7 +563,7 @@
                 <div class="formcontents" id="formcontents">
                     <div id='attachment'>
                         <h3 style="color:#b31b1b">Attached files:</h3></br>
-                        <label class="label"> <?php echo $fileAttachment;?></label></br><!--label ><!--?php echo $fileAttachment; ?></label-->
+                       <a href="<?php echo $attachmnetLink;?>"><?php echo $fileAttachment;?> </a></br><!--label ><!--?php echo $fileAttachment; ?></label-->
                     </div></br>
                     <?php if($sizeofRequests>0){?>
                     <h3>Requests</h3><br/>
@@ -527,14 +618,32 @@
 
                     <?php } ?>
                 </div>
+                <h4 id="4" class="accordion">Upload Copies</h4>
+                <div class='contents' id="copies_sent">
+                </div>
+
+                <form action="" id='complete' enctype="multipart/form-data" method="post">
+                    <div>
+
+                        <label for='upload'>Add Attachments:</label>
+                        <input id='upload' class='btn' name="upload[]" type="file" multiple="multiple" onchange="updateList()"></br></br>
+                        <div id="fileList">
+                        </div>
+                        </br><label class="label">Message:</label><br/><textarea id="message" name='message' rows="8" cols="75" style="display: block; margin-bottom: 10px;" ></textarea>
+                        <input class='btn' type="submit" name="submit" value="Complete Transaction">
+                    </div>
+
+
+                </form>
+
                 <div id ="instructions">
                     </br><label class="label">Optional Message (This will be part of the email sent to the researcher):</label><br/><textarea id="instructions" rows="8" cols="75" style="display: block; margin-bottom: 10px;" ></textarea>
                 </div>
-
                 <button class="btn" type="submit" id="approve">Approve</button>
                 <button class="btn" type="button" id="disapprove">Return for review</button></br>
+            </div>
 
-            </div> <!-- researcherInfo -->
+
         </div> <!-- content -->
     </div>
 
@@ -558,6 +667,10 @@
                 $('div#3-contents').toggle();
             }else if (div == 'requests'){
                 $('div#formcontents').toggle();
+            }else if(div=='4'){
+
+                $('div#copies_sent').toggle();
+
             }
 
         });
@@ -565,3 +678,117 @@
 </body>
 
 </html>
+<?php
+if(isset($_POST['submit'])){
+    if(count($_FILES['upload']['name']) > 0){
+        //Loop through each file
+        $files = array();
+        for($i=0; $i<count($_FILES['upload']['name']); $i++) {
+            //Get the temp file path
+            $tmpFilePath = $_FILES['upload']['tmp_name'][$i];
+
+            //Make sure we have a filepath
+            if($tmpFilePath != ""){
+                //save the filename
+               // $shortname = $_FILES['upload']['name'][$i];
+                $shortname = str_replace(' ', '', $_FILES['upload']['name'][$i]);
+                $six_digit_random_number = mt_rand(100000, 999999);
+
+                //save the url and the file
+                $filePath = "/data/library/htdocs/archives/useagreement/completed/" . $userId.'_'.$six_digit_random_number.'_'.$shortname;
+                //Upload the file into the temp dir
+                if(move_uploaded_file($tmpFilePath, $filePath)) {
+                    $link = "http://library.marist.edu/archives/useagreement/completed/";
+                    array_push($files, $link.$userId.'_'.$six_digit_random_number.'_'.$shortname);
+                  //  $files[] = $link.$userId.'_'.$six_digit_random_number.'_'.$shortname;
+                    //insert into db
+                    //use $shortname for the filename
+                    //use $filePath for the relative url to the file
+                }
+            }
+        }
+        $comment = $_POST["message"];
+        $message = '<html><body>';
+
+        $message .= '<table width="100%"; rules="all" style="border:1px solid #3A5896;" cellpadding="10">';
+
+        $message .= "<tr ><td align='center'><img src='https://s.graphiq.com/sites/default/files/10/media/images/Marist_College_2_220374.jpg'  /><h3> Marist Archives and Special Collection </h3><h3>COPY/USE AGREEMENT REQUEST</h3> ";
+
+        $message .= "<br/><br/> <h4> Dear $userName ,<br /><br />Please find the below links to access your requested copies</h4></tr>";
+
+//$message .= "<tr><td colspan=2 font='colr:#3A5896;'><I>Link:<br></I> $url </td></tr>";
+         $filestring = "";
+        $i=0;
+        for ($i=0;$i<sizeof($files);$i++){
+            $message.= "<tr><td><I>Link:</I></br>$files[$i] </td></tr>";
+            $filestring =$filestring.$files[$i];
+            if($i<(sizeof($files)-1)){
+                $filestring= $filestring.'||';
+            }
+        }
+/*        foreach($files as $file){
+            $message.= "<tr><td><I>Link:</I></br>$file </td></tr>";
+            $filestring =$filestring.$file;
+            $filestring= $filestring.'||';
+        }*/
+
+        $message .= "<tr><td colspan=2 font='colr:#3A5896;'><I>Comments/Instructions:<br></I><h4>$comment</h4></td></tr>";
+        $message .= "</table>";
+
+        $message .= "</body></html>";
+    }
+    $message_body = $message ;
+    $ci = get_instance();
+    $ci->load->library('email');
+    $config['protocol'] = "smtp";
+    $config['smtp_host'] = "tls://smtp.googlemail.com";
+    $config['smtp_port'] = "465";
+    $config['smtp_user'] = "maristarchives@gmail.com";
+    $config['smtp_pass'] = "20MaristArchives15";
+    $config['charset'] = "utf-8";
+    $config['mailtype'] = "html";
+    $config['newline'] = "\r\n";
+
+    $ci->email->initialize($config);
+
+    $ci->email->from('maristarchives@gmail.com', "Marist Archives");
+    $ci->email->cc('dheeraj.karnati1@marist.edu');
+    $ci->email->to($emailId);
+    $ci->email->reply_to('maristarchives@gmail.com', "Marist Archives");
+    $ci->email->message($message_body);
+    $ci->email->subject("UseAgreement Request Copies");
+    if( $ci->email->send()){
+
+
+   $response = file_get_contents(base_url('?c=usragr&m=update_status&status=4&files='.$filestring.'&userId='.$userId));
+if($response) {
+
+  //  header("Refresh:0");
+        echo "<script>
+   $('#requestStatus').show().css('background','#66cc00').append(\"\"  + \"File(s) has been uploaded and email sent to the user\");
+     document.getElementById('step1').className='completed';
+                document.getElementById('step2').className='completed';
+                document.getElementById('step3').className='completed';
+                document.getElementById('step4').className='completed';
+                document.getElementById('step5').className='completed';
+                document.getElementById(\"approve\").style.display = \"none\";
+                document.getElementById(\"disapprove\").style.display = \"none\";
+                document.getElementById(\"complete\").style.display = \"none\";
+                document.getElementById(\"instructions\").style.display=\"none\";
+                document.getElementById(\"message\").style.display = \"none\";
+
+   </script>";
+
+}
+   }
+    //show success message
+    /* echo "<h1>Uploaded:</h1>";
+    if(is_array($files)){
+         echo "<ul>";
+         foreach($files as $file){
+             echo "<li>$file</li>";
+         }
+         echo "</ul>";
+     }*/
+}
+?>
