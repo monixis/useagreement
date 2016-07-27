@@ -720,7 +720,7 @@ if(isset($_POST['submit'])){
          $filestring = "";
         $i=0;
         for ($i=0;$i<sizeof($files);$i++){
-            $message.= "<tr><td><I>Link:</I></br>$files[$i] </td></tr>";
+            $message.= "<tr><td><I>Link: </I><a href='$files[$i]'> $files[$i]</a> </td></tr>";
             $filestring =$filestring.$files[$i];
             if($i<(sizeof($files)-1)){
                 $filestring= $filestring.'||';
