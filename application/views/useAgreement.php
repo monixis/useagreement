@@ -333,8 +333,8 @@
 					requestList:requestList,
 					message:message
 				}).done(function (userId) {
-					if (userId > 0) {
-						$('#requestStatus').show().css('background','#66cc00').append("#" + userId + ": Form saved successfully. Please submit for approval");
+					if (userId != null) {
+						$('#requestStatus').show().css('background','#66cc00').append("Form saved successfully. Please submit for approval");
 						//	alert("Form saved successfully for UserId:"  + userId);
 					}else
 					{
@@ -449,9 +449,9 @@
 						message:message,
 						instructions:instructions
 					}).done(function (userId) {
-						if (userId > 0) {
+						if (userId != null) {
 
-							$('#requestStatus').show().css('background','#66cc00').append("#" + userId + ": Form submitted successfully. We'll get back to you shortly");
+							$('#requestStatus').show().css('background','#66cc00').append("Form submitted successfully. We'll get back to you shortly");
 					//		$('#stat').show().css("font-weight","Bold").append("Status: Submitted");
 							//$('#statusInfo').html().replace(/<br\s?\/?>/,'');
 							//$('#statusInfo').hide();
