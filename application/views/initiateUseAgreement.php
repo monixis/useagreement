@@ -15,13 +15,20 @@
 	<script type="text/javascript" src="http://library.marist.edu/archives/mainpage/scripts/archivesChildMenu.js"></script>
 	<script type="text/javascript" src="js/cloneRequests.js"></script>
 	<script type="text/javascript">
+	
+		function verifyEmail(email){
+   			var atpos = email.indexOf("@");
+    		var dotpos = email.lastIndexOf(".");
+    		if (atpos<1 || dotpos<atpos+2 || dotpos+2>=email.length) {
+        		return false;
+    			}
+			}	
+	
 		$(document).ready(function(){
 
 			$('#datepicker').datepicker();
 			$("#datepicker").datepicker( "setDate", new Date());
 			$('div#request_input').clone();
-
-			var inputemail = 0;
 
 			/* Validation */
 			$('input#name').keydown(function(e){
@@ -33,18 +40,7 @@
 			});
 
 			$('input#email').keydown(function(e){
-				var filter = /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
-				if((e.which == 9) && ($(this).val().length == 0)){
-					$(this).css('border','1px solid red');
-					inputemail = 0;
-				}else if (filter.test($(this).val())){
-					$(this).css('border','1px solid #ccc');
-					inputemail = 1;
-				}
-				else{
-					$(this).css('border','1px solid red');
-					inputemail = 0;
-				}
+				$(this).css('border','1px solid #ccc');
 			});
 
 			/* validation ends */
@@ -55,13 +51,16 @@
 					$('div#requests').hide();
 				}
 			});
-
+			
 			$('button#initiate').click(function(){
 				if ($('input#name').val() == ""){
 					$('input#name').css('border','1px solid red');
-				}else if (inputemail == 0){
+					$("html, body").animate({ scrollTop: 0}, 600);
+				}else if (verifyEmail($('input#email').val()) == false){
 					$('input#email').css('border','1px solid red');
-				}else{
+					$("html, body").animate({ scrollTop: 0}, 600);
+				}
+				else{
 					var date = $('input#datepicker').val();
 					var userName = $('input#name').val();
 					var address = $('input#address').val();
@@ -228,7 +227,7 @@
 						<h3>Add/Remove Requests</h3><br/></br>
 						<button id="buttonAdd-request">+</button>
 						<button id="buttonRemove-request" disabled style="opacity: 0.5;">-</button></br>
-						<div id="request_input" style="border-bottom: 1px solid; padding: 10px; display: none;">
+						<div id="request_input" style="border-bottom: 1px solid; padding: 10px;">
 							<label class="label" for="collection">Collection:</label><br/>
 							<select id ="collection" style="width: 500px;" >
 								<option value="Lowell Thomas Papers" class="selectinput">Lowell Thomas Papers</option>

@@ -5,7 +5,16 @@
 		table, tr {
 			border: 1px solid red;
 		}
-
+		
+		span.click{
+			float: right;
+			margin-top: -25px;
+		}
+		
+		div.accordion{
+			margin-bottom: 8px;
+		}
+		
 	</style>
 
 	<title>Use Agreement Form</title>
@@ -55,6 +64,15 @@
 	?>
 
 	<script type="text/javascript">
+	
+		function verifyEmail(email){
+   			var atpos = email.indexOf("@");
+    		var dotpos = email.lastIndexOf(".");
+    		if (atpos<1 || dotpos<atpos+2 || dotpos+2>=email.length) {
+        		return false;
+    			}
+			}
+			
 		$(document).ready(function(){
 			if("<?php echo $status ?>" ==0){
 				document.getElementById('step1').className='warning';
@@ -84,12 +102,10 @@
 				document.getElementById('step5').className='completed';
 				document.getElementById("submit").style.display = "none";
 				document.getElementById("save").style.display = "none";
-
-
 			}
 			var inputemail = 1;
 			var inputaccept = 0;
-			$('#2-contents, #3-contents, #formcontents').hide();
+			$('#formcontents').hide();
 			var text_max = 140;
 			$('#textarea_feedback').html(text_max + ' characters remaining');
 
@@ -148,18 +164,7 @@
 			});
 
 			$('input#email').keydown(function(e){
-				var filter = /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
-				if((e.which == 9) && ($(this).val().length == 0)){
-					$(this).css('border','1px solid red');
-					inputemail = 0;
-				}else if (filter.test($(this).val())){
 					$(this).css('border','1px solid #ccc');
-					inputemail = 1;
-				}
-				else{
-					$(this).css('border','1px solid red');
-					inputemail = 0;
-				}
 			});
 
 			$('input#accept[type="checkbox"]').click(function(){
@@ -351,9 +356,8 @@
 					$('input#name').css('border','1px solid red');
 					$('div#2-contents').show();
 					$("html, body").animate({ scrollTop: 0}, 600);
-				}else if (inputemail == 0){
+				}else if (verifyEmail($('input#email').val()) == false){
 					$('input#email').css('border','1px solid red');
-					$('div#2-contents').show();
 					$("html, body").animate({ scrollTop: 0}, 600);
 				}else if ($('input#initials').val() == "" ){
 					$('input#initials').css('border','1px solid red');
@@ -567,7 +571,7 @@
 				<?php if ($status != 3) {?>
 					<?php
 					if(sizeof($chatList)>0){
-						?><h4 align="left" id="1" class="accordion">Conversations</h4>
+						?><div class="accordion" id="1"><h4 align="left" id="1" >Conversations</h4><span class="click">Click to Open/Close</span></div>
 					<?php  }?>
 					<div id="1-contents">
 
@@ -592,7 +596,7 @@
 						<?php } ?>
 					</div>
 				<?php } ?>
-				<h4 id="2" class="accordion">Section 1: Researcher's Information:</h4>
+				<div class="accordion" id="2"><h4 id="2">Section 1: Researcher's Information:</h4><span class="click">Click to Open/Close</span></div>
 				<div class="formcontents" id="2-contents">
 					<?php if ($status ==3) { ?>
 					<label class="label">Date:</label><br/><input type="text" id="datepicker" class="textinput" value = "<?php echo $date; ?>" style="width: 100px;" readonly/>
@@ -618,16 +622,52 @@
 					<!--label class="label">Comments (optional):</label><br/><textarea id="comments" rows="4" cols="50" style="display: block; margin-bottom: 10px;" --><!--?php echo $comments; ?--><!--/textarea-->
 				</div>
 
-				<h4 id="3" class="accordion">Section 2: Conditions of use</h2>
+				<div class="accordion" id="3"><h4 id="3">Section 2: Conditions of use</h4><span class="click">Click to Open/Close</span></div>
 					<div id="3-contents" class="formcontents">
-						<div style="height: 100px; border-bottom: 1px solid #e0e0e0; border-width: 75%; overflow-y: auto; padding: 10px; margin-bottom: 1px;">
+						<div style="height: 200px; border-bottom: 1px solid #e0e0e0; border-width: 75%; overflow-y: auto; padding: 10px; margin-bottom: 1px;">
 							<ul>
 								<li>(1) To use the image(s), audio, or video only for the purpose or project stated above. Later and different use constitutes reuse and is
 									prohibited. Subsequent requests for permission to reuse image(s), audio, or video must be made in writing. A reuse fee may apply</li><br/>
 								<li>(2) To give proper credit for the image(s), audio, or video. Unless otherwise stated on the photographic copy, the credit line should
 									read: James A. Cannavino Library, Archives & Special Collections, Marist College, USA. When the name of the photographer
-									or collection is supplied, this should also be included in the credit. The placement of credit should be as follows:</li>
+									or collection is supplied, this should also be included in the credit. The placement of credit should be as follows:<br/>
+									<ul>a) Printed material - Preferably the credit line should appear on the same page as the printed copy of the image and
+									immediately adjacent to it. The credit may appear elsewhere in the publication if done in such a way that readers
+can quickly match individual images with their respective credit.</ul><br/>
+<ul>b) Films, filmstrips, video, or electronic media (including Internet productions) - The credit line should appear
+on the film, filmstrip, video, or electronic media where other sources are listed. If manuals accompany films or
+filmstrips, the credit should appear where the subject of the illustration is discussed in the text.</ul><br/>
+<ul>c) Public exhibitions - The credit should appear within the exhibit area.</ul><br/>
+<ul>d) Audio broadcasts – The credit should be read at the end of the broadcast or given when other sources are listed.</ul><br/>
+			</li>
+								<li>(3) Not to digitize images at a resolution higher than 72 dots per inch for use on the Internet, or distribute image(s), audio, or
+video without written authorization from the Marist College Archives &amp; Special Collections.</li><br/>
+<li>(4) To assume all responsibility for questions of copyright and invasion of privacy that may arise in the copying and in the use of
+the image(s), audio, or video and to assume responsibility for obtaining all necessary permissions pertaining to use.</li><br/>
+<li>(5) To defend and indemnify and save and hold harmless Marist College, its Archives &amp; Special Collections, its employees or
+designates, and the donors and former owners of Marist College Archives or Special Collections, from any and all costs,
+expense, damage and liability arising because of any claim whatsoever which may be presented by anyone for loss or damage or
+other relief occasioned or caused by the release of image(s), audio, or video to the undersigned applicant and their use in any
+manner, including inspection, publication, reproduction, duplication or printing by anyone for any purpose whatsoever.</li><br/>
+<li>(6) To supply the Marist College Archives &amp; Special Collections with one complimentary copy of any printed, broadcast, or
+published work in which one or more image(s), audio, or video appear.</li><br/>
+<li>(7) Not to permit others to reproduce the image(s), audio, or video; to destroy any digitized copies of image(s) audio, or
+video following their use.</li><br/>
+<li>(8) Not to place the image(s), audio, or video in another institution, repository, or collection--public or private.</li><br/>
+<li>(9) To return to the Marist College Archives &amp; Special Collections the supplied copies of any image(s), audio, or video if they are
+designated by the Archives &amp; Special Collections for return.</li><br/>
+<li>(10) That the Marist College Archives &amp; Special Collections in no way surrenders its own right to publish or otherwise use the image(s),
+audio, or video, or to grant permission for others to do so. That the Marist College Archives & Special Collections reserves the right
+to make exceptions or additions to the conditions stated herein.</li><br/>
 							</ul>
+							<p>As a patron of Marist College Archives &amp; Special Collections, I agree to abide by all copyright laws as they are applicable to my work, including intellectual rights, privacy of individuals, corporate privacy rights and federal and state laws. I agree to abide by all donor and/or
+informant restrictions placed on the items that I request to use, and agree that this material will not be misquoted, misused, or mishandled. I
+also agree that these reproductions are solely for my personal use, and I will not resell or donate them.
+</p>
+<p>All reproductions are handled by the Marist College Archives &amp; Special Collections staff (unless noted otherwise) and are dependent on the
+physical condition of the item. Reproductions are limited to 10% of a book, article, or folder unless otherwise authorized by a curator.
+Orders are completed in the order that they are received.
+</p>
 						</div>
 						<p><label style="font-weight: bold;">Copyright Notice: </label>The individual requesting reproductions expressly assumes the responsibility for compliance with all pertinent provisions of
 							the Copyright Act, 17 U.S.C. ss101 et seq. The patron further agrees to indemnify and hold harmless the Marist College Archives & Special
@@ -648,13 +688,8 @@
 						<?php } ?>
 					</div>
 
-					<h4 id ="requests" class="accordion">Section 3: Requests:</h2>
-						<?php if($attachment !=null){?>
-							</br><div id='attachment'>
-								<h3 style="color:#b31b1b">Attached files:</h3></br></br>
-							 <a href="<?php echo $attachemntLink;?>"><?php echo $attachment ?></a></br><!--label ><!--?php echo $fileAttachment; ?></label-->
-							</div></br></br>
-						<?php } ?>
+					<div class="accordion" id="requests"><h4 id ="requests">Section 3: Requests:</h4><span class="click">Click to Open/Close</span></div>
+						
 						<div class="formcontents" id="formcontents">
 							<h3 id="att">Attachements (if any):</h3></br>
 							<h3 id="requestsReadOnly" style="display:none"> Requests:</h3></br>
@@ -827,7 +862,14 @@
 								<?php }?>
 								</div><!-- request_input template -->
 						</div> <!-- formcontents -->
-
+						
+						<?php if($attachment !=null){?>
+							</br><div id='attachment'>
+								<h3 style="color:#b31b1b">Attached files:</h3></br></br>
+							 <a href="<?php echo $attachemntLink;?>"><?php echo $attachment ?></a></br><!--label ><!--?php echo $fileAttachment; ?></label-->
+							</div></br></br>
+						<?php } ?>
+						
 						<div id="messages"  >
 							<label class="label" >Message (If any) : </label><br/>
 							<div id="textarea_feedback"></div><textarea maxlength="140"  id="message" rows="5" cols="2000" style="display: inline-block;  margin-bottom: 10px; " ><?php echo null ; ?></textarea>
@@ -852,7 +894,7 @@
 		</p>
 	</div>
 	<script>
-		$('h4').click(function(){
+		$('div.accordion').click(function(){
 			var div =$(this).attr('id');
 			if(div == '1'){
 				$('div#1-contents').toggle();
