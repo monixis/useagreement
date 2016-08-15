@@ -185,6 +185,8 @@
             var tNc = '<?php echo $termsAndConditions?>';
             if(tNc =="true"){
                 $('#accept').prop('checked',true);
+                $('#condofuse').prop('checked',true)    ;
+                $('#cond_of_use').css({'color':'green', 'font-weight':'bold'});
                 $('#accept-cond').css({'color':'green', 'font-weight':'bold'});
 
             }else{
@@ -596,6 +598,24 @@ physical condition of the item. Reproductions are limited to 10% of a book, arti
 Orders are completed in the order that they are received.
 </p>
 						</div>
+                    <?php if ($status ==2 || $status ==3) { ?>
+
+                        <div>
+                            <input type="checkbox" id="condofuse" value="condofuse"  name = "condofuse" class="checkbox" disabled="disabled" required><span id="cond_of_use" style="color: #b31b1b; font-weight: bold;"> I accept
+								<select id ="NumConditions"  disabled="disabled" >
+                                    <option value="10" class="selectinput">10</option>
+                                </select>
+							Conditions of use agreement of Marist College Archives and Special Collection </span></input>
+                        </div>
+
+                    <?php } else {?>
+                        <div id="numcheck">	<input type="checkbox" style="background-color: #f6f5f7" id="condofuse" value="condofuse" name = "condofuse"  disabled='disabled' ><span id="cond_of_use" style="color: #fd2323; font-weight: bold;">I accept 10
+						         	Conditions of use agreement of Marist College Archives and Special Collection</span></input>
+                            </br>
+
+
+
+                    <?php } ?>
                     <p><label style="font-weight: bold;">Copyright Notice: </label>The individual requesting reproductions expressly assumes the responsibility for compliance with all pertinent provisions of
                         the Copyright Act, 17 U.S.C. ss101 et seq. The patron further agrees to indemnify and hold harmless the Marist College Archives & Special
                         Collections and its staff in connection with any disputes arising from the Copyright Act, over the reproduction of material at the request of the

@@ -14,7 +14,7 @@
 		div.accordion{
 			margin-bottom: 8px;
 		}
-		
+
 	</style>
 
 	<title>Use Agreement Form</title>
@@ -74,7 +74,10 @@
 			}
 			
 		$(document).ready(function(){
+			$('#num_error').hide();
+
 			if("<?php echo $status ?>" ==0){
+
 				document.getElementById('step1').className='warning';
 			}else if("<?php echo $status ?>" ==1){
 				document.getElementById('step1').className='danger';
@@ -177,7 +180,28 @@
 					inputaccept = 0;
 				}
 			});
-			/* validation ends */
+			$('input#condofuse[type="checkbox"]').click(function() {
+				if($(this).prop("checked") == true) {
+					$('#cond_of_use').css({'color':'green', 'font-weight':'bold'});
+					inputaccept = 1
+
+				}else if($(this).prop("checked") == false){
+					$('#cond_of_use').css({'color':'#b31b1b', 'font-weight':'bold'});
+					inputaccept = 0;
+				}
+			});
+
+			$('#NumConditions').on('change', function() {
+				if($(this).val()!=10) {
+					$("#NumConditions").css('backgroundColor', this.style.backgroundColor);
+					$('#num_error').show();
+				}else{
+
+					$('#num_error').hide();
+
+				}
+				});
+				/* validation ends */
 			$('#datepicker').datepicker();
 			var requestsCnt = 0;
 			var reqSize = "<?php echo sizeof($requests)?>";
@@ -194,7 +218,9 @@
 			var tNc = '<?php echo $termsAndCond ?>';
 			if(tNc =="true"){
 				$('#accept').prop('checked',true)    ;
+				$('#condofuse').prop('checked',true)    ;
 				$('#accept-cond').css({'color':'green', 'font-weight':'bold'});
+				$('#cond_of_use').css({'color':'green', 'font-weight':'bold'});
 				inputaccept = 1
 
 			}
@@ -351,22 +377,32 @@
 			});
 
 			$('button#submit').click(function(){
+				if($('select#NumConditions').val()!=10){
+
+				}else if($('input#accept').prop("checked") == false){
+
+
+			}else if($('input#condofuse').prop('checked')== false){
+
+
+			}else {
 				//validations
-				if ($('input#name').val() == ""){
-					$('input#name').css('border','1px solid red');
+				if ($('input#name').val() == "") {
+					$('input#name').css('border', '1px solid red');
 					$('div#2-contents').show();
-					$("html, body").animate({ scrollTop: 0}, 600);
-				}else if (verifyEmail($('input#email').val()) == false){
-					$('input#email').css('border','1px solid red');
-					$("html, body").animate({ scrollTop: 0}, 600);
-				}else if ($('input#initials').val() == "" ){
-					$('input#initials').css('border','1px solid red');
+					$("html, body").animate({scrollTop: 0}, 600);
+				} else if (verifyEmail($('input#email').val()) == false) {
+					$('input#email').css('border', '1px solid red');
+					$("html, body").animate({scrollTop: 0}, 600);
+				} else if ($('input#initials').val() == "") {
+					$('input#initials').css('border', '1px solid red');
 					$('div#3-contents').show();
-				}else if ($(this).prop("checked") == false){
-					$('#accept-cond').css({'color':'#b31b1b', 'font-weight':'bold'});
+				} else if ($(this).prop("checked") == false) {
+					$('#accept-cond').css({'color': '#b31b1b', 'font-weight': 'bold'});
+					$('#cond_of_use').css({'color': '#b31b1b', 'font-weight': 'bold'});
 					$('div#3-contents').show();
 				}
-				else{
+				else {
 
 					<?php  if($status == 0 || $status == 1) {?>
 					var date = $('input#datepicker').val();
@@ -382,7 +418,7 @@
 					var termsAndConditions = "false";
 					var message = $('textarea#message').val();
 					var instructions = $('textarea#instructions').val();
-					if($('#accept').prop('checked')){
+					if ($('#accept').prop('checked') && $('#condofuse').prop('checked')) {
 						termsAndConditions = "true";
 					}
 
@@ -422,10 +458,10 @@
 						});
 
 						avFormats = avFormats.slice(0, -1);
-						if(reqCollection == 0 || descOfUse == 0){
-							$(reqCollection).css('border','1px solid red');
+						if (reqCollection == 0 || descOfUse == 0) {
+							$(reqCollection).css('border', '1px solid red');
 
-							$(descOfUse).css('border','1px solid red');
+							$(descOfUse).css('border', '1px solid red');
 
 						}
 						request.push(reqCollection);
@@ -438,7 +474,7 @@
 						requestList.push(request);
 
 					}
-					$.post("<?php echo base_url("?c=usragr&m=submitResearcher&userId=".$userId);?>", {
+					$.post("<?php echo base_url("?c=usragr&m=submitResearcher&userId=" . $userId);?>", {
 						date: date,
 						userName: userName,
 						address: address,
@@ -446,28 +482,28 @@
 						citystate: citystate,
 						emailId: emailId,
 						phoneNumber: phoneNumber,
-						userInitials:userInitials ,
-						termsAndConditions:termsAndConditions ,
+						userInitials: userInitials,
+						termsAndConditions: termsAndConditions,
 						requestCount: requestCount,
 						requestList: requestList,
-						message:message,
-						instructions:instructions
+						message: message,
+						instructions: instructions
 					}).done(function (userId) {
 						if (userId != null) {
 
-							$('#requestStatus').show().css('background','#66cc00').append("Form submitted successfully. We'll get back to you shortly");
-					//		$('#stat').show().css("font-weight","Bold").append("Status: Submitted");
+							$('#requestStatus').show().css('background', '#66cc00').append("Form submitted successfully. We'll get back to you shortly");
+							//		$('#stat').show().css("font-weight","Bold").append("Status: Submitted");
 							//$('#statusInfo').html().replace(/<br\s?\/?>/,'');
 							//$('#statusInfo').hide();
-							document.getElementById('step1').className='warning';
-							document.getElementById('step2').className='warning';
-							document.getElementById('step3').className='';
-							document.getElementById('step3').className='';
+							document.getElementById('step1').className = 'warning';
+							document.getElementById('step2').className = 'warning';
+							document.getElementById('step3').className = '';
+							document.getElementById('step3').className = '';
 							//alert("Form Submitted successfully for UserId:" + userId);
 						} else {
-							$('#requestStatus').show().css('background','#b31b1b').append("Something wrong with the form. Contact Administrator");
+							$('#requestStatus').show().css('background', '#b31b1b').append("Something wrong with the form. Contact Administrator");
 						}
-						$("html, body").animate({ scrollTop: 0}, 600);
+						$("html, body").animate({scrollTop: 0}, 600);
 					});
 
 					var m_data = new FormData();
@@ -478,7 +514,7 @@
 					m_data.append('date', $('input#datepicker').val());
 					$.ajax({
 						type: "POST",
-						url: "<?php echo base_url("?c=usragr&m=mailAttachment&userId=".$userId);?>",
+						url: "<?php echo base_url("?c=usragr&m=mailAttachment&userId=" . $userId);?>",
 						data: m_data,
 						processData: false,
 						contentType: false,
@@ -500,6 +536,7 @@
 					alert("you cannot edit the form..! as the form submitted already");
 					<?php } ?>
 				}
+			}
 			}); //end of submit function
 			$('div#request_input').clone();
 		}); // end of document function
@@ -669,18 +706,53 @@ physical condition of the item. Reproductions are limited to 10% of a book, arti
 Orders are completed in the order that they are received.
 </p>
 						</div>
+						<?php if ($status ==2 || $status ==3) { ?>
+
+						<div>
+							<input type="checkbox" id="condofuse" value="condofuse"  name = "condofuse" class="checkbox" disabled="disabled" required><span id="cond_of_use" style="color: #b31b1b; font-weight: bold;"> I accept
+								<select id ="NumConditions"  disabled="disabled" >
+									<option value="10" class="selectinput">10</option>
+								</select>
+							Conditions of use agreement of Marist College Archives and Special Collection </span></input>
+                          </div>
+
+						<?php } else {?>
+							<div id="numcheck">	<input type="checkbox" style="background-color: #f6f5f7" id="condofuse" value="condofuse" name = "condofuse"  ><span id="cond_of_use" style="color: #fd2323; font-weight: bold;">I accept
+								<select id ="NumConditions" onChange="this.style.backgroundColor=this.options[this.selectedIndex].style.backgroundColor">
+									<option value="2" style="background: #B31B1B;" >2</option>
+									<option  value="6" style="background: #B31B1B;" >6</option>
+									<option style="background: #139b6c;" class="selectinput">10</option>
+									<option  value="15" style="background: #B31B1B;" >15</option>
+									<option  value="20" style="background: #B31B1B;" 	>20</option>
+								</select>
+						         	Conditions of use agreement of Marist College Archives and Special Collection</span></input>
+								</br>
+
+								<div id="num_error" style="width: auto;text-align: center font-size: 12pt;">
+									<p align="center" style="color: #b31b1b;font-style:oblique " >									<a><img src="./icons/attention_icon.gif" id="attention" class="shortcutlink" style="width:25px; height:25px; margin-left:10px;"/></a>
+										 Please go through the conditions of use and select the correct number</p></br></br></br>
+
+								</div>
+							</div>
+
+
+						<?php } ?>
+
 						<p><label style="font-weight: bold;">Copyright Notice: </label>The individual requesting reproductions expressly assumes the responsibility for compliance with all pertinent provisions of
 							the Copyright Act, 17 U.S.C. ss101 et seq. The patron further agrees to indemnify and hold harmless the Marist College Archives & Special
 							Collections and its staff in connection with any disputes arising from the Copyright Act, over the reproduction of material at the request of the
 							patron.</p>
+
 						<?php if ($status ==2 || $status ==3) { ?>
 
-						<input type="checkbox" id="accept" value="Accept"  name = "accept" class="checkbox" disabled="disabled"><span id="accept-cond" style="color: #b31b1b; font-weight: bold;">I accept and agree with the conditions of use.</span></input>
-						<br/><br/>
+						<input type="checkbox" id="accept" value="Accept"  name = "accept" class="checkbox" disabled="disabled"><span id="accept-cond" style="color: #b31b1b; font-weight: bold;"> I accept and agree with the copyright notice.</span></input>
+
+							<br/><br/>
 						<label>Applicant's Initials:</label><input type="text" id="initials" value ="<?php echo $userInitials ?>" class="textinput" readonly/>
 
 						<?php } else {?>
-							<input type="checkbox" id="accept" value="Accept"  name = "accept" class="checkbox"><span id="accept-cond" style="color: #b31b1b; font-weight: bold;">I accept and agree with the conditions of use.</span></input>
+
+							<input type="checkbox" id="accept" value="Accept"  name = "accept" class="checkbox" required><span id="accept-cond" style="color: #b31b1b; font-weight: bold;">I accept and agree with the copyright notice.</span></input>
 							<br/><br/>
 							<label>Applicant's Initials:</label><input type="text" id="initials" value ="<?php echo $userInitials ?>" class="textinput"/>
 
@@ -880,6 +952,7 @@ Orders are completed in the order that they are received.
 						<button class="btn" type="button" id="save">Save</button>
 
 			</div> <!-- researcherInfo -->
+
 
 		</div> <!-- content -->
 	</div>
