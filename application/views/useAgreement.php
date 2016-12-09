@@ -14,7 +14,26 @@
 		div.accordion{
 			margin-bottom: 8px;
 		}
-
+		.progress {
+			display: block;
+			text-align: center;
+			width: 0;
+			height: 9px;
+			background: #07bb6c;
+			transition: width 12.5s;
+			border-color: #0c0c0c;
+		}
+		.progress.hide {
+			opacity: 0;
+			transition: opacity 2.3s;
+		}
+		.progress.status {
+			top:3px;
+			left:5%;
+			position:absolute;
+			display:inline-block;
+			color: #000000;
+		}
 	</style>
 
 	<title>Use Agreement Form</title>
@@ -48,6 +67,7 @@
 	$userInitials = $researcher[9];
 	$termsAndCond = $researcher[10];
 	$attachemntLink = $researcher[12];
+	$user_Id = $user_Id;
 	if($status == 0){
 		$formStatus = "Initiated";
 	}elseif($status == 1){
@@ -64,7 +84,25 @@
 	?>
 
 	<script type="text/javascript">
-	
+		uploadedFile = function() {
+			var input = document.getElementById('uploaded_file');
+			var output = document.getElementById('fileInfo');
+
+			output.innerHTML = "";
+
+			//  for (var i = 0; i < input.files.length; ++i) {
+			if(input.files.item(0).size> 2000000){
+				output.innerHTML = '<ul>';
+				output.innerHTML += '<li>' + input.files.item(0).name + "<h4 style='color: red'>(Exceeded 2 MB File size limit)<h4>"+'</li>';
+				output.innerHTML += '</ul>';
+
+			}else {
+				// output.innerHTML += '<li>' + input.files.item(i).name + '</li>';
+				//output.innerHTML += '<li>' + input.files.item(i).size + '</li>';
+			}
+			//   }
+
+		}
 		function verifyEmail(email){
    			var atpos = email.indexOf("@");
     		var dotpos = email.lastIndexOf(".");
@@ -191,7 +229,7 @@
 				}
 			});
 
-			$('#NumConditions').on('change', function() {
+/*			$('#NumConditions').on('change', function() {
 				if($(this).val()!=10) {
 					$("#NumConditions").css('backgroundColor', this.style.backgroundColor);
 					$('#num_error').show();
@@ -200,7 +238,7 @@
 					$('#num_error').hide();
 
 				}
-				});
+				});*/
 				/* validation ends */
 			$('#datepicker').datepicker();
 			var requestsCnt = 0;
@@ -232,7 +270,7 @@
 			var str2 = str1.concat(requestsCnt);
 			var requestIds = [];
 			requestIds.push(str2.concat(" select#collection"));
-			requestIds.push(str2.concat(" input#request_boxno"));
+			requestIds.push(str2.concat(" input#request_itemno"));
 			requestIds.push(str2.concat(" input#request_itemno"));
 			requestIds.push(str2.concat(" input:not(:checked)[name='dpi'][value='72']"));
 			requestIds.push(str2.concat(" input:not(:checked)[name='dpi'][value='300']"));
@@ -245,12 +283,14 @@
 			requestIds.push(str2.concat(" input:not(:checked)[name='avformat'][value='mp3']"));
 			requestIds.push(str2.concat(" input:not(:checked)[name='avformat'][value='mpeg']"));
 			requestIds.push(str2.concat(" input:not(:checked)[name='avformat'][value='hd']"));
+			requestIds.push(str2.concat(" input:not(:checked)[name='avformat'][value='mov']"));
+
 			requestIds.push(str2.concat(" textarea#request_desc"));
 
 			$(requestIds[0]).val('<?php echo $request[1]?>');
 			$(requestIds[1]).val('<?php echo $request[2]?>');
 			$(requestIds[2]).val('<?php echo $request[3]?>');
-			$(requestIds[14]).val('<?php echo $request[4]?>');
+			$(requestIds[15]).val('<?php echo $request[4]?>');
 
 			<?php foreach($request[5] as $dpi) {?>
 
@@ -284,6 +324,8 @@
 				$(requestIds[12]).attr('checked', true);
 			} else if ("<?php echo $avformat ?>" == "hd") {
 				$(requestIds[13]).attr('checked', true);
+			}else if ("<?php echo $avformat ?>" == "mov"){
+				$(requestIds[14]).attr('checked', true);
 			}
 			<?php }?>
 
@@ -319,7 +361,7 @@
 					var str2 = str1.concat(i);
 					var request = [];
 					var reqCollection = $(str2.concat(" select#collection")).val();
-					var boxNumber = $(str2.concat(" input#request_boxno")).val();
+					var boxNumber = "";//$(str2.concat(" input#request_boxno")).val()
 					var itemNumber = $(str2.concat(" input#request_itemno")).val();
 					var descOfUse = $(str2.concat(" textarea#request_desc")).val();
 
@@ -376,167 +418,244 @@
 				});
 			});
 
-			$('button#submit').click(function(){
-				if($('select#NumConditions').val()!=10){
-
-				}else if($('input#accept').prop("checked") == false){
-
-
-			}else if($('input#condofuse').prop('checked')== false){
-
-
-			}else {
-				//validations
-				if ($('input#name').val() == "") {
-					$('input#name').css('border', '1px solid red');
-					$('div#2-contents').show();
-					$("html, body").animate({scrollTop: 0}, 600);
-				} else if (verifyEmail($('input#email').val()) == false) {
-					$('input#email').css('border', '1px solid red');
-					$("html, body").animate({scrollTop: 0}, 600);
-				} else if ($('input#initials').val() == "") {
-					$('input#initials').css('border', '1px solid red');
-					$('div#3-contents').show();
-				} else if ($(this).prop("checked") == false) {
-					$('#accept-cond').css({'color': '#b31b1b', 'font-weight': 'bold'});
-					$('#cond_of_use').css({'color': '#b31b1b', 'font-weight': 'bold'});
-					$('div#3-contents').show();
+			$('button#submit').click(function() {
+				var filesize = 0;
+				if ($('input#uploaded_file')[0].files[0]) {
+					filesize = $('input#uploaded_file')[0].files[0].size / 1024 / 1024;
 				}
-				else {
+				if (filesize <= 2){
+				/*	if($('select#NumConditions').val()!=10){
 
-					<?php  if($status == 0 || $status == 1) {?>
-					var date = $('input#datepicker').val();
-					var userName = $('input#name').val();
-					var address = $('input#address').val();
-					var citystate = $('input#citystate').val();
-					var zipCode = $('input#zip').val();
-					var emailId = $('input#email').val();
-					var phoneNumber = $('input#phoneNo').val();
-					var requestCount = $("#formcontents > div").length - 1;
-					var file = $('input#uploaded_file')[0].files[0];
-					var userInitials = $('input#initials').val();
-					var termsAndConditions = "false";
-					var message = $('textarea#message').val();
-					var instructions = $('textarea#instructions').val();
-					if ($('#accept').prop('checked') && $('#condofuse').prop('checked')) {
-						termsAndConditions = "true";
-					}
+				 }else*/ if ($('input#condofuse').prop("checked") == false) {
+					alert("Please agree to the Terms & Conditions of use");
 
-					var files = [];
-					files.push(file);
-					var requestList = [];
-					//iterating multiple requests.
-					for (var i = 1; i <= requestCount; i++) {
-						var checked = [];
-						var imageResolutions = "";
-						var fileFormats = "";
-						var avFormats = "";
-						var str1 = "div#request_input";
-						var str2 = str1.concat(i);
-						var request = [];
-						var reqCollection = $(str2.concat(" select#collection")).val();
-						var boxNumber = $(str2.concat(" input#request_boxno")).val();
-						var itemNumber = $(str2.concat(" input#request_itemno")).val();
-						var descOfUse = $(str2.concat(" textarea#request_desc")).val();
+				} else if ($('input#accept').prop('checked') == false) {
+					alert("please agree to the copyright notice");
 
-						$.each($(str2.concat(" input:checked[name='dpi']")), function () {
-							imageResolutions = imageResolutions.concat($(this).val());
-							imageResolutions = imageResolutions.concat(":");
-						});
-						imageResolutions = imageResolutions.slice(0, -1);
-						$.each($(str2.concat(" input:checked[name= 'format']")), function () {
-							checked.push($(this).val());
-							fileFormats = fileFormats.concat($(this).val());
-							fileFormats = fileFormats.concat(":");
-						});
-						fileFormats = fileFormats.slice(0, -1);
 
-						$.each($(str2.concat(" input:checked[name= 'avformat']")), function () {
-							checked.push($(this).val());
-							avFormats = avFormats.concat($(this).val());
-							avFormats = avFormats.concat(":");
-						});
-
-						avFormats = avFormats.slice(0, -1);
-						if (reqCollection == 0 || descOfUse == 0) {
-							$(reqCollection).css('border', '1px solid red');
-
-							$(descOfUse).css('border', '1px solid red');
-
-						}
-						request.push(reqCollection);
-						request.push(boxNumber);
-						request.push(itemNumber);
-						request.push(imageResolutions);
-						request.push(fileFormats);
-						request.push(avFormats);
-						request.push(descOfUse);
-						requestList.push(request);
-
-					}
-					$.post("<?php echo base_url("?c=usragr&m=submitResearcher&userId=" . $userId);?>", {
-						date: date,
-						userName: userName,
-						address: address,
-						zipCode: zipCode,
-						citystate: citystate,
-						emailId: emailId,
-						phoneNumber: phoneNumber,
-						userInitials: userInitials,
-						termsAndConditions: termsAndConditions,
-						requestCount: requestCount,
-						requestList: requestList,
-						message: message,
-						instructions: instructions
-					}).done(function (userId) {
-						if (userId != null) {
-
-							$('#requestStatus').show().css('background', '#66cc00').append("Form submitted successfully. We'll get back to you shortly");
-							//		$('#stat').show().css("font-weight","Bold").append("Status: Submitted");
-							//$('#statusInfo').html().replace(/<br\s?\/?>/,'');
-							//$('#statusInfo').hide();
-							document.getElementById('step1').className = 'warning';
-							document.getElementById('step2').className = 'warning';
-							document.getElementById('step3').className = '';
-							document.getElementById('step3').className = '';
-							//alert("Form Submitted successfully for UserId:" + userId);
-						} else {
-							$('#requestStatus').show().css('background', '#b31b1b').append("Something wrong with the form. Contact Administrator");
-						}
+				} else {
+					//validations
+					if ($('input#name').val() == "") {
+						$('input#name').css('border', '1px solid red');
+						$('div#2-contents').show();
 						$("html, body").animate({scrollTop: 0}, 600);
-					});
+					} else if (verifyEmail($('input#email').val()) == false) {
+						$('input#email').css('border', '1px solid red');
+						$("html, body").animate({scrollTop: 0}, 600);
+					} else if ($('input#initials').val() == "") {
+						$('input#initials').css('border', '1px solid red');
+						$('div#3-contents').show();
+					} else if ($(this).prop("checked") == false) {
+						$('#accept-cond').css({'color': '#b31b1b', 'font-weight': 'bold'});
+						$('#cond_of_use').css({'color': '#b31b1b', 'font-weight': 'bold'});
+						$('div#3-contents').show();
+					}
+					else {
 
-					var m_data = new FormData();
-					m_data.append('user_name', $('input#name').val());
-					m_data.append('user_email', $('input#email').val());
-					m_data.append('phone_number', $('input#phoneNo').val());
-					m_data.append('file_attach', $('input#uploaded_file')[0].files[0]);
-					m_data.append('date', $('input#datepicker').val());
-					$.ajax({
-						type: "POST",
-						url: "<?php echo base_url("?c=usragr&m=mailAttachment&userId=" . $userId);?>",
-						data: m_data,
-						processData: false,
-						contentType: false,
-						cache: false,
-						success: function (response) {
-							//load json data from server and output message
-							if (response.type == 'error') { //load json data from server and output message
-								output = '<div class="error">' + response.text + '</div>';
-							} else {
-								output = '<div class="success">' + response.text + '</div>';
-							}
-							$("#contact_form #contact_results").hide().html(output).slideDown();
+						<?php  if($status == 0 || $status == 1) {?>
+						var date = $('input#datepicker').val();
+						var userName = $('input#name').val();
+						var address = $('input#address').val();
+						var citystate = $('input#citystate').val();
+						var zipCode = $('input#zip').val();
+						var emailId = $('input#email').val();
+						var phoneNumber = $('input#phoneNo').val();
+						var requestCount = $("#formcontents > div").length - 1;
+						var file = $('input#uploaded_file')[0].files[0];
+						var userInitials = $('input#initials').val();
+						var termsAndConditions = "false";
+						var message = $('textarea#message').val();
+						var instructions = $('textarea#instructions').val();
+						if ($('#accept').prop('checked') && $('#condofuse').prop('checked')) {
+							termsAndConditions = "true";
 						}
-					});
-					document.getElementById("submit").disabled = true;
-					document.getElementById("save").disabled = true;
 
-					<?php }else{ ?>
-					alert("you cannot edit the form..! as the form submitted already");
-					<?php } ?>
+						var files = [];
+						files.push(file);
+						var requestList = [];
+						//iterating multiple requests.
+						for (var i = 1; i <= requestCount; i++) {
+							var checked = [];
+							var imageResolutions = "";
+							var fileFormats = "";
+							var avFormats = "";
+							var str1 = "div#request_input";
+							var str2 = str1.concat(i);
+							var request = [];
+							var reqCollection = $(str2.concat(" select#collection")).val();
+							var boxNumber = "";//$(str2.concat(" input#request_boxno")).val()
+							var itemNumber = $(str2.concat(" input#request_itemno")).val();
+							var descOfUse = $(str2.concat(" textarea#request_desc")).val();
+
+							$.each($(str2.concat(" input:checked[name='dpi']")), function () {
+								imageResolutions = imageResolutions.concat($(this).val());
+								imageResolutions = imageResolutions.concat(":");
+							});
+							imageResolutions = imageResolutions.slice(0, -1);
+							$.each($(str2.concat(" input:checked[name= 'format']")), function () {
+								checked.push($(this).val());
+								fileFormats = fileFormats.concat($(this).val());
+								fileFormats = fileFormats.concat(":");
+							});
+							fileFormats = fileFormats.slice(0, -1);
+
+							$.each($(str2.concat(" input:checked[name= 'avformat']")), function () {
+								checked.push($(this).val());
+								avFormats = avFormats.concat($(this).val());
+								avFormats = avFormats.concat(":");
+							});
+
+							avFormats = avFormats.slice(0, -1);
+							if (reqCollection == 0 || descOfUse == 0) {
+								$(reqCollection).css('border', '1px solid red');
+
+								$(descOfUse).css('border', '1px solid red');
+
+							}
+							request.push(reqCollection);
+							request.push(boxNumber);
+							request.push(itemNumber);
+							request.push(imageResolutions);
+							request.push(fileFormats);
+							request.push(avFormats);
+							request.push(descOfUse);
+							requestList.push(request);
+
+						}
+						$.post("<?php echo base_url("?c=usragr&m=submitResearcher&userId=" . $userId);?>", {
+							date: date,
+							userName: userName,
+							address: address,
+							zipCode: zipCode,
+							citystate: citystate,
+							emailId: emailId,
+							phoneNumber: phoneNumber,
+							userInitials: userInitials,
+							termsAndConditions: termsAndConditions,
+							requestCount: requestCount,
+							requestList: requestList,
+							message: message,
+							instructions: instructions
+						}).done(function (userId) {
+
+							if (userId != null) {
+								if ($('input#uploaded_file')[0].files[0]) {
+									var filesize = $('input#uploaded_file')[0].files[0].size / 1024 / 1024;
+									if (filesize <= 2.0) {
+										var m_data = new FormData();
+										m_data.append('user_name', $('input#name').val());
+										m_data.append('user_email', $('input#email').val());
+										m_data.append('phone_number', $('input#phoneNo').val());
+										m_data.append('file_attach', $('input#uploaded_file')[0].files[0]);
+										m_data.append('date', $('input#datepicker').val());
+										$.ajax({
+											xhr: function () {
+												var xhr = new window.XMLHttpRequest();
+												xhr.upload.addEventListener("progress", function (evt) {
+													if (evt.lengthComputable) {
+														var percentComplete = evt.loaded / evt.total;
+														//console.log(percentComplete);
+
+														$('.progress').css({
+															width: percentComplete * 100 + '%'
+														});
+														if (percentComplete === 1) {
+															$("#progressstatus").html("<p color='black'>Upload attachment is in progress</p>");
+														}
+													}
+												}, false);
+												return xhr;
+											},
+											type: "POST",
+											url: "<?php echo base_url("?c=usragr&m=mailAttachment&userId=" . $userId);?>",
+											data: m_data,
+											processData: false,
+											contentType: false,
+											cache: false,
+											success: function (response) {
+												//load json data from server and output message
+												if (response.type == 'error') { //load json data from server and output message
+													output = '<div class="error">' + response.text + '</div>';
+												} else {
+													setTimeout(function () {
+														$('.progress').addClass('hide');
+													$("#progressstatus").html("<p color='black'></p>");
+													$('#requestStatus').show().css('background', '#66cc00').append("Form submitted successfully. We'll get back to you shortly");
+													output = '<div class="success">' + response.text + '</div>';
+													}, 5000);
+												}
+												//$("#contact_form #contact_results").hide().html(output).slideDown();
+											}
+										});
+
+										document.getElementById('step1').className = 'warning';
+										document.getElementById('step2').className = 'warning';
+										document.getElementById('step3').className = '';
+										document.getElementById('step3').className = '';
+										//alert("Form Submitted successfully for UserId:" + userId);
+									} else {
+
+
+										$('#requestStatus').show().css('background', '#b31b1b').append("<div id='message'>Uploaded file size should be less than 2 MB</div>");
+										setTimeout(function () {
+											$('#requestStatus').hide();
+										}, 2000);
+									}
+								} else {
+
+										var m_data = new FormData();
+										m_data.append('user_name', $('input#name').val());
+										m_data.append('user_email', $('input#email').val());
+										m_data.append('phone_number', $('input#phoneNo').val());
+										m_data.append('date', $('input#datepicker').val());
+										$.ajax({
+											type: "POST",
+											url: "<?php echo base_url("?c=usragr&m=mailAttachment&userId=" . $userId);?>",
+											data: m_data,
+											processData: false,
+											contentType: false,
+											cache: false,
+											success: function (response) {
+												//load json data from server and output message
+												if (response.type == 'error') { //load json data from server and output message
+													output = '<div class="error">' + response.text + '</div>';
+												} else {
+
+													$('#requestStatus').show().css('background', '#66cc00').append("Form submitted successfully. We'll get back to you shortly");
+
+												}
+											}
+										});
+
+										document.getElementById('step1').className = 'warning';
+										document.getElementById('step2').className = 'warning';
+										document.getElementById('step3').className = '';
+										document.getElementById('step3').className = '';
+
+								}
+							} else {
+								$('#requestStatus').show().css('background', '#b31b1b').append("Something wrong with the form. Contact Administrator");
+							}
+
+						});
+
+
+						document.getElementById("submit").disabled = true;
+						document.getElementById("save").disabled = true;
+
+						<?php }else{ ?>
+						alert("you cannot edit the form..! as the form submitted already");
+						<?php } ?>
+					}
 				}
-			}
+			}else{
+					$('#requestStatus').show().css('background', '#b31b1b').append("<div id='message'>Uploaded file size should be less than 2 MB</div>");
+					setTimeout(function () {
+						$('#requestStatus').hide();
+					}, 3000);
+
+				}
+				$("html, body").animate({scrollTop: 0}, 600);
 			}); //end of submit function
 			$('div#request_input').clone();
 		}); // end of document function
@@ -572,10 +691,14 @@
 				> Forms > Reserve Forms
 			</p>
 
-			<div id="researcherInfo"><h1 class="page_head" style="float: none;">Use Agreement Form</h1>
+			<div id="researcherInfo"><h1 class="page_head" style="float: none;">Use Agreement Form</h1></br>
 
 				<div id="requestStatus" style="width: auto; height:40px; margin-bottom: 7px; margin-top: -15px; color:#000000; font-size: 12pt; text-align: center; padding-top: 10px; display: none;">
 				</div></br>
+				<div id ="progressstatus"></div></br></br>
+				<div class="progress"></div>
+				<div class="progress"></div>
+				</br></br>
 				<ul class="progress-indicator">
 					<li id="step1" class="">
 						<span class="bubble"></span>
@@ -598,6 +721,12 @@
 						Completed
 					</li>
 				</ul></br>
+				<div align="right">
+					<div  style="width:170px;height:30px; background: #b31b1b;" class="box" id="requestInf">
+
+						<h3 style="color: white;text-align: center; vertical-align:middle;line-height: 30px;">Request ID : <?php echo $user_Id ?></h3>
+					</div>
+				</div></br>
 <!--				<div id="statusInfo">
 
 					<h3 align="right">Status: <?php /*echo $formStatus */?></h3></br></br>
@@ -709,30 +838,33 @@ Orders are completed in the order that they are received.
 						<?php if ($status ==2 || $status ==3) { ?>
 
 						<div>
-							<input type="checkbox" id="condofuse" value="condofuse"  name = "condofuse" class="checkbox" disabled="disabled" required><span id="cond_of_use" style="color: #b31b1b; font-weight: bold;"> I accept
-								<select id ="NumConditions"  disabled="disabled" >
+							<input type="checkbox" id="condofuse" value="condofuse"  name = "condofuse" class="checkbox" disabled="disabled" required><span id="cond_of_use" style="color: #ff082b; font-weight: bold;">
+								I accept 10 Conditions of use agreement of Marist College Archives and Special Collection </span></input>
+								<!--select id ="NumConditions"  disabled="disabled" >
 									<option value="10" class="selectinput">10</option>
-								</select>
-							Conditions of use agreement of Marist College Archives and Special Collection </span></input>
+								</select-->
+
                           </div>
 
 						<?php } else {?>
-							<div id="numcheck">	<input type="checkbox" style="background-color: #f6f5f7" id="condofuse" value="condofuse" name = "condofuse"  ><span id="cond_of_use" style="color: #fd2323; font-weight: bold;">I accept
-								<select id ="NumConditions" onChange="this.style.backgroundColor=this.options[this.selectedIndex].style.backgroundColor">
+							<div id="numcheck">
+								<input type="checkbox" style="background-color: #f6f5f7" id="condofuse" value="condofuse" name = "condofuse"  ><span id="cond_of_use" style="color: #ff082b; font-weight: bold;">
+									I accept 10 Conditions of use agreement of Marist College Archives and Special Collection</span></input>
+								<!--select id ="NumConditions" onChange="this.style.backgroundColor=this.options[this.selectedIndex].style.backgroundColor">
 									<option value="2" style="background: #B31B1B;" >2</option>
 									<option  value="6" style="background: #B31B1B;" >6</option>
 									<option style="background: #139b6c;" class="selectinput">10</option>
 									<option  value="15" style="background: #B31B1B;" >15</option>
 									<option  value="20" style="background: #B31B1B;" 	>20</option>
-								</select>
-						         	Conditions of use agreement of Marist College Archives and Special Collection</span></input>
+								</select-->
+
 								</br>
 
-								<div id="num_error" style="width: auto;text-align: center font-size: 12pt;">
+								<!--<div id="num_error" style="width: auto;text-align: center font-size: 12pt;visibility: hidden">
 									<p align="center" style="color: #b31b1b;font-style:oblique " >									<a><img src="./icons/attention_icon.gif" id="attention" class="shortcutlink" style="width:25px; height:25px; margin-left:10px;"/></a>
 										 Please go through the conditions of use and select the correct number</p></br></br></br>
 
-								</div>
+								</div>-->
 							</div>
 
 
@@ -745,14 +877,14 @@ Orders are completed in the order that they are received.
 
 						<?php if ($status ==2 || $status ==3) { ?>
 
-						<input type="checkbox" id="accept" value="Accept"  name = "accept" class="checkbox" disabled="disabled"><span id="accept-cond" style="color: #b31b1b; font-weight: bold;"> I accept and agree with the copyright notice.</span></input>
+						<input type="checkbox" id="accept" value="Accept"  name = "accept" class="checkbox" disabled="disabled"><span id="accept-cond" style="color: #ff082b; font-weight: bold;"> I accept and agree with the copyright notice.</span></input>
 
 							<br/><br/>
 						<label>Applicant's Initials:</label><input type="text" id="initials" value ="<?php echo $userInitials ?>" class="textinput" readonly/>
 
 						<?php } else {?>
 
-							<input type="checkbox" id="accept" value="Accept"  name = "accept" class="checkbox" required><span id="accept-cond" style="color: #b31b1b; font-weight: bold;">I accept and agree with the copyright notice.</span></input>
+							<input type="checkbox" id="accept" value="Accept"  name = "accept" class="checkbox" required><span id="accept-cond" style="color: #ff082b; font-weight: bold;">I accept and agree with the copyright notice.</span></input>
 							<br/><br/>
 							<label>Applicant's Initials:</label><input type="text" id="initials" value ="<?php echo $userInitials ?>" class="textinput"/>
 
@@ -763,10 +895,7 @@ Orders are completed in the order that they are received.
 					<div class="accordion" id="requests"><h4 id ="requests">Section 3: Requests:</h4><span class="click">Click to Open/Close</span></div>
 						
 						<div class="formcontents" id="formcontents">
-							<h3 id="att">Attachements (if any):</h3></br>
-							<h3 id="requestsReadOnly" style="display:none"> Requests:</h3></br>
-							<input class='btn' type="file" name="uploaded_file" id="uploaded_file"><br/></br>
-							<h3 align="center">(OR)</h3><br/></br>
+
 							<h3 id="addOrRem">Add/Remove Requests (Optional):</h3><br/>
 							<button id="buttonAdd-request" >+</button>
 							<button id="buttonRemove-request" disabled style="opacity: 0.5;">-</button>
@@ -833,7 +962,7 @@ Orders are completed in the order that they are received.
 									<option value="Blaise Pascal Collection">Blaise Pascal Collection</option>
 									<option value="Other">Other</option>
 								</select></br></br>
-								<label class="label" for="boxno">Box Number:</label><br/><input type="text" id="request_boxno" class="textinput" readonly/>
+								<!--label class="label" for="boxno">Box Number:</label><br/><input type="text" id="request_boxno" class="textinput" readonly/-->
 								<label class="label" for="itemno">Item Numbers:</label><br/><input type="text" id="request_itemno" class="textinput" readonly/>
 								<label class="label" for="dpi">Requested Resolution (dpi):</label><br/>
 								<input type="checkbox" name="dpi" value="72" class="checkbox" disabled="disabled">72</input>
@@ -848,7 +977,9 @@ Orders are completed in the order that they are received.
 								<input type="checkbox" name="avformat" value="wav" class="checkbox" disabled="disabled">WAV</input>
 								<input type="checkbox" name="avformat" value="mp3" class="checkbox" disabled="disabled">MP3</input>
 								<input type="checkbox" name="avformat" value="mpeg" class="checkbox" disabled="disabled">MPEG</input>
-								<input type="checkbox" name="avformat" value="hd" class="checkbox" disabled="disabled">HD</input><br/><br/>
+								<input type="checkbox" name="avformat" value="hd" class="checkbox" disabled="disabled">HD</input>
+									<input type="checkbox" name="avformat" value="mov" class="checkbox" disabled="disabled">MOV</input>
+									<br/><br/>
 								<label class="label" for="desc">Description of Use (Provided by the researcher):</label><br/><textarea id="request_desc" rows="4" cols="4" readonly/></textarea>
 						<?php } else { ?>
 
@@ -912,7 +1043,7 @@ Orders are completed in the order that they are received.
 										<option value="Blaise Pascal Collection">Blaise Pascal Collection</option>
 										<option value="Other">Other</option>
 									</select></br></br>
-									<label class="label" for="boxno">Box Number:</label><br/><input type="text" id="request_boxno" class="textinput" <!--value="--><--?php /*echo $boxNumber */?> "/>
+									<!--label class="label" for="boxno">Box Number:</label><br/><input type="text" id="request_boxno" class="textinput" /-->
 									<label class="label" for="itemno">Item Numbers:</label><br/><input type="text" id="request_itemno" class="textinput" <!--value="--><--?php /*echo $itemNumber */?> "/>
 									<label class="label" for="dpi">Requested Resolution (dpi):</label><br/>
 									<input type="checkbox" name="dpi" value="72" class="checkbox">72</input>
@@ -927,30 +1058,41 @@ Orders are completed in the order that they are received.
 									<input type="checkbox" name="avformat" value="wav" class="checkbox">WAV</input>
 									<input type="checkbox" name="avformat" value="mp3" class="checkbox">MP3</input>
 									<input type="checkbox" name="avformat" value="mpeg" class="checkbox">MPEG</input>
-									<input type="checkbox" name="avformat" value="hd" class="checkbox">HD</input><br/><br/>
+									<input type="checkbox" name="avformat" value="hd" class="checkbox">HD</input>
+									<input type="checkbox" name="avformat" value="mov" class="checkbox">MOV</input>
+									<br/><br/>
 									<label class="label" for="desc">Description of Use (Provided by the researcher):</label><br/><textarea id="request_desc" rows="4" cols="4"/></textarea>
 
 
 								<?php }?>
 								</div><!-- request_input template -->
 						</div> <!-- formcontents -->
-						
+		                		<h3 align="center">(OR)</h3><br/></br>
+						<div>
+							<h3 id="att">Attachements (if any):</h3></br>
+							<h3 id="requestsReadOnly" style="display:none"> Requests:</h3></br>
+							<input class='btn' type="file" name="uploaded_file" onchange= uploadedFile() id="uploaded_file"><br/></br>
+							<div id="fileInfo"></div>
+							<!-- formcontents -->
+						</div>
+
 						<?php if($attachment !=null){?>
-							</br><div id='attachment'>
-								<h3 style="color:#b31b1b">Attached files:</h3></br></br>
+							</br><div align="left" id='attachment'>
+								<h3 style="color:#b31b1b">Previously Attached files:</h3></br></br>
 							 <a href="<?php echo $attachemntLink;?>"><?php echo $attachment ?></a></br><!--label ><!--?php echo $fileAttachment; ?></label-->
 							</div></br></br>
 						<?php } ?>
 						
-						<div id="messages"  >
+						<div align="left" id="messages"  >
 							<label class="label" >Message (If any) : </label><br/>
 							<div id="textarea_feedback"></div><textarea maxlength="140"  id="message" rows="5" cols="2000" style="display: inline-block;  margin-bottom: 10px; " ><?php echo null ; ?></textarea>
+
+
 						</div >
-
-
 						<button class="btn" type="submit" id="submit">Submit</button>
 						<button class="btn" type="button" id="save">Save</button>
 
+			</div>
 			</div> <!-- researcherInfo -->
 
 

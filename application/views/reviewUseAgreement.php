@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/html">
+<html lang="en" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
 <head>
     <style>
         table, tr {
@@ -68,16 +68,31 @@
     }
     ?>
     <script type="text/javascript">
-        updateList = function() {
+       /* updateList = function() {
             var input = document.getElementById('upload');
             var output = document.getElementById('fileList');
 
             output.innerHTML = '<ul>';
+           var sizeLimit = false;
             for (var i = 0; i < input.files.length; ++i) {
-                output.innerHTML += '<li>' + input.files.item(i).name + '</li>';
+                if(input.files.item(i).size> 2000000){
+
+                    output.innerHTML += '<li>' + input.files.item(i).name + "<h4 style='color: red'>(Exceeded 2 MB File size limit)<h4>"+'</li>';
+                    sizeLimit = true;
+                }else {
+                    output.innerHTML += '<li>' + input.files.item(i).name + '</li>';
+
+                    //output.innerHTML += '<li>' + input.files.item(i).size + '</li>';
+                }
+            }
+            if(sizeLimit) {
+                $('#requestStatus').show().css('background', '#b31b1b').append("Each uploaded file should be less than 2 MB");
+
+
             }
             output.innerHTML += '</ul>';
-        }
+
+        }*/
         $(document).ready(function(){
 
             if("<?php echo $status ?>" ==0){
@@ -85,7 +100,7 @@
                 document.getElementById("approve").style.display = "none";
                 document.getElementById("disapprove").style.display = "none";
                 document.getElementById("complete").style.display="none";
-                document.getElementById("4").style.display="none";
+               // document.getElementById("4").style.display="none";
 
             }else if("<?php echo $status ?>" ==1){
                 document.getElementById('step1').className='danger';
@@ -95,7 +110,7 @@
                 document.getElementById("approve").style.display = "none";
                 document.getElementById("disapprove").style.display = "none";
                 document.getElementById("complete").style.display="none";
-                document.getElementById("4").style.display="none";
+               // document.getElementById("4").style.display="none";
 
 
             }else if("<?php echo $status ?>" ==2){
@@ -105,7 +120,7 @@
                 document.getElementById('step3').className='';
                 document.getElementById("complete").style.display="none";
 
-                document.getElementById("4").style.display="none";
+                //document.getElementById("4").style.display="none";
 
 
             }else if("<?php echo $status ?>" ==3){
@@ -116,6 +131,7 @@
                 document.getElementById("approve").style.display = "none";
                 document.getElementById("disapprove").style.display = "none";
                 document.getElementById("instructions").style.display="none";
+                document.getElementById("completeTransaction").style.visibility= 'visible';
 
 
             }else if("<?php echo $status ?>"==4){
@@ -215,22 +231,25 @@
             requestIds.push(str2.concat(" input:not(:checked)[name='avformat'][value='mp3']"));
             requestIds.push(str2.concat(" input:not(:checked)[name='avformat'][value='mpeg']"));
             requestIds.push(str2.concat(" input:not(:checked)[name='avformat'][value='hd']"));
+            requestIds.push(str2.concat(" input:not(:checked)[name='avformat'][value='mov']"));
             requestIds.push(str2.concat(" textarea#request_desc"));
             $(requestIds[0]).val('<?php echo $request[1]?>');
             $(requestIds[1]).val('<?php echo $request[2]?>');
             $(requestIds[2]).val('<?php echo $request[3]?>');
-            $(requestIds[14]).val('<?php echo $request[4]?>');
+            $(requestIds[15]).val('<?php echo $request[4]?>');
 
             <?php foreach($request[5] as $dpi) {?>
 
             if("<?php echo $dpi ?>" == "72"){
                 $(requestIds[3]).attr('checked',true);
+
             }else if("<?php echo $dpi ?>" == "300"){
                 $(requestIds[4]).attr('checked',true);
             }else if("<?php echo $dpi ?>" == "600"){
                 $(requestIds[5]).attr('checked',true);
             }else if("<?php echo $dpi ?>" == "1200"){
                 $(requestIds[6]).attr('checked',true);
+
             }
             <?php }?>
             <?php foreach($request[6] as $format) {?>
@@ -253,6 +272,8 @@
                 $(requestIds[12]).attr('checked',true);
             }else if("<?php echo $avformat ?>" == "hd"){
                 $(requestIds[13]).attr('checked',true);
+            }else if("<?php echo $avformat ?>" == "mov"){
+                $(requestIds[14]).attr('checked',true);
             }
             <?php }?>
 
@@ -351,123 +372,156 @@
             });
 
             $('button#approve').click(function(){
-                if ($('input#name').val() == ""){
-                    $('input#name').css('border','1px solid red');
-                }else if ($('input#email').val() == ""){
-                    $('input#email').css('border','1px solid red');
-                }else{
-                    var date = $('input#datepicker').val();
-                    var userName = $('input#name').val();
-                    var address = $('input#address').val();
-                    var citystate = $('input#citystate').val();
-                    var zipCode = $('input#zip').val();
-                    var emailId = $('input#email').val();
-                    var comments = $('textarea#comments').val();
-                    var phoneNumber = $('input#phoneNo').val();
-                    var instructions =  $('textarea#instructions').val();
-                    var requestCount = $("#formcontents > div").length - 1
-                    var requestList = [];
-                    //iterating multiple requests.
-                    for (var i = 1; i <= requestCount; i++) {
-                        var checked = [];
-                        var imageResolutions = "";
-                        var fileFormats = "";
-                        var avFormats = "";
-                        var str1 = "div#request_input";
-                        var str2 = str1.concat(i);
-                        var request = [];
-                        var reqCollection = $(str2.concat(" input#request_collection")).val();
-                        var boxNumber = $(str2.concat(" input#request_boxno")).val();
-                        var itemNumber = $(str2.concat(" input#request_itemno")).val();
-                        $.each($(str2.concat(" input:checked[name='dpi']")), function () {
-                            imageResolutions = imageResolutions.concat($(this).val());
-                            imageResolutions = imageResolutions.concat(":");
-                        });
-                        imageResolutions = imageResolutions.slice(0, -1);
-                        $.each($(str2.concat(" input:checked[name= 'format']")), function () {
-                            checked.push($(this).val());
-                            fileFormats = fileFormats.concat($(this).val());
-                            fileFormats = fileFormats.concat(":");
-                        });
-                        fileFormats = fileFormats.slice(0, -1);
 
-                        $.each($(str2.concat(" input:checked[name= 'avformat']")), function () {
-                            checked.push($(this).val());
-                            avFormats = avFormats.concat($(this).val());
-                            avFormats = avFormats.concat(":");
-                        });
-                        avFormats = avFormats.slice(0, -1);
-                        request.push(reqCollection);
-                        request.push(boxNumber);
-                        request.push(itemNumber);
-                        request.push(imageResolutions);
-                        request.push(fileFormats);
-                        request.push(avFormats);
-                        requestList.push(request);
-                    }
-                    $.post("<?php echo base_url("?c=usragr&m=approveRequest&userId=" . $userId);?>", {
-                        date: date,
-                        userName: userName,
-                        address: address,
-                        zipCode: zipCode,
-                        citystate: citystate,
-                        emailId: emailId,
-                        comments: comments,
-                        phoneNumber: phoneNumber,
-                        requestCount: requestCount,
-                        requestList: requestList,
-                        instructions:instructions
-                    }).done(function (userId) {
-                        if (userId > 0) {
 
-                            $('#requestStatus').show().css('background','#66cc00').append("#" + userId + ": User Agreement Form has been approved and confirmation mail sent to "+ userName);
-                           // $('#stat').show().append("Status: Approved");
-                            document.getElementById('step1').className='completed';
-                            document.getElementById('step2').className='completed';
-                            document.getElementById('step3').className='completed';
-                            document.getElementById('step4').className='completed';
-                            //var htmlcleaned = $('#statusInfo h3').html().replace(/<br\s?\/?>/,'');
-                          //  $('#statusInfo h3').html(htmlcleaned);
-                           // $('#statusInfo').hide();
 
-                        } else {
-                            $('#requestStatus').show().css('background','#b31b1b').append("Something wrong with the form. Contact Administrator");
 
-                        }
-                        $("html, body").animate({ scrollTop: 0}, 600);
-                    });
+                var email = $('input#email').val();
+                var selectEmail = prompt("Please select recipient emailId",email );
 
-                }
+              if(selectEmail != null) {
+                  if ($('input#name').val() == "") {
+                      $('input#name').css('border', '1px solid red');
+                  } else if ($('input#email').val() == "") {
+                      $('input#email').css('border', '1px solid red');
+                  } else {
+
+                      var date = $('input#datepicker').val();
+                      var userName = $('input#name').val();
+                      var address = $('input#address').val();
+                      var citystate = $('input#citystate').val();
+                      var zipCode = $('input#zip').val();
+                      var emailId = selectEmail;
+                     // var emailId = $('input#email').val();
+                      var comments = $('textarea#comments').val();
+                      var phoneNumber = $('input#phoneNo').val();
+                      var instructions = $('textarea#instructions').val();
+                      var requestCount = $("#formcontents > div").length - 1
+                      var requestList = [];
+                      //iterating multiple requests.
+                      for (var i = 1; i <= requestCount; i++) {
+                          var checked = [];
+                          var imageResolutions = "";
+                          var fileFormats = "";
+                          var avFormats = "";
+                          var str1 = "div#request_input";
+                          var str2 = str1.concat(i);
+                          var request = [];
+                          var reqCollection = $(str2.concat(" input#request_collection")).val();
+                          var boxNumber = $(str2.concat(" input#request_boxno")).val();
+                          var itemNumber = $(str2.concat(" input#request_itemno")).val();
+                          $.each($(str2.concat(" input:checked[name='dpi']")), function () {
+                              imageResolutions = imageResolutions.concat($(this).val());
+                              imageResolutions = imageResolutions.concat(":");
+                          });
+                          imageResolutions = imageResolutions.slice(0, -1);
+                          $.each($(str2.concat(" input:checked[name= 'format']")), function () {
+                              checked.push($(this).val());
+                              fileFormats = fileFormats.concat($(this).val());
+                              fileFormats = fileFormats.concat(":");
+                          });
+                          fileFormats = fileFormats.slice(0, -1);
+
+                          $.each($(str2.concat(" input:checked[name= 'avformat']")), function () {
+                              checked.push($(this).val());
+                              avFormats = avFormats.concat($(this).val());
+                              avFormats = avFormats.concat(":");
+                          });
+                          avFormats = avFormats.slice(0, -1);
+                          request.push(reqCollection);
+                          request.push(boxNumber);
+                          request.push(itemNumber);
+                          request.push(imageResolutions);
+                          request.push(fileFormats);
+                          request.push(avFormats);
+                          requestList.push(request);
+                      }
+                      $.post("<?php echo base_url("?c=usragr&m=approveRequest&userId=" . $userId);?>", {
+                          date: date,
+                          userName: userName,
+                          address: address,
+                          zipCode: zipCode,
+                          citystate: citystate,
+                          emailId: emailId,
+                          comments: comments,
+                          phoneNumber: phoneNumber,
+                          requestCount: requestCount,
+                          requestList: requestList,
+                          instructions: instructions
+                      }).done(function (userId) {
+                          if (userId > 0) {
+
+                              $('#requestStatus').show().css('background', '#66cc00').append("#" + userId + ": User Agreement Form has been approved and confirmation mail sent to " + userName);
+                              // $('#stat').show().append("Status: Approved");
+                              document.getElementById('step1').className = 'completed';
+                              document.getElementById('step2').className = 'completed';
+                              document.getElementById('step3').className = 'completed';
+                              document.getElementById('step4').className = 'completed';
+                              //var htmlcleaned = $('#statusInfo h3').html().replace(/<br\s?\/?>/,'');
+                              //  $('#statusInfo h3').html(htmlcleaned);
+                              // $('#statusInfo').hide();
+
+                          } else {
+                              $('#requestStatus').show().css('background', '#b31b1b').append("Something wrong with the form. Contact Administrator");
+
+                          }
+                          $("html, body").animate({scrollTop: 0}, 600);
+                      });
+
+                  }
+              }
             });//end of approve function
-            $('button#complete').click(function() {
+           $('button#complete').click(function() {
 
-                var m_data = new FormData();
-                m_data.append('user_name', $('input#name').val());
-                m_data.append('user_email', $('input#email').val());
-                m_data.append('instructions', $('textarea#instructions').val());
-                m_data.append('file_attach', $('input#uploaded_file')[0].files[0]);
-                m_data.append('file_attach', $('input#uploaded_file')[1].files[1]);
-                m_data.append('file_attach', $('input#uploaded_file')[2].files[2]);
+               var user_name =  $('input#name').val();
+               var user_email =  $('input#email').val();
+               var message = $('textarea#message').val();
+              //  var m_data = new FormData();
+                //m_data.append('user_name', $('input#name').val());
+                //m_data.append('user_email', $('input#email').val());
+                //m_data.append('message', $('textarea#message').val());
 
-                m_data.append('date', $('input#datepicker').val());
-                $.ajax({
+                //m_data.append('file_attach', $('input#uploaded_file')[0].files[0]);
+                //m_data.append('file_attach', $('input#uploaded_file')[1].files[1]);
+                //m_data.append('file_attach', $('input#uploaded_file')[2].files[2]);
+
+            //    m_data.append('date', $('input#datepicker').val());
+               $.post("<?php echo base_url("?c=usragr&m=completetransaction&userId=".$userId);?>", {
+                   user_name: user_name,
+                   user_email:user_email,
+                   message :message
+
+               }).done(function (response) {
+                   if(response>0){
+                       $('#requestStatus').show().css('background', '#66cc00').append("Email has been sent to user");
+                       document.getElementById('step1').className = 'completed';
+                       document.getElementById('step2').className = 'completed';
+                       document.getElementById('step3').className = 'completed';
+                       document.getElementById('step4').className = 'completed';
+                       document.getElementById('step5').className = 'completed';
+                   }else{
+
+                       $('#requestStatus').show().css('background', '#b31b1b').append("Something wrong with the form. Contact Administrator");
+
+                   }
+
+
+               });
+/*                $.ajax({
                     type: "POST",
-                    url: "<?php echo base_url("?c=usragr&m=mailAttachment&userId=" . $userId);?>",
+                    url: "<!--?php echo base_url("?c=usragr&m=completetransaction&userId=".$userId);?>",
                     data: m_data,
                     processData: false,
                     contentType: false,
                     cache: false,
                     success: function (response) {
-                        //load json data from server and output message
-                        if (response.type == 'error') { //load json data from server and output message
-                            output = '<div class="error">' + response.text + '</div>';
-                        } else {
-                            output = '<div class="success">' + response.text + '</div>';
-                        }
-                        $("#contact_form #contact_results").hide().html(output).slideDown();
+
+
                     }
-                });
-            });
+                });*/
+               $("html, body").animate({scrollTop: 0}, 600);
+
+           });
 
             $('div#request_input').clone();
 
@@ -504,7 +558,8 @@
                 <a href="http://library.marist.edu" class="map_link"><img src="http://library.marist.edu/images/home.png" class="fox2"/></a>
                 > Forms > Reserve Forms
             </p>
-            <div id="researcherInfo"><h1 class="page_head" align="center" style="float: none;">Use Agreement Admin Form</h1>
+            <div id="researcherInfo"><h1 class="page_head" align="center" style="float: none;">Use Agreement Admin Form</h1></br>
+                </br>
                 <div id="requestStatus" style="width: auto; height:40px; margin-bottom: 7px; margin-top: -15px; color:#000000; font-size: 12pt; text-align: center; padding-top: 10px; display: none;">
                 </div></br>
                 <ul class="progress-indicator">
@@ -528,13 +583,19 @@
                         <span class="bubble"></span>
                         Completed
                     </li>
-                </ul></br></br>
-                <div id="confirmations"></div></br></br>
+                </ul></br>
+                <div id="confirmations"></div></br>
 <!--                <div id="statusInfo">
                     <h3 align="right">Status: <!--?php /*echo $formStatus */?></h3></br></br>
                 </div>
                 <div id="stat" style="width: auto; height:40px; margin-bottom: 7px; margin-top: -15px; font-size: 12pt; text-align: right; padding-top: 10px; display: none;">
                 </div>-->
+                <div align="right">
+                    <div  style="width:170px;height:30px; background: #b31b1b;" class="box" id="requestInf">
+
+                        <h3 style="color: white;text-align: center; vertical-align:middle;line-height: 30px;">Request ID : <?php echo $userId ?></h3>
+                    </div>
+                </div></br>
                 <div class="accordion" id="2"><h4 id="2">Section 1: Researcher's Information:</h4><span class="click">Click to Open/Close</span></div>
                 <div class="formcontents" id="2-contents" aria-readonly="true">
                     <label class="label">Date:</label><br/><input type="text" id="datepicker" class="textinput"  value = "<?php echo $date; ?>" style="width: 100px;"readonly/>
@@ -602,10 +663,8 @@ Orders are completed in the order that they are received.
 
                         <div>
                             <input type="checkbox" id="condofuse" value="condofuse"  name = "condofuse" class="checkbox" disabled="disabled" required><span id="cond_of_use" style="color: #b31b1b; font-weight: bold;"> I accept
-								<select id ="NumConditions"  disabled="disabled" >
-                                    <option value="10" class="selectinput">10</option>
-                                </select>
-							Conditions of use agreement of Marist College Archives and Special Collection </span></input>
+
+						 10	Conditions of use agreement of Marist College Archives and Special Collection </span></input>
                         </div>
 
                     <?php } else {?>
@@ -652,7 +711,9 @@ Orders are completed in the order that they are received.
                         <input type="checkbox" name="avformat" value="wav" class="checkbox"disabled>WAV</input>
                         <input type="checkbox" name="avformat" value="mp3" class="checkbox"disabled>MP3</input>
                         <input type="checkbox" name="avformat" value="mpeg" class="checkbox"disabled>MPEG</input>
-                        <input type="checkbox" name="avformat" value="hd" class="checkbox"disabled>HD</input><br/><br/>
+                        <input type="checkbox" name="avformat" value="hd" class="checkbox" disabled>HD</input>
+                        <input type="checkbox" name="avformat" value="mov" class="checkbox" style="background-color:black" disabled>MOV</input>
+                        <br/><br/>
                         <label class="label" for="desc">Description of Use (Provided by the researcher):</label><br/><textarea id="request_desc" rows="4" cols="4" readonly/></textarea>
                     </div><!-- request_input template -->
                 </div> <!-- formcontents -->
@@ -683,32 +744,39 @@ Orders are completed in the order that they are received.
 
                     <?php } ?>
                 </div>
-                 <div class="accordion" id="4"><h4 id="4" class="accordion">Upload Copies</h4><span class="click">Click to Open/Close</span></div>
+                <!-- <div class="accordion" id="4"><h4 id="4" class="accordion">Upload Copies</h4><span class="click">Click to Open/Close</span></div>
                 <div class='contents' id="copies_sent">
-                </div>
+                </div>-->
 
-                <form action="" id='complete' enctype="multipart/form-data" method="post">
+                <!--form action="" id='complete' enctype="multipart/form-data"  method="post">
                     <div>
 
-                        <label for='upload'>Add Attachments:</label>
+<!--                        <label for='upload'>Add Attachments:</label>
                         <input id='upload' class='btn' name="upload[]" type="file" multiple="multiple" onchange="updateList()"></br></br>
                         <div id="fileList">
-                        </div>
-                        </br><label class="label">Message:</label><br/><textarea id="message" name='message' rows="8" cols="75" style="display: block; margin-bottom: 10px;" ></textarea>
-                        <input class='btn' type="submit" name="submit" value="Complete Transaction">
-                    </div>
+                        </div>-->
+                        </br>
+                    <!--/div-->
 
 
-                </form>
+                <!--/form-->
 
                 <div id ="instructions">
                     </br><label class="label">Optional Message (This will be part of the email sent to the researcher):</label><br/><textarea id="instructions" rows="8" cols="75" style="display: block; margin-bottom: 10px;" ></textarea>
                 </div>
                 <button class="btn" type="submit" id="approve">Approve</button>
                 <button class="btn" type="button" id="disapprove">Return for review</button></br>
+
+
+
             </div>
 
+                <div id="completeTransaction" align="center" style="visibility: hidden;">
+                    <label class="label">Message:</label><br/><textarea id="message" name='message' rows="8" cols="75" style="display: block; margin-bottom: 10px;" ></textarea>
+                    <button class="btn" type="button" id="complete">Complete Transaction</button>
 
+                    <!--button class='btn' type="button" id="complete" name="submit" value="Complete Transaction"-->
+                </div>
         </div> <!-- content -->
     </div>
 
@@ -743,21 +811,26 @@ Orders are completed in the order that they are received.
 </body>
 
 </html>
+
 <?php
 if(isset($_POST['submit'])){
-    if(count($_FILES['upload']['name']) > 0){
+
+
+/*    if(count($_FILES['upload']['name']) > 0){
         //Loop through each file
         $files = array();
         for($i=0; $i<count($_FILES['upload']['name']); $i++) {
-            //Get the temp file path
-            $tmpFilePath = $_FILES['upload']['tmp_name'][$i];
+            $file_size = $_FILES['upload']['size'];
+             print_r($file_size);
+               //Get the temp file path
+               $tmpFilePath = $_FILES['upload']['tmp_name'][$i];
 
-            //Make sure we have a filepath
-            if($tmpFilePath != ""){
-                //save the filename
-               // $shortname = $_FILES['upload']['name'][$i];
-                $shortname = str_replace(' ', '', $_FILES['upload']['name'][$i]);
-                $six_digit_random_number = mt_rand(100000, 999999);
+               //Make sure we have a filepath
+               if ($tmpFilePath != "") {
+                   //save the filename
+                   // $shortname = $_FILES['upload']['name'][$i];
+                   $shortname = str_replace(' ', '', $_FILES['upload']['name'][$i]);
+                   $six_digit_random_number = mt_rand(100000, 999999);
 
                 //save the url and the file
                 $filePath = "/data/library/htdocs/archives/useagreement/completed/" . $userId.'_'.$six_digit_random_number.'_'.$shortname;
@@ -771,7 +844,7 @@ if(isset($_POST['submit'])){
                     //use $filePath for the relative url to the file
                 }
             }
-        }
+        }*/ //uploading file feature is disabled for time being
         $comment = $_POST["message"];
         $message = '<html><body>';
 
@@ -779,10 +852,10 @@ if(isset($_POST['submit'])){
 
         $message .= "<tr ><td align='center'><img src='https://s.graphiq.com/sites/default/files/10/media/images/Marist_College_2_220374.jpg'  /><h3> Marist Archives and Special Collection </h3><h3>COPY/USE AGREEMENT REQUEST</h3> ";
 
-        $message .= "<br/><br/> <h4> Dear $userName ,<br /><br />Please find the below links to access your requested copies</h4></tr>";
+        $message .= "<br/><br/> <h4> Dear $userName ,<br /><br />We have sent you the requested copies through Marist Dropbox. Please verify them and let us know in case of any issues.</h4></tr>";
 
 //$message .= "<tr><td colspan=2 font='colr:#3A5896;'><I>Link:<br></I> $url </td></tr>";
-         $filestring = "";
+/*         $filestring = "";
         $i=0;
         for ($i=0;$i<sizeof($files);$i++){
             $message.= "<tr><td><I>Link: </I><a href='$files[$i]'> $files[$i]</a> </td></tr>";
@@ -790,7 +863,7 @@ if(isset($_POST['submit'])){
             if($i<(sizeof($files)-1)){
                 $filestring= $filestring.'||';
             }
-        }
+        }*/
 /*        foreach($files as $file){
             $message.= "<tr><td><I>Link:</I></br>$file </td></tr>";
             $filestring =$filestring.$file;
@@ -801,7 +874,7 @@ if(isset($_POST['submit'])){
         $message .= "</table>";
 
         $message .= "</body></html>";
-    }
+   // }
     $message_body = $message ;
     $ci = get_instance();
     $ci->load->library('email');
@@ -825,7 +898,7 @@ if(isset($_POST['submit'])){
     if( $ci->email->send()){
 
 
-   $response = file_get_contents(base_url('?c=usragr&m=update_status&status=4&files='.$filestring.'&userId='.$userId));
+  // $response = file_get_contents(base_url('?c=usragr&m=update_status&status=4&files='.$filestring.'&userId='.$userId));
 if($response) {
 
   //  header("Refresh:0");
