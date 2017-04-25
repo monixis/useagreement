@@ -37,7 +37,8 @@
 | in the URL cannot be matched to a valid route.
 |
 */
-
+// $route['view/(:any)'] = 'usragr/view/$1';
+// $route['view'] = 'usragr/view';
 $route['default_controller'] = "usragr";
 $route['404_override'] = '';
 
