@@ -478,6 +478,6 @@
             <a href="http://www.marist.edu/disclaimers.html" target="_blank" >Disclaimers</a> | <a href="http://www.marist.edu/privacy.html" target="_blank" >Privacy Policy</a> | <a href=<?php echo base_url("?c=usragr&m=ack");?> target="_blank">Acknowledgements</a>
         </p>
     </div>
-
+  </div>
 </body>
 </html>

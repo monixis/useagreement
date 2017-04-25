@@ -1,12 +1,13 @@
 <?php
-class usragr extends CI_Controller
+class Usragr extends CI_Controller
 {
 
 
     private $limit = 10;
 
-    public function index()
+    public function index($page = 'initiateUseAgreement')
     {
+
         $this->load->model('usragr_model');
         $data['title'] = "COPY REQUEST/USE AGREEMENT FORM";
         $date = date_default_timezone_set('US/Eastern');
@@ -16,6 +17,17 @@ class usragr extends CI_Controller
 	 public function ack(){
 	 	$this->load->view('ack');
 	 }
+
+   /* Function to display a given page - Dan Mopsick */
+   public function view($page = 'initiateUseAgreement'){
+     $this->load->model('usragr_model');
+     $query = $this->usragr_model->allRequests($this->limit);
+
+     $total_rows = $this->usragr_model->count();
+     $this->load->helper('app');
+     $pagination_links = pagination($total_rows, $this->limit);
+     $this->load->view($page, compact('query', 'pagination_links','total_rows'));
+   }
 
     /*
      *Function to create new researcher.
