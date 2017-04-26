@@ -2,18 +2,6 @@
 <html lang="en" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
 <head>
 	<style>
-		table, tr {
-			border: 1px solid red;
-		}
-		
-		span.click{
-			float: right;
-			margin-top: -25px;
-		}
-		
-		div.accordion{
-			margin-bottom: 8px;
-		}
 		.progress {
 			display: block;
 			text-align: center;
@@ -110,7 +98,7 @@
         		return false;
     			}
 			}
-			
+
 		$(document).ready(function(){
 			$('#num_error').hide();
 
@@ -171,7 +159,7 @@
 			document.getElementById("buttonAdd-request").style.display="none";
 			document.getElementById("buttonRemove-request").style.display="none";
 			document.getElementById("addOrRem").style.display="none";*/
-			
+
 	        <?php if($sizeofRequests>0){ ?>
 			for(var i=0;i <= <?php echo $sizeofRequests?>;i++ ){
 
@@ -853,7 +841,7 @@ Orders are completed in the order that they are received.
 						<?php } else {?>
 							<div id="numcheck">
 								<input type="checkbox" style="background-color: #f6f5f7" id="condofuse" value="condofuse" name = "condofuse"  ><span id="cond_of_use" style="color: #ff082b; font-weight: bold;">
-									I accept 10 Conditions of use agreement of Marist College Archives and Special Collection</span></input>
+									I accept the 10 Conditions of use agreement of Marist College Archives and Special Collection</span></input>
 								<!--select id ="NumConditions" onChange="this.style.backgroundColor=this.options[this.selectedIndex].style.backgroundColor">
 									<option value="2" style="background: #B31B1B;" >2</option>
 									<option  value="6" style="background: #B31B1B;" >6</option>
@@ -897,7 +885,7 @@ Orders are completed in the order that they are received.
 					</div>
 
 					<div class="accordion" id="requests"><h4 id ="requests">Section 3: Requests:</h4><span class="click">Click to Open/Close</span></div>
-						
+
 						<div class="formcontents" id="formcontents">
 
 							<h3 id="addOrRem">Add/Remove Requests (Optional):</h3><br/>
@@ -1086,7 +1074,7 @@ Orders are completed in the order that they are received.
 							 <a href="<?php echo $attachemntLink;?>"><?php echo $attachment ?></a></br><!--label ><!--?php echo $fileAttachment; ?></label-->
 							</div></br></br>
 						<?php } ?>
-						
+
 						<div align="left" id="messages"  >
 							<label class="label" >Message (If any) : </label><br/>
 							<div id="textarea_feedback"></div><textarea maxlength="140"  id="message" rows="5" cols="2000" style="display: inline-block;  margin-bottom: 10px; " ><?php echo null ; ?></textarea>

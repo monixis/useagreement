@@ -1,3 +1,14 @@
+div.accordion{
+  margin-bottom: 8px;
+}
+table, tr {
+  border: 1px solid red;
+}
+
+span.click{
+  float: right;
+  margin-top: -25px;
+}
 .label {
 	font-size: 16px;
 	font-style: bold;
@@ -110,7 +121,7 @@ h2 {
 h4{
 	margin-bottom: 5px;
 }
-		
+
 .accordion {
 	font-family: Arial;
 	color: #000000;
