@@ -100,8 +100,15 @@ h4{
 	border: 1px solid #e0e0e0;
 }
 
-.initialinput {
-	height: 16px;
+.label {
+	font-size: 16px;
+	font-style: bold;
+	margin-right: 20px;
+}
+
+.readonlytext {
+	width: 230px;
+	height: 30px;
 	padding: 6px 12px;
 	font-size: 14px;
 	line-height: 1.428571429;
@@ -114,15 +121,8 @@ h4{
 	margin-bottom: 10px;
 }
 
-.label {
-	font-size: 16px;
-	font-style: bold;
-	margin-right: 20px;
-}
-
-.readonlytext {
-	width: 230px;
-	height: 30px;
+.sizable_input {
+	height: 16px;
 	padding: 6px 12px;
 	font-size: 14px;
 	line-height: 1.428571429;

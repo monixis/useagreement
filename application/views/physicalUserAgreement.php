@@ -73,8 +73,95 @@
             <form style = "float:none; margin-left:0;" action="javascript:void(0);">
               <div class = "formcontents">
               <!-- Should the date be time stamped by the datbase? If the person is in the library... the time they are using the archive material is now -->
-                <label class = "label">Confirmation Number:</label><br/><input type = "text" id = "confirmation" class = "textinput" size = "10" maxLength = "10" required autofocus/>
+                <label class = "label">Confirmation Number:</label><br/><input type = "text" id = "confirmation" class = "sizable_input" size = "10" minLength = "10" maxLength = "10" required autofocus/>
               </div> <!-- formcontents -->
+
+              <div class="accordion" id="3"><h4 id="3">Section 2: Conditions of use</h4><span class="click">Click to Open/Close</span></div>
+      					<div id="3-contents" class="formcontents">
+      						<div style="height: 200px; border-bottom: 1px solid #e0e0e0; border-width: 75%; overflow-y: auto; padding: 10px; margin-bottom: 1px;">
+      							<ul>
+      								<li>(1) To use the image(s), audio, or video only for the purpose or project stated above. Later and different use constitutes reuse and is
+      									prohibited. Subsequent requests for permission to reuse image(s), audio, or video must be made in writing. A reuse fee may apply</li><br/>
+      								<li>(2) To give proper credit for the image(s), audio, or video. Unless otherwise stated on the photographic copy, the credit line should
+      								read: James A. Cannavino Library, Archives &amp; Special Collections, Marist College, USA. When the name of the photographer
+      								or collection is supplied, this should also be included in the credit. The placement of credit should be as follows:<br/><br/>
+    									  <ul>a) Printed material - Preferably the credit line should appear on the same page as the printed copy of the image and
+      									           immediately adjacent to it. The credit may appear elsewhere in the publication if done in such a way that readers
+                          can quickly match individual images with their respective credit.
+                        </ul><br/>
+                        <ul>b) Films, filmstrips, video, or electronic media (including Internet productions) - The credit line should appear
+                          on the film, filmstrip, video, or electronic media where other sources are listed. If manuals accompany films or
+                          filmstrips, the credit should appear where the subject of the illustration is discussed in the text.
+                        </ul><br/>
+                        <ul>
+                          c) Public exhibitions - The credit should appear within the exhibit area.
+                        </ul><br/>
+                        <ul>
+                          d) Audio broadcasts – The credit should be read at the end of the broadcast or given when other sources are listed.
+                        </ul><br/>
+      			          </li>
+      								<li>(3) Not to digitize images at a resolution higher than 72 dots per inch for use on the Internet, or distribute image(s), audio, or
+                        video without written authorization from the Marist College Archives &amp; Special Collections.
+                      </li><br/>
+                      <li>(4) To assume all responsibility for questions of copyright and invasion of privacy that may arise in the copying and in the use of
+                        the image(s), audio, or video and to assume responsibility for obtaining all necessary permissions pertaining to use.
+                      </li><br/>
+                      <li>(5) To defend and indemnify and save and hold harmless Marist College, its Archives &amp; Special Collections, its employees or
+                        designates, and the donors and former owners of Marist College Archives or Special Collections, from any and all costs,
+                        expense, damage and liability arising because of any claim whatsoever which may be presented by anyone for loss or damage or
+                        other relief occasioned or caused by the release of image(s), audio, or video to the undersigned applicant and their use in any
+                        manner, including inspection, publication, reproduction, duplication or printing by anyone for any purpose whatsoever.
+                      </li><br/>
+                      <li>(6) To supply the Marist College Archives &amp; Special Collections with one complimentary copy of any printed, broadcast, or
+                        published work in which one or more image(s), audio, or video appear.
+                      </li><br/>
+                      <li>(7) Not to permit others to reproduce the image(s), audio, or video; to destroy any digitized copies of image(s) audio, or
+                        video following their use.
+                      </li><br/>
+                      <li>(8) Not to place the image(s), audio, or video in another institution, repository, or collection--public or private.</li><br/>
+                      <li>(9) To return to the Marist College Archives &amp; Special Collections the supplied copies of any image(s), audio, or video if they are
+                        designated by the Archives &amp; Special Collections for return.
+                      </li><br/>
+                      <li>(10) That the Marist College Archives &amp; Special Collections in no way surrenders its own right to publish or otherwise use the image(s),
+                        audio, or video, or to grant permission for others to do so. That the Marist College Archives &amp; Special Collections reserves the right
+                        to make exceptions or additions to the conditions stated herein.
+                      </li><br/>
+    							  </ul>
+      							<p>As a patron of Marist College Archives &amp; Special Collections, I agree to abide by all copyright laws as they are applicable to my work, including intellectual rights, privacy of
+                      individuals, corporate privacy rights and federal and state laws. I agree to abide by all donor and/or
+                      informant restrictions placed on the items that I request to use, and agree that this material will not be misquoted, misused, or mishandled. I
+                      also agree that these reproductions are solely for my personal use, and I will not resell or donate them.
+                    </p>
+                    <p>All reproductions are handled by the Marist College Archives &amp; Special Collections staff (unless noted otherwise) and are dependent on the
+                      physical condition of the item. Reproductions are limited to 10% of a book, article, or folder unless otherwise authorized by a curator.
+                      Orders are completed in the order that they are received.
+                    </p>
+      						</div>
+              </div>
+              <br/>
+
+              <div id="numcheck">
+      				   <input type="checkbox" style="background-color: #f6f5f7" id="condofuse" value="condofuse" name = "condofuse"  required><span id="cond_of_use" style="color: #ff082b; font-weight: bold;">
+      									I accept the 10 Conditions of use agreement of Marist College Archives and Special Collection</span></input>
+
+      								<br/>
+
+
+
+      						<p><label style="font-weight: bold;">Copyright Notice: </label>The individual requesting reproductions expressly assumes the responsibility for compliance with all pertinent provisions of
+      							the Copyright Act, 17 U.S.C. ss101 et seq. The patron further agrees to indemnify and hold harmless the Marist College Archives &amp; Special
+      							Collections and its staff in connection with any disputes arising from the Copyright Act, over the reproduction of material at the request of the
+      							patron.</p>
+
+
+      							<input type="checkbox" id="accept" value="Accept"  name = "accept" class="checkbox" required><span id="accept-cond" style="color: #ff082b; font-weight: bold;">I accept and agree with the copyright notice.</span></input>
+      							<br/><br/>
+      							<label>Applicant's Initials:</label><input type="text" id="initials" size = "3" minLength = "2" maxLength = "3" class="sizable_input" required/>
+
+
+      					</div>
+
+
               <div class="accordion" id="requests"><h4 id ="requests">Section 3: Requests:</h4><span class="click">Click to Open/Close</span></div>
 
     						<div class="formcontents" id="formcontents">
@@ -163,36 +250,35 @@
     									<br/><br/>
     									<label class="label" for="desc">Description of Use (Provided by the researcher):</label><br/><textarea id="request_desc" rows="4" cols="4"/></textarea>
     								</div><!-- request_input template -->
-    						</div> <!-- formcontents -->
+
     		        <h3 align="center">(OR)</h3><br/></br>
     						<div>
     							<h3 id="att">Attachements (if any):</h3></br>
     							<h3 id="requestsReadOnly" style="display:none"> Requests:</h3></br>
     							<input class='btn' type="file" name="uploaded_file" onchange= uploadedFile() id="uploaded_file"><br/></br>
     							<div id="fileInfo"></div>
-    							<!-- formcontents -->
+
     						</div>
 
     						<?php if($attachment !=null){?>
     							</br><div align="left" id='attachment'>
     								<h3 style="color:#b31b1b">Previously Attached files:</h3></br></br>
-    							 <a href="<?php echo $attachemntLink;?>"><?php echo $attachment ?></a></br><!--label ><!--?php echo $fileAttachment; ?></label-->
+    							 <a href="<?php echo $attachemntLink;?>"><?php echo $attachment ?></a></br><!--label --><!--?php echo $fileAttachment; ?></label-->
     							</div></br></br>
     						<?php } ?>
 
-    						<div align="left" id="messages"  >
+    						<div align="left" id="messages">
     							<label class="label" >Message (If any) : </label><br/>
-    							<div id="textarea_feedback"></div><textarea maxlength="140"  id="message" rows="5" cols="2000" style="display: inline-block;  margin-bottom: 10px; " ><?php echo null ; ?></textarea>
+    							<div id="textarea_feedback"></div>
+                  <textarea maxlength="140"  id="message" rows="5" cols="2000" style="display: inline-block;  margin-bottom: 10px;" placeholder="Write your message here." ></textarea>
 
 
     						</div>
-    						<button class="btn" type="submit" id="submit">Submit</button>
-    						<button class="btn" type="button" id="save">Save</button>
 
     			</div>
+                <!-- The submit button that will send the email and handle the form info. -->
+                <input type = "submit" class="btn" id="initiate" value = "Initiate Use Agreement &amp; Send email">
               </div> <!-- researcherInfo -->
-              <!-- The submit button that will send the email and handle the form info. -->
-              <input type = "submit" class="btn" id="initiate" value = "Initiate Use Agreement &amp; Send email">
           </form>
 
 

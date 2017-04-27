@@ -182,7 +182,7 @@
                     </span>
                   </input>
                   <br/><br/>
-                  <label class = "label">Applicant's Initials:</label><input type = "text" id = "initials" size = "3" class = "initialinput" maxLength = "3" required/>
+                  <label class = "label">Applicant's Initials:</label><input type = "text" id = "initials" size = "3" class = "sizable_input" maxLength = "3" required/>
                 </div>
 
                 <!-- The submit button that will send the email and handle the form info. -->
