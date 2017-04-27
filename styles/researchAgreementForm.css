@@ -100,6 +100,20 @@ h4{
 	border: 1px solid #e0e0e0;
 }
 
+.initialinput {
+	height: 16px;
+	padding: 6px 12px;
+	font-size: 14px;
+	line-height: 1.428571429;
+	color: #555;
+	vertical-align: middle;
+	background-color: #fff;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	display: block;
+	margin-bottom: 10px;
+}
+
 .label {
 	font-size: 16px;
 	font-style: bold;

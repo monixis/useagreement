@@ -14,6 +14,41 @@ $(document).ready(function(){
 
   });
 
+  var howArchives = "";
+  var purpose = "";
+
+  /* Parses the value of the check boxes for "How did you learn about our archives and Special Collections holdings?" */
+  $('#howDiv input').each(function(){
+    var tis = $(this);
+    var value = tis.val();
+    tis.click(function(){
+      if(tis.is(':checked')){
+        howArchives +=  (value + " ");
+        alert("Check!" + howArchives);
+      }
+      else{
+        howArchives = howArchives.replace(value + " ", "");
+        alert("Uncheck!" + howArchives);
+      }
+    });
+  });
+
+  /* Parses the value of the check boxes for "What is the purpose of your research?" */
+  $('#purposeDiv input').each(function(){
+    var tis = $(this);
+    var value = tis.val();
+    tis.click(function(){
+      if(tis.is(':checked')){
+        purpose += (value + " ");
+        alert("Check!" + purpose);
+      }
+      else{
+        purpose = purpose.replace(value + " ", "");
+        alert("Uncheck!" + purpose);
+      }
+    });
+  });
+
   $('#initiate').click(function(){
     // Check to see that the required checkboxes have at least one option checked
     var purposeChecked = $("input[id=purpose]:checked").length;

@@ -1080,7 +1080,7 @@ Orders are completed in the order that they are received.
 							<div id="textarea_feedback"></div><textarea maxlength="140"  id="message" rows="5" cols="2000" style="display: inline-block;  margin-bottom: 10px; " ><?php echo null ; ?></textarea>
 
 
-						</div >
+						</div>
 						<button class="btn" type="submit" id="submit">Submit</button>
 						<button class="btn" type="button" id="save">Save</button>
 
