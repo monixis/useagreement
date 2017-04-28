@@ -178,7 +178,7 @@
                 <div id = "numcheck">
                   <input type="checkbox" style="background-color: #f6f5f7" id="condofuse" value="condofuse" name = "condofuse" required/>
                     <span id="cond_of_use" style="color: #ff082b; font-weight: bold;">
-  									I have read, understood, and by my initials below, agree to comply with the regulations set forth above, in order to use material in the custody of the Marist College Archives & Special Collections, James A. Cannavino Library, Marist College.
+  									I have read, understood, and by my initials below, agree to comply with the regulations set forth above, in order to use material in the custody of the Marist College Archives &amp; Special Collections, James A. Cannavino Library, Marist College.
                     </span>
                   </input>
                   <br/><br/>
@@ -186,7 +186,10 @@
                 </div>
 
                 <!-- The submit button that will send the email and handle the form info. -->
-                <input type = "submit" class="btn" id="initiate" value = "Confirm Resarch Agreement &amp; Send Email">
+                <button type = "submit" class="btn"> Confirm Resarch Agreement &amp; Send Email</button>
+
+                <!-- Hidden submit button to allow for HTMl validation before JS validation -->
+                <input type = "submit" id = "initiate" style = "display:none;"/>
               </div> <!-- researcherInfo -->
           </form>
 
@@ -203,7 +206,7 @@
           &#169; Copyright 2007-2016 Marist College. All Rights Reserved.
 
           <a href="http://www.marist.edu/disclaimers.html" target="_blank" >Disclaimers</a> | <a href="http://www.marist.edu/privacy.html" target="_blank" >Privacy Policy</a> |
-          <!-- <a href=<?php echo base_url("?c=usragr&m=ack");?> target="_blank">Acknowledgements</a>-->
+          <a href= '<?php echo base_url("?c=usragr&m=ack");?>' target="_blank">Acknowledgements</a>
         </p>
       </div> <!-- bottom_container -->
     </div> <!-- content_container -->

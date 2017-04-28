@@ -24,11 +24,11 @@ $(document).ready(function(){
     tis.click(function(){
       if(tis.is(':checked')){
         howArchives +=  (value + " ");
-        alert("Check!" + howArchives);
+        // alert("Check!" + howArchives);
       }
       else{
         howArchives = howArchives.replace(value + " ", "");
-        alert("Uncheck!" + howArchives);
+        // alert("Uncheck!" + howArchives);
       }
     });
   });
@@ -40,16 +40,17 @@ $(document).ready(function(){
     tis.click(function(){
       if(tis.is(':checked')){
         purpose += (value + " ");
-        alert("Check!" + purpose);
+        // alert("Check!" + purpose);
       }
       else{
         purpose = purpose.replace(value + " ", "");
-        alert("Uncheck!" + purpose);
+        // alert("Uncheck!" + purpose);
       }
     });
   });
 
-  $('#initiate').click(function(){
+  $("form").submit(function(){
+
     // Check to see that the required checkboxes have at least one option checked
     var purposeChecked = $("input[id=purpose]:checked").length;
     var howArchivesChecked = $("input[id=howArchives]:checked").length;
@@ -68,7 +69,9 @@ $(document).ready(function(){
       return false;
     }
     // Code that will operate only if the page is validated
-    // else{
+    else{
+         var confirmationNum = generateConfirmationNum(10);
+         alert("dad");
     //   var userName = $('input#name').val();
     //   var address = $('input#address').val();
     //   var citystate = $('input#citystate').val();
@@ -126,8 +129,24 @@ $(document).ready(function(){
     //     }
     //       $("html, body").animate({scrollTop: 0}, 600);
     //     });
-    // }
+    }
 
 
   });
 });
+
+/* This function generates a random alphanumeric of the specified length of the parameter */
+function generateConfirmationNum(idLength){
+  var characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+  var confirmationNum = "";
+
+  // Holds the highest possible value to select a character from the string
+  var max = characters.length - 1;
+
+  for(var i = 0; i < idLength; i ++){
+    confirmationNum += characters.charAt((Math.random() * max));
+  }
+
+  return confirmationNum;
+}

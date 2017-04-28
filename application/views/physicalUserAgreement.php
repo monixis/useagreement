@@ -141,34 +141,32 @@
               <br/>
 
               <div id="numcheck">
-      				   <input type="checkbox" style="background-color: #f6f5f7" id="condofuse" value="condofuse" name = "condofuse"  required><span id="cond_of_use" style="color: #ff082b; font-weight: bold;">
-      									I accept the 10 Conditions of use agreement of Marist College Archives and Special Collection</span></input>
+        				<input type="checkbox" style="background-color: #f6f5f7" id="condofuse" value="condofuse" name = "condofuse"  required>
+                  <span id="cond_of_use" style="color: #ff082b; font-weight: bold;">I accept the 10 Conditions of use agreement of Marist College Archives and Special Collection</span>
+                </input>
+  							<br/>
+    						<p>
+                  <label style="font-weight: bold;">Copyright Notice: </label>
+                    The individual requesting reproductions expressly assumes the responsibility for compliance with all pertinent provisions of
+        						the Copyright Act, 17 U.S.C. ss101 et seq. The patron further agrees to indemnify and hold harmless the Marist College Archives &amp; Special
+        						Collections and its staff in connection with any disputes arising from the Copyright Act, over the reproduction of material at the request of the
+        						patron.
+                </p>
 
-      								<br/>
+                <input type="checkbox" id="accept" value="Accept"  name = "accept" class="condofuse" required>
+                  <span id="accept-cond" style="color: #ff082b; font-weight: bold;">I accept and agree with the copyright notice.</span>
+                </input>
+      					<br/><br/>
 
-
-
-      						<p><label style="font-weight: bold;">Copyright Notice: </label>The individual requesting reproductions expressly assumes the responsibility for compliance with all pertinent provisions of
-      							the Copyright Act, 17 U.S.C. ss101 et seq. The patron further agrees to indemnify and hold harmless the Marist College Archives &amp; Special
-      							Collections and its staff in connection with any disputes arising from the Copyright Act, over the reproduction of material at the request of the
-      							patron.</p>
-
-
-      							<input type="checkbox" id="accept" value="Accept"  name = "accept" class="checkbox" required><span id="accept-cond" style="color: #ff082b; font-weight: bold;">I accept and agree with the copyright notice.</span></input>
-      							<br/><br/>
-      							<label>Applicant's Initials:</label><input type="text" id="initials" size = "3" minLength = "2" maxLength = "3" class="sizable_input" required/>
-
-
-      					</div>
-
+      					<label>Applicant's Initials:</label><input type="text" id="initials" size = "3" minLength = "2" maxLength = "3" class="sizable_input" required/>
+      				</div>
 
               <div class="accordion" id="requests"><h4 id ="requests">Section 3: Requests:</h4><span class="click">Click to Open/Close</span></div>
-
-    						<div class="formcontents" id="formcontents">
-
+                <div class="formcontents" id="formcontents">
     							<h3 id="addOrRem">Add/Remove Requests (Optional):</h3><br/>
     							<button id="buttonAdd-request" >+</button>
     							<button id="buttonRemove-request" disabled style="opacity: 0.5;">-</button>
+
     							<div id="request_input" style="border-bottom: 1px solid; padding: 10px; display: none;">
     									<label class="label" for="collection">Collection:</label><br/>
     									<select id ="collection" style="width: 500px;" >
@@ -251,50 +249,44 @@
     									<label class="label" for="desc">Description of Use (Provided by the researcher):</label><br/><textarea id="request_desc" rows="4" cols="4"/></textarea>
     								</div><!-- request_input template -->
 
-    		        <h3 align="center">(OR)</h3><br/></br>
-    						<div>
-    							<h3 id="att">Attachements (if any):</h3></br>
-    							<h3 id="requestsReadOnly" style="display:none"> Requests:</h3></br>
-    							<input class='btn' type="file" name="uploaded_file" onchange= uploadedFile() id="uploaded_file"><br/></br>
-    							<div id="fileInfo"></div>
+                    <h3 align="center">(OR)</h3><br/></br>
+    						    <div>
+        							<h3 id="att">Attachements (if any):</h3></br>
+        							<h3 id="requestsReadOnly" style="display:none"> Requests:</h3></br>
+        							<input class='btn' type="file" name="uploaded_file" onchange= uploadedFile() id="uploaded_file"><br/></br>
+    							    <div id="fileInfo"></div>
+    						    </div>
 
-    						</div>
+    						    <?php if($attachment !=null){?>
+    							    </br>
+                      <div align="left" id='attachment'>
+    								    <h3 style="color:#b31b1b">Previously Attached files:</h3></br></br>
+    							      <a href="<?php echo $attachemntLink;?>"><?php echo $attachment ?></a></br><!--label --><!--?php echo $fileAttachment; ?></label-->
+    							    </div></br></br>
+    						    <?php } ?>
 
-    						<?php if($attachment !=null){?>
-    							</br><div align="left" id='attachment'>
-    								<h3 style="color:#b31b1b">Previously Attached files:</h3></br></br>
-    							 <a href="<?php echo $attachemntLink;?>"><?php echo $attachment ?></a></br><!--label --><!--?php echo $fileAttachment; ?></label-->
-    							</div></br></br>
-    						<?php } ?>
+    						   <div align="left" id="messages">
+    							   <label class="label" >Message (If any) : </label><br/>
+    							   <div id="textarea_feedback"></div>
+                     <textarea maxlength="140"  id="message" rows="5" cols="2000" style="display: inline-block;  margin-bottom: 10px;" placeholder="Write your message here." ></textarea>
+                   </div>
+                 </div>
 
-    						<div align="left" id="messages">
-    							<label class="label" >Message (If any) : </label><br/>
-    							<div id="textarea_feedback"></div>
-                  <textarea maxlength="140"  id="message" rows="5" cols="2000" style="display: inline-block;  margin-bottom: 10px;" placeholder="Write your message here." ></textarea>
-
-
-    						</div>
-
-    			</div>
                 <!-- The submit button that will send the email and handle the form info. -->
                 <input type = "submit" class="btn" id="initiate" value = "Initiate Use Agreement &amp; Send email">
               </div> <!-- researcherInfo -->
           </form>
-
-
-
-
         </div> <!-- content -->
       </div> <!-- container_home_child -->
 
       <div class = "bottom_container">
         <p class = "foot">
           James A. Cannavino Library, 3399 North Road, Poughkeepsie, NY 12601; 845.575.3199
-          <br />
-          &#169; Copyright 2007-2016 Marist College. All Rights Reserved.
+          <br/>
+          &#169; Copyright 2007-2017 Marist College. All Rights Reserved.
 
           <a href="http://www.marist.edu/disclaimers.html" target="_blank" >Disclaimers</a> | <a href="http://www.marist.edu/privacy.html" target="_blank" >Privacy Policy</a> |
-          <!-- <a href=<?php echo base_url("?c=usragr&m=ack");?> target="_blank">Acknowledgements</a>-->
+          <a href='<?php echo base_url("?c=usragr&m=ack");?>' target="_blank">Acknowledgements</a>
         </p>
       </div> <!-- bottom_container -->
     </div> <!-- content_container -->
