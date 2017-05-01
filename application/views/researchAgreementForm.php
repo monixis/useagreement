@@ -115,16 +115,16 @@
             phoneNumber: phoneNumber
         }).done(function (userId) {
           var m_data = new FormData();
-          m_data.append('user_name', $('input#name').val());
-          m_data.append('user_email', $('input#email').val());
-          m_data.append('phone_number', $('input#phoneNo').val());
+          m_data.append('user_name', name);
+          m_data.append('user_email', email;
+          m_data.append('phone_number', phoneNumber;
           m_data.append('date', date);
           var pcdone = 0;
           $.ajax({
 
 
               type: "POST",
-              url: "<?php echo base_url("?c=usragr&m=InitiateWithMailAttachment&userId=");?>" + userId,
+              url: "<?php echo base_url("?c=usragr&m=mailResearchReceipt")?>",
               data: m_data,
               processData: false,
               contentType: false,

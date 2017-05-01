@@ -666,6 +666,83 @@ class Usragr extends CI_Controller
         }
     }
 
+    /* By Dan Mopsick - This function sends an email to a researcher who is physically in the building performiing reserach.
+    This email will serve as a receipt. Will be used by researchAgreementForm.php */
+    public function mailResearchReceipt(){
+        $date = date("m/d/Y");
+        $userId = $this->input->get('userId');
+        $userId = (string)$userId;
+        $six_digit_random_number = mt_rand(100000, 999999);
+        $six_digit_random_string =  $this -> generateRandomString();
+        $UUID=$six_digit_random_string.$userId;
+        $six_digit_random_string =  $this -> generateRandomString();
+        $UUID = $UUID.$six_digit_random_string;
+        echo $UUID;
+
+        // Process and Filter values from POST
+        $date = filter_var($_POST['date'], FILTER_SANITIZE_STRING);
+        $user_name = filter_var($_POST['user_name'], FILTER_SANITIZE_STRING);
+        $user_address = filter_var($_POST['user_address'], FILTER_SANITIZE_STRING);
+        $user_citystate
+        $user_email = filter_var($_POST['user_email'], FILTER_SANITIZE_STRING);
+        $user_zipcode = filter_var($_POST['user_zipcode'], FILTER_SANITIZE_STRING);
+        $user_phoneNumber = filter_var($_POST['user_phoneNumber'], FILTER_SANITIZE_STRING);
+        $user_affiliation = filter_var($_POST['user_affiliation'], FILTER_SANITIZE_STRING);
+        $user_status = filter_var($_POST['user_status'], FILTER_SANITIZE_STRING);
+        $user_subject = filter_var($_POST['user_subject'], FILTER_SANITIZE_STRING);
+        $user_collection = filter_var($_POST['user_collection'], FILTER_SANITIZE_STRING);
+        $user_initials = filter_var($_POST['user_initials'], FILTER_SANITIZE_STRING);
+
+
+        $url = base_url()."?c=usragr&m=useagreement&userId=". $UUID;
+        $message = '<html><body>';
+
+        $message .= '<table width="100%"; rules="all" style="border:1px solid #3A5896;" cellpadding="10">';
+
+        $message .= "<tr ><td align='center'><img src='https://s.graphiq.com/sites/default/files/10/media/images/Marist_College_2_220374.jpg'  /><h3> Marist Archives and Special Collection </h3><h3>RESEARCH AGREEMENT CONFIRMATION</h3>";
+
+        $message .= "<br/><br/> <h4> Dear $user_name ,<br /><br /> Your research agreement has been confirmed.</h4><br/>";
+
+        $message .= "<br/><h3>Entered Information</h3>";
+
+        $message .= "<p><b>Name:</b> $user_name</p>";
+
+        $message .+ "</tr>";
+
+        $message .= "<tr><td colspan=2 font='colr:#3A5896;'></td></tr>";
+        $message .= "</table>";
+
+        $message .= "</body></html>";
+
+        $messageTwo = "Please find the below link to review the submitted request";
+        $message_body = $message ;
+
+        $ci = get_instance();
+        $ci->load->library('email');
+        $config['protocol'] = "smtp";
+        $config['smtp_host'] = "tls://smtp.googlemail.com";
+        $config['smtp_port'] = "465";
+        $config['smtp_user'] = "maristarchives@gmail.com";
+        $config['smtp_pass'] = "MaristArchives2017";
+        $config['charset'] = "utf-8";
+        $config['mailtype'] = "html";
+        $config['newline'] = "\r\n";
+
+        $ci->email->initialize($config);
+
+        $ci->email->from('maristarchives@gmail.com', "Marist Archives");
+        //$ci->email->cc('dheeraj.karnati1@marist.edu');
+        $ci->email->to($_POST['user_email']);
+        $ci->email->reply_to('maristarchives@gmail.com', "Marist Archives");
+        $ci->email->message($message_body);
+
+
+        $ci->email->subject("Research Agreement Confirmation");
+        $ci->email->send();
+
+
+    }
+
     public function InitiateWithMailAttachment()
     {
 
