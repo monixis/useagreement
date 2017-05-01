@@ -13,15 +13,177 @@
     <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
     <link rel="stylesheet" type="text/css" href="http://library.marist.edu/archives/mainpage/mainStyles/style.css" />
     <link rel="stylesheet" type="text/css" href="http://library.marist.edu/archives/mainpage/mainStyles/main.css" />
-    <link rel="stylesheet" type="text/css" href="../../styles/researchAgreementForm.css" />
+    <link rel="stylesheet" type="text/css" href="styles/researchAgreementForm.css" />
     <script type="text/javascript" src="http://library.marist.edu/archives/mainpage/scripts/archivesChildMenu.js"></script>
-    <script type="text/javascript" src="../../js/cloneRequests.js"></script>
-    <link rel="stylesheet" type="text/css" href="../../styles/useagreement.css"/>
-    <!-- Creating JS file to use specifically for this page -->
-    <script type = "text/javascript" src = "../../js/researchAgreementForm.js"></script>
+    <script type="text/javascript" src="js/cloneRequests.js"></script>
+    <link rel="stylesheet" type="text/css" href="styles/useagreement.css"/>
 
     <!-- Not sure what JS I need to add here from the other page. But most likely at least some of the js from initiateUseAgreement.php -->
+  <script type = "text/javascript">
+  $(document).ready(function(){
 
+    $('div.accordion').click(function(){
+      var div =$(this).attr('id');
+      if(div == '1'){
+        $('div#1-contents').toggle();
+      }else if (div == '2'){
+        $('div#2-contents').toggle();
+      }else if (div == '3'){
+        $('div#3-contents').toggle();
+      }else if (div == 'requests'){
+        $('div#formcontents').toggle();
+      }
+
+    });
+
+    var howArchives = "";
+    var purpose = "";
+
+    /* Parses the value of the check boxes for "How did you learn about our archives and Special Collections holdings?" */
+    $('#howDiv input').each(function(){
+      var tis = $(this);
+      var value = tis.val();
+      tis.click(function(){
+        if(tis.is(':checked')){
+          howArchives +=  (value + " ");
+          // alert("Check!" + howArchives);
+        }
+        else{
+          howArchives = howArchives.replace(value + " ", "");
+          // alert("Uncheck!" + howArchives);
+        }
+      });
+    });
+
+    /* Parses the value of the check boxes for "What is the purpose of your research?" */
+    $('#purposeDiv input').each(function(){
+      var tis = $(this);
+      var value = tis.val();
+      tis.click(function(){
+        if(tis.is(':checked')){
+          purpose += (value + " ");
+          // alert("Check!" + purpose);
+        }
+        else{
+          purpose = purpose.replace(value + " ", "");
+          // alert("Uncheck!" + purpose);
+        }
+      });
+    });
+
+    $("form").submit(function(){
+      if(!howArchives && !purpose){
+        alert("Please select at least one Purpose of Research and one way in which you learned about the archives.");
+        return false;
+      }
+      else if(!howArchives){
+        alert("Please select at least one way in which you learned about the archives.");
+        return false;
+      }
+      else if(!purpose){
+        alert("Please select at least one Purpose of Research.");
+        return false;
+      }
+      // Code that will operate only if the page is validated
+      else{
+        var researchAgreementNumber = generateResearchAgreementNumber(10);
+        var date = generateDate();
+        var userName = $('input#name').val();
+        var address = $('input#address').val();
+        var citystate = $('input#citystate').val();
+        var emailId = $('input#email').val();
+        var zipCode = $('input#zip').val();
+        var phoneNumber = $('input#phoneNo').val();
+        var affiliation = $('input#affiliation').val();
+        var status = $('input#status').val();
+        var subject = $('input#subject').val();
+        var collection = $('input#collection').val();
+        var userInitials = $('input#initials').val();
+        // variables for hawArchives and purpose are defined above outside of this function
+        var termsAndConditions = "false";
+        if ($('#accept').prop('checked') && $('#condofuse').prop('checked')) {
+          termsAndConditions = "true";
+        }
+
+        $.post("<?php echo base_url("?c=usragr&m=insertNewResearcher");?>", {
+            date: date,
+            userName: userName,
+            address: address,
+            zipCode: zipCode,
+            citystate: citystate,
+            emailId: emailId,
+            phoneNumber: phoneNumber
+        }).done(function (userId) {
+          var m_data = new FormData();
+          m_data.append('user_name', $('input#name').val());
+          m_data.append('user_email', $('input#email').val());
+          m_data.append('phone_number', $('input#phoneNo').val());
+          m_data.append('date', date);
+          var pcdone = 0;
+          $.ajax({
+
+
+              type: "POST",
+              url: "<?php echo base_url("?c=usragr&m=InitiateWithMailAttachment&userId=");?>" + userId,
+              data: m_data,
+              processData: false,
+              contentType: false,
+              cache: false,
+
+              success: function (response) {
+                  //load json data from server and output message
+                  if (response.type == 'error') { //load json data from server and output message
+                      output = '<div class="error">' + response.text + '</div>';
+                  } else {
+
+                      $('#requestStatus').show().css('background', '#66cc00').append("#" + userId + ": A User Agreement Form has been sent to " + userName);
+
+                  }
+                  $("#contact_form #contact_results").hide().html(output).slideDown();
+              }
+          });
+        });
+
+      }
+    });
+  });
+
+  /* This function generates the current date */
+  function generateDate(){
+    var today = new Date();
+    var month = today.getMonth() + 1;
+    var day = today.getDate();
+    var year = today.getFullYear();
+
+    // Add a zero in front of the day and month if single digits
+    if(day < 10){
+      day = "0" + day;
+    }
+
+    if(month < 10){
+      month = "0" + month;
+    }
+
+    return (month + "/" + day + "/" + year);
+  }
+
+  /* This function generates a random alphanumeric of the specified length of the parameter */
+  function generateResearchAgreementNumber(idLength){
+    var characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+    var researchAgreementNumber = "";
+
+    // Holds the highest possible value to select a character from the string
+    var max = characters.length - 1;
+
+    for(var i = 0; i < idLength; i ++){
+      researchAgreementNumber += characters.charAt((Math.random() * max));
+    }
+
+    return researchAgreementNumber;
+  }
+
+  </script>
   </head>
   <body>
     <div id = "headerContainer">
@@ -64,15 +226,17 @@
           <!-- Dan Mopsick - This is where the research form becomes different than the initiateUseAgreementForm -->
 
           <div id = "researcherInfo">
+
             <h1 class = "page_head" style = "float:none;">Research Agreement Form</h1>
 
-            <!-- Is there a message that should be displayed here similiar to the pdf version of the form? -->
+            <div id="requestStatus" style="width: auto; height:40px; margin-bottom: 7px; margin-top: -15px; color:#000000; font-size: 12pt; text-align: center; padding-top: 10px; display: none;">
+            </div></br>
 
 
             <!-- All of the inputs are in a form element for validaiton purposes (ex: required) -->
             <form style = "float:none; margin-left:0;" action="javascript:void(0);">
               <div class = "formcontents">
-              <!-- Should the date be time stamped by the datbase? If the person is in the library... the time they are using the archive material is now -->
+
 
 
                 <label class = "label">Name:</label><br/><input type = "text" id = "name" class = "textinput" size = "35" maxLength = "70" required autofocus/>
@@ -186,7 +350,7 @@
                 </div>
 
                 <!-- The submit button that will send the email and handle the form info. -->
-                <button type = "submit" class="btn"> Confirm Resarch Agreement &amp; Send Email</button>
+                <button type = "submit" class="btn"> Confirm Research Agreement &amp; Send Email</button>
 
                 <!-- Hidden submit button to allow for HTMl validation before JS validation -->
                 <input type = "submit" id = "initiate" style = "display:none;"/>
@@ -203,7 +367,7 @@
         <p class = "foot">
           James A. Cannavino Library, 3399 North Road, Poughkeepsie, NY 12601; 845.575.3199
           <br />
-          &#169; Copyright 2007-2016 Marist College. All Rights Reserved.
+          &#169; Copyright 2007-2017 Marist College. All Rights Reserved.
 
           <a href="http://www.marist.edu/disclaimers.html" target="_blank" >Disclaimers</a> | <a href="http://www.marist.edu/privacy.html" target="_blank" >Privacy Policy</a> |
           <a href= '<?php echo base_url("?c=usragr&m=ack");?>' target="_blank">Acknowledgements</a>

@@ -13,15 +13,255 @@
     <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
     <link rel="stylesheet" type="text/css" href="http://library.marist.edu/archives/mainpage/mainStyles/style.css" />
     <link rel="stylesheet" type="text/css" href="http://library.marist.edu/archives/mainpage/mainStyles/main.css" />
-    <link rel="stylesheet" type="text/css" href="../../styles/researchAgreementForm.css" />
+
+    <link rel="stylesheet" type="text/css" href="styles/researchAgreementForm.css" />
     <script type="text/javascript" src="http://library.marist.edu/archives/mainpage/scripts/archivesChildMenu.js"></script>
-    <script type="text/javascript" src="../../js/cloneRequests.js"></script>
-    <link rel="stylesheet" type="text/css" href="../../styles/useagreement.css"/>
-    <!-- Creating JS file to use specifically for this page -->
-    <script type = "text/javascript" src = "../../js/physicalUserAgreement.js"></script>
+    <script type="text/javascript" src="js/cloneRequests.js"></script>
+    <link rel="stylesheet" type="text/css" href="styles/useagreement.css"/>
 
     <!-- Not sure what JS I need to add here from the other page. But most likely at least some of the js from initiateUseAgreement.php -->
+  <script type = "text/javascript">
+    uploadedFile = function() {
+      $('#message').remove();
+      var input = document.getElementById('uploaded_file');
+      var output = document.getElementById('fileInfo');
 
+      output.innerHTML = '<ul>';
+
+    //  for (var i = 0; i < input.files.length; ++i) {
+          if(input.files.item(0).size> 2000000){
+
+              output.innerHTML += '<li>' + input.files.item(0).name + "<h4 style='color: red'>(Exceeded 2 MB File size limit)<h4>"+'</li>';
+
+          }else {
+             // output.innerHTML += '<li>' + input.files.item(i).name + '</li>';
+              //output.innerHTML += '<li>' + input.files.item(i).size + '</li>';
+          }
+   //   }
+      output.innerHTML += '</ul>';
+
+  }
+
+  $(document).ready(function(){
+    $('#datepicker').datepicker();
+    $("#datepicker").datepicker("setDate", new Date());
+    $('div#request_input').clone();
+
+    $('div.accordion').click(function(){
+      var div =$(this).attr('id');
+      if(div == '1'){
+        $('div#1-contents').toggle();
+      }else if (div == '2'){
+        $('div#2-contents').toggle();
+      }else if (div == '3'){
+        $('div#3-contents').toggle();
+      }else if (div == 'requests'){
+        $('div#formcontents').toggle();
+      }
+
+    });
+
+    $("form").submit(function(){
+      var filesize = 0;
+      if($('input#uploaded_file')[0].files[0]) {
+          filesize  = $('input#uploaded_file')[0].files[0].size / 1024 / 1024;
+      }
+      if (filesize <= 2 ){
+       //   var input = document.getElementById('uploaded_file');
+      //var output = document.getElementById('fileInfo');
+      if ($('input#name').val() == "") {
+          $('input#name').css('border', '1px solid red');
+          $("html, body").animate({scrollTop: 0}, 600);
+      } else if (verifyEmail($('input#email').val()) == false) {
+          $('input#email').css('border', '1px solid red');
+          $("html, body").animate({scrollTop: 0}, 600);
+      }
+      else {
+          var date = $('input#datepicker').val();
+          var userName = $('input#name').val();
+          var address = $('input#address').val();
+          var citystate = $('input#citystate').val();
+          var zipCode = $('input#zip').val();
+          var emailId = $('input#email').val();
+          var comments = $('textarea#comments').val();
+          var phoneNumber = $('input#phoneNo').val();
+          var requestCount = $("#formcontents > div").length - 1;
+          var requestList = [];
+          //alert (requestCount);
+          //iterating multiple requests.
+          for (var i = 1; i <= requestCount; i++) {
+              var checked = [];
+              var imageResolutions = "";
+              var fileFormats = "";
+              var avFormats = "";
+              var str1 = "div#request_input";
+              var str2 = str1.concat(i);
+              var request = [];
+              var reqCollection = $(str2.concat(" select#collection")).val();
+              //var reqCollection = $(str2.concat(" input#request_collection")).val();
+
+              var boxNumber = "";//$(str2.concat(" input#request_boxno")).val()
+              var itemNumber = $(str2.concat(" input#request_itemno")).val();
+              var descOfUse = $(str2.concat(" textarea#request_desc")).val();
+              $.each($(str2.concat(" input:checked[name='dpi']")), function () {
+                  imageResolutions = imageResolutions.concat($(this).val());
+                  imageResolutions = imageResolutions.concat(":");
+              });
+              imageResolutions = imageResolutions.slice(0, -1);
+
+              $.each($(str2.concat(" input:checked[name= 'format']")), function () {
+                  checked.push($(this).val());
+                  fileFormats = fileFormats.concat($(this).val());
+                  fileFormats = fileFormats.concat(":");
+              });
+              fileFormats = fileFormats.slice(0, -1);
+
+              $.each($(str2.concat(" input:checked[name= 'avformat']")), function () {
+                  checked.push($(this).val());
+                  avFormats = avFormats.concat($(this).val());
+                  avFormats = avFormats.concat(":");
+              });
+              avFormats = avFormats.slice(0, -1);
+              request.push(reqCollection);
+              request.push(boxNumber);
+              request.push(itemNumber);
+              request.push(imageResolutions);
+              request.push(fileFormats);
+              request.push(avFormats);
+              request.push(descOfUse);
+              requestList.push(request);
+          }
+          //alert(requestList);
+          $.post("<?php echo base_url("?c=usragr&m=insertNewResearcher");?>", {
+              date: date,
+              userName: userName,
+              address: address,
+              zipCode: zipCode,
+              citystate: citystate,
+              emailId: emailId,
+              comments: comments,
+              phoneNumber: phoneNumber,
+              requestCount: requestCount,
+              requestList: requestList
+
+          }).done(function (userId) {
+              if (userId > 0) {
+                  if($('input#uploaded_file')[0].files[0]) {
+                  var m_data = new FormData();
+                  m_data.append('user_name', $('input#name').val());
+                  m_data.append('user_email', $('input#email').val());
+                  m_data.append('phone_number', $('input#phoneNo').val());
+                  m_data.append('file_attach', $('input#uploaded_file')[0].files[0]);
+                  m_data.append('date', $('input#datepicker').val());
+                  m_data.append('comments', $('textarea#comments').val());
+                  var pcdone = 0;
+                  $.ajax({
+
+                      xhr: function () {
+                          var xhr = new window.XMLHttpRequest();
+                          xhr.upload.addEventListener("progress", function (evt) {
+                              if (evt.lengthComputable) {
+                                  var percentComplete = evt.loaded / evt.total;
+                                  console.log(percentComplete);
+                                  pcdone = percentComplete;
+                                  $('.progress').css({
+                                      width: percentComplete * 100 + '%'
+
+                                  });
+                                  if (percentComplete === 1) {
+                                      $("#progressstatus").html("<p color='black'>File Upload is in progress</p>");
+
+                                  }
+                              }
+                          }, false);
+                          return xhr;
+                      },
+
+                      type: "POST",
+                      url: "<?php echo base_url("?c=usragr&m=InitiateWithMailAttachment&userId=");?>" + userId,
+                      data: m_data,
+                      processData: false,
+                      contentType: false,
+                      cache: false,
+
+                      success: function (response) {
+                          //load json data from server and output message
+                          if (response.type == 'error') { //load json data from server and output message
+                              output = '<div class="error">' + response.text + '</div>';
+                          } else {
+                              setTimeout(function () {
+                                  $('.progress').addClass('hide');
+                                  $("#progressstatus").html("<p color='black'></p>");
+                                  $('#requestStatus').show().css('background', '#66cc00').append("#" + userId + ": A User Agreement Form has been sent to " + userName);
+
+                              }, 5000);
+
+
+                              // output = '<div class="success">' + response.text + '</div>';
+                          }
+                          $("#contact_form #contact_results").hide().html(output).slideDown();
+                      }
+                  });
+
+                  /* } else {
+
+                   $('#requestStatus').show().css('background', '#66cc00').append("#" + userId + ": A User Agreement Form has been sent to " + userName);
+
+
+                   }*/
+              }else{
+
+                      var m_data = new FormData();
+                      m_data.append('user_name', $('input#name').val());
+                      m_data.append('user_email', $('input#email').val());
+                      m_data.append('phone_number', $('input#phoneNo').val());
+                      m_data.append('date', $('input#datepicker').val());
+                      m_data.append('comments', $('textarea#comments').val());
+                      var pcdone = 0;
+                      $.ajax({
+
+
+                          type: "POST",
+                          url: "<?php echo base_url("?c=usragr&m=InitiateWithMailAttachment&userId=");?>" + userId,
+                          data: m_data,
+                          processData: false,
+                          contentType: false,
+                          cache: false,
+
+                          success: function (response) {
+                              //load json data from server and output message
+                              if (response.type == 'error') { //load json data from server and output message
+                                  output = '<div class="error">' + response.text + '</div>';
+                              } else {
+
+                                  $('#requestStatus').show().css('background', '#66cc00').append("#" + userId + ": A User Agreement Form has been sent to " + userName);
+
+                              }
+                              $("#contact_form #contact_results").hide().html(output).slideDown();
+                          }
+                      });
+
+                  }
+
+              }
+               else {
+                  $('#requestStatus').show().css('background', '#b31b1b').append("Something wrong with the form. Contact Administrator");
+
+              }
+            //  $("html, body").animate({scrollTop: 0}, 600);
+          });
+      }
+
+
+  }else{
+          $('#requestStatus').show().css('background', '#b31b1b').append("<div id='message'>Uploaded file size should be less than 2 MB</div>");
+
+      }
+      $("html, body").animate({scrollTop: 0}, 600);
+    });
+
+  });
+  </script>
   </head>
   <body>
     <div id = "headerContainer">
