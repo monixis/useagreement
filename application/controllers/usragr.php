@@ -106,13 +106,20 @@ class Usragr extends CI_Controller
 
         $data = array(
             'userName'   => $_POST['userName'],
+            'date' => $_POST['date'],
             'emailId'    => $_POST['emailId'],
             'citystate'  => $_POST['citystate'],
             'address'    => $_POST['address'],
             'zipCode'    => $_POST['zipCode'],
-            'date'       => $_POST['date'],
-            'phoneNumber'=> $_POST['phoneNumber'],
-            'status'     => 0
+            'researchAgreementNumber' => $_POST['researchAgreementNumber'],
+            'affiliation'=> $_POST['affiliation'],
+            'academicStatus' => $_POST['academicStatus'],
+            'researchSubject' => $_POST['researchSubject'],
+            'collection'       => $_POST['collection'],
+            'userInitials'       => $_POST['userInitials'],
+            'howArchives' => $_POST['howArchives'],
+            'researchPurpose' => $_POST['researchPurpose'],
+            'phoneNumber'=> $_POST['phoneNumber']
         );
 
         $this->load->model('usragr_model');

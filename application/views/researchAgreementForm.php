@@ -38,6 +38,7 @@
 
     var howArchives = "";
     var purpose = "";
+    var status = "";
 
     /* Parses the value of the check boxes for "How did you learn about our archives and Special Collections holdings?" */
     $('#howDiv input').each(function(){
@@ -71,7 +72,19 @@
       });
     });
 
+    $("#statusDiv input").each(function(){
+      var tis = $(this);
+      var value = tis.val();
+      tis.click(function(){
+        if(tis.is(':checked')){
+          status = value;
+        }
+      });
+    });
+
+
     $("form").submit(function(){
+
       if(!howArchives && !purpose){
         alert("Please select at least one Purpose of Research and one way in which you learned about the archives.");
         return false;
@@ -95,7 +108,6 @@
         var zipCode = $('input#zip').val();
         var phoneNumber = $('input#phoneNo').val();
         var affiliation = $('input#affiliation').val();
-        var status = $('input#status').val();
         var subject = $('input#subject').val();
         var collection = $('input#collection').val();
         var userInitials = $('input#initials').val();
@@ -112,6 +124,14 @@
             zipCode: zipCode,
             citystate: citystate,
             emailId: emailId,
+            researchAgreementNumber: researchAgreementNumber,
+            howArchives: howArchives,
+            affiliation: affiliation,
+            academicStatus: status,
+            researchSubject: subject,
+            collection: collection,
+            userInitials: userInitials,
+            researchPurpose: purpose,
             phoneNumber: phoneNumber
         }).done(function (userId) {
           /* Store the data that will be passed to the usragr controller to be emailed to the usre */
@@ -148,6 +168,9 @@
                   } else {
 
                       $('#requestStatus').show().css('background', '#66cc00').append("#" + userId + ": A User Agreement Form has been sent to " + userName);
+
+                      // Disable the submit button to prevent the user from sending multiple emails to themselves and creating multiple duplicated entries
+                      $('.btn').attr('disabled', true);
 
                   }
                   $("html, body").animate({scrollTop: 0}, 600);
@@ -257,8 +280,8 @@
                 <label class = "label">Institutional Affiliation (If any):</label><br/><input type = "text" id = "affiliation" class ="textinput"/>
 
                 <!-- Create checkboxes for user to select their academic status -->
-                <label class = "label">Academic Status (If any):</label><br/><br/>
-                  <input type = "hidden" id = "status" name = "status" value = ""/>
+                <div id ="statusDiv">
+                  <label class = "label">Academic Status (If any):</label><br/><br/>
                   <input type = "radio" id = "status" name = "status" value = "Undergraduate Student" class = "checkbox">Undergraduate Student</input>
                   <input type = "radio" id = "status" name = "status" value = "Faculty" class = "checkbox">Faculty</input>
                   <input type = "radio" id = "status" name = "status" value = "Alumni" class = "checkbox">Alumni</input>
@@ -266,6 +289,7 @@
                   <input type = "radio" id = "status" name = "status" value = "Graduate Student" class = "checkbox">Graduate Student</input>
                   <input type = "radio" id = "status" name = "status" value = "Staff" class = "checkbox">Staff</input>
                   <input type = "radio" id = "status" name = "status" value = "Visiting Researcher" class = "checkbox">Visiting Researcher</input> <br/><br/>
+                </div>
 
                   <!-- Create checkboxes for user to select how they learned about the Marist Archives -->
                   <!-- When parsing this form, will I need to assign each of these inputs an id?? -->
