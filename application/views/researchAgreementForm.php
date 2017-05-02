@@ -45,11 +45,11 @@
       var value = tis.val();
       tis.click(function(){
         if(tis.is(':checked')){
-          howArchives +=  (value + " ");
+          howArchives +=  (value + ", ");
           // alert("Check!" + howArchives);
         }
         else{
-          howArchives = howArchives.replace(value + " ", "");
+          howArchives = howArchives.replace(value + ", ", "");
           // alert("Uncheck!" + howArchives);
         }
       });
@@ -61,11 +61,11 @@
       var value = tis.val();
       tis.click(function(){
         if(tis.is(':checked')){
-          purpose += (value + " ");
+          purpose += (value + ", ");
           // alert("Check!" + purpose);
         }
         else{
-          purpose = purpose.replace(value + " ", "");
+          purpose = purpose.replace(value + ", ", "");
           // alert("Uncheck!" + purpose);
         }
       });
@@ -104,8 +104,8 @@
         if ($('#accept').prop('checked') && $('#condofuse').prop('checked')) {
           termsAndConditions = "true";
         }
-
-        $.post("<?php echo base_url("?c=usragr&m=insertNewResearcher");?>", {
+        /* Save the researcher to the database via the suragr controller */
+        $.post("<?php echo base_url("?c=usragr&m=insertNewPhysicalResearcher");?>", {
             date: date,
             userName: userName,
             address: address,
@@ -114,11 +114,22 @@
             emailId: emailId,
             phoneNumber: phoneNumber
         }).done(function (userId) {
+          /* Store the data that will be passed to the usragr controller to be emailed to the usre */
           var m_data = new FormData();
-          m_data.append('user_name', name);
-          m_data.append('user_email', email;
-          m_data.append('phone_number', phoneNumber;
           m_data.append('date', date);
+          m_data.append('user_name', userName);
+          m_data.append('researchAgreementNumber', researchAgreementNumber);
+          m_data.append('user_address', address);
+          m_data.append('user_citystate', citystate);
+          m_data.append('user_email', emailId);
+          m_data.append('user_zipCode', zipCode);
+          m_data.append('user_phoneNumber', phoneNumber);
+          m_data.append('user_affiliation', affiliation);
+          m_data.append('user_status', status);
+          m_data.append('user_subject', subject);
+          m_data.append('user_collection', collection);
+          m_data.append('user_initials', userInitials);
+          m_data.append('user_purpose', purpose);
           var pcdone = 0;
           $.ajax({
 
@@ -139,7 +150,7 @@
                       $('#requestStatus').show().css('background', '#66cc00').append("#" + userId + ": A User Agreement Form has been sent to " + userName);
 
                   }
-                  $("#contact_form #contact_results").hide().html(output).slideDown();
+                  $("html, body").animate({scrollTop: 0}, 600);
               }
           });
         });
@@ -237,8 +248,6 @@
             <form style = "float:none; margin-left:0;" action="javascript:void(0);">
               <div class = "formcontents">
 
-
-
                 <label class = "label">Name:</label><br/><input type = "text" id = "name" class = "textinput" size = "35" maxLength = "70" required autofocus/>
                 <label class="label">Address:</label><br/><input type="text" id="address" class="textinput" required/>
                 <label class="label">City/State:</label><br/><input type="text" id="citystate" class="textinput" required/>
@@ -249,13 +258,14 @@
 
                 <!-- Create checkboxes for user to select their academic status -->
                 <label class = "label">Academic Status (If any):</label><br/><br/>
-                  <input type = "radio" id = "status" name = "status" value = "undergrad" class = "checkbox">Undergraduate Student</input>
+                  <input type = "hidden" id = "status" name = "status" value = ""/>
+                  <input type = "radio" id = "status" name = "status" value = "Undergraduate Student" class = "checkbox">Undergraduate Student</input>
                   <input type = "radio" id = "status" name = "status" value = "Faculty" class = "checkbox">Faculty</input>
-                  <input type = "radio" id = "status" name = "status" value = "alumni" class = "checkbox">Alumni</input>
+                  <input type = "radio" id = "status" name = "status" value = "Alumni" class = "checkbox">Alumni</input>
                   <br/><br/>
-                  <input type = "radio" id = "status" name = "status" value = "gradStudent" class = "checkbox">Graduate Student</input>
-                  <input type = "radio" id = "status" name = "status" value = "staff" class = "checkbox">Staff</input>
-                  <input type = "radio" id = "status" name = "status" value = "visiting" class = "checkbox">Visiting Researcher</input> <br/><br/>
+                  <input type = "radio" id = "status" name = "status" value = "Graduate Student" class = "checkbox">Graduate Student</input>
+                  <input type = "radio" id = "status" name = "status" value = "Staff" class = "checkbox">Staff</input>
+                  <input type = "radio" id = "status" name = "status" value = "Visiting Researcher" class = "checkbox">Visiting Researcher</input> <br/><br/>
 
                   <!-- Create checkboxes for user to select how they learned about the Marist Archives -->
                   <!-- When parsing this form, will I need to assign each of these inputs an id?? -->
@@ -280,19 +290,19 @@
                 <div id = "purposeDiv">
                   <label class = "label">Purpose of Research (Check all that apply):</label>
                   <br/><br/>
-                  <input type = "checkbox" id = "purpose" name = "purpose[]" value = "localHistory" class = "checkbox">Local History</input>
-                  <input type = "checkbox" id = "purpose" name = "purpose[]" value = "genealogy" class = "checkbox">Genealogy</input>
-                  <input type = "checkbox" id = "purpose" name = "purpose[]" value = "thesis" class = "checkbox">Dissertation/Thesis</input>
+                  <input type = "checkbox" id = "purpose" name = "purpose[]" value = "Local History" class = "checkbox">Local History</input>
+                  <input type = "checkbox" id = "purpose" name = "purpose[]" value = "Genealogy" class = "checkbox">Genealogy</input>
+                  <input type = "checkbox" id = "purpose" name = "purpose[]" value = "Dissertation/Thesis" class = "checkbox">Dissertation/Thesis</input>
                   <br/></br/>
-                  <input type = "checkbox" id = "purpose" name = "purpose[]" value = "literary" class = "checkbox">Literary Research</input>
-                  <input type = "checkbox" id = "purpose" name = "purpose[]" value = "pictorial" class = "checkbox">Pictorial research</input>
-                  <input type = "checkbox" id = "purpose" name = "purpose[]" value = "class" class = "checkbox">Class Project</input>
+                  <input type = "checkbox" id = "purpose" name = "purpose[]" value = "Literary Research" class = "checkbox">Literary Research</input>
+                  <input type = "checkbox" id = "purpose" name = "purpose[]" value = "Pictorial research" class = "checkbox">Pictorial research</input>
+                  <input type = "checkbox" id = "purpose" name = "purpose[]" value = "Class Project" class = "checkbox">Class Project</input>
                   <br/></br/>
-                  <input type = "checkbox" id = "purpose" name = "purpose[]" value = "historical" class = "checkbox">Historical Research</input>
-                  <input type = "checkbox" id = "purpose" name = "purpose[]" value = "discographical" class = "checkbox">Discographical research</input>
+                  <input type = "checkbox" id = "purpose" name = "purpose[]" value = "Historical research" class = "checkbox">Historical Research</input>
+                  <input type = "checkbox" id = "purpose" name = "purpose[]" value = "Discographical research" class = "checkbox">Discographical research</input>
                   <br/></br/>
-                  <input type = "checkbox" id = "purpose" name = "purpose[]" value = "administrative" class = "checkbox">Marist administrative research</input>
-                  <input type = "checkbox" id = "purpose" name = "purpose[]" value = "other" class = "checkbox">Other</input>
+                  <input type = "checkbox" id = "purpose" name = "purpose[]" value = "Marist administrative research" class = "checkbox">Marist administrative research</input>
+                  <input type = "checkbox" id = "purpose" name = "purpose[]" value = "Other" class = "checkbox">Other</input>
                 </div>
               </div> <!-- formcontents -->
 

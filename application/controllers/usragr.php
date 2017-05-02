@@ -98,6 +98,28 @@ class Usragr extends CI_Controller
 
     }
 
+    /* Function to insert a physical researcher.inot the database */
+    public function insertNewPhysicalResearcher()
+    {
+        date_default_timezone_set('US/Eastern');
+        $date = date("m/d/Y");
+
+        $data = array(
+            'userName'   => $_POST['userName'],
+            'emailId'    => $_POST['emailId'],
+            'citystate'  => $_POST['citystate'],
+            'address'    => $_POST['address'],
+            'zipCode'    => $_POST['zipCode'],
+            'date'       => $_POST['date'],
+            'phoneNumber'=> $_POST['phoneNumber'],
+            'status'     => 0
+        );
+
+        $this->load->model('usragr_model');
+        $result = $this->usragr_model->insert_researcher($data, 'researcher');
+        echo $result;
+    }
+
     /*
      * function to fetch the researcher with userId.
      * loads useAgreement view form
@@ -680,41 +702,60 @@ class Usragr extends CI_Controller
         echo $UUID;
 
         // Process and Filter values from POST
+        $researchAgreementNumber = filter_var($_POST['researchAgreementNumber'], FILTER_SANITIZE_STRING);
         $date = filter_var($_POST['date'], FILTER_SANITIZE_STRING);
         $user_name = filter_var($_POST['user_name'], FILTER_SANITIZE_STRING);
         $user_address = filter_var($_POST['user_address'], FILTER_SANITIZE_STRING);
-        $user_citystate
+        $user_citystate = filter_var($_POST['user_citystate'], FILTER_SANITIZE_STRING);
         $user_email = filter_var($_POST['user_email'], FILTER_SANITIZE_STRING);
-        $user_zipcode = filter_var($_POST['user_zipcode'], FILTER_SANITIZE_STRING);
+        $user_zipCode = filter_var($_POST['user_zipCode'], FILTER_SANITIZE_STRING);
         $user_phoneNumber = filter_var($_POST['user_phoneNumber'], FILTER_SANITIZE_STRING);
         $user_affiliation = filter_var($_POST['user_affiliation'], FILTER_SANITIZE_STRING);
         $user_status = filter_var($_POST['user_status'], FILTER_SANITIZE_STRING);
         $user_subject = filter_var($_POST['user_subject'], FILTER_SANITIZE_STRING);
         $user_collection = filter_var($_POST['user_collection'], FILTER_SANITIZE_STRING);
+        $user_purpose = filter_var($_POST['user_purpose'], FILTER_SANITIZE_STRING);
         $user_initials = filter_var($_POST['user_initials'], FILTER_SANITIZE_STRING);
 
-
         $url = base_url()."?c=usragr&m=useagreement&userId=". $UUID;
+
+        /* Create the contents of the email */
         $message = '<html><body>';
 
         $message .= '<table width="100%"; rules="all" style="border:1px solid #3A5896;" cellpadding="10">';
 
-        $message .= "<tr ><td align='center'><img src='https://s.graphiq.com/sites/default/files/10/media/images/Marist_College_2_220374.jpg'  /><h3> Marist Archives and Special Collection </h3><h3>RESEARCH AGREEMENT CONFIRMATION</h3>";
+        $message .= "<tr ><td align='center'><img src='https://s.graphiq.com/sites/default/files/10/media/images/Marist_College_2_220374.jpg'/><h3> Marist Archives and Special Collection </h3><h3>RESEARCH AGREEMENT CONFIRMATION</h3>";
 
-        $message .= "<br/><br/> <h4> Dear $user_name ,<br /><br /> Your research agreement has been confirmed.</h4><br/>";
+        $message .= "<br/><h4> Dear $user_name,<br /><br /> Your research agreement has been confirmed.</h4>";
 
-        $message .= "<br/><h3>Entered Information</h3>";
+        $message .= "<h3><b>Research Agreement Number:</b> $researchAgreementNumber</h3>";
 
+        $message .= "<h3>Recorded Information</h3>";
+        $message .= "<div align = 'center' style = 'width:50%; text-align:left;'><p><b>Date:</b> $date</p>";
         $message .= "<p><b>Name:</b> $user_name</p>";
+        $message .= "<p><b>Address:</b> $user_address</p>";
+        $message .= "<p><b>City/State:</b> $user_citystate</p>";
+        $message .= "<p><b>Zip Code:</b> $user_zipCode</p>";
+        $message .= "<p><b>Phone Number:</b> $user_phoneNumber</p>";
+        if($user_affiliation != ""){
+          $message .= "<p><b>Affiliation:</b> $user_affiliation</p>";
+        }
+        if($user_status != ""){
+          $message .= "<p><b>Academic Status:</b> $user_status</p>";
+        }
+        $message .= "<p><b>Subject of Research:</b> $user_subject</p>";
+        if($user_collection != ""){
+          $message .= "<p><b>Collection:</b> $user_collection</p>";
+        }
+        $message.= "<p><b>Purpose of Research:</b>" .  rtrim($user_purpose, ", ") . "</p>";
 
-        $message .+ "</tr>";
+        $message .= "<p><b>Initials:</b> $user_initials</p></div>";
 
-        $message .= "<tr><td colspan=2 font='colr:#3A5896;'></td></tr>";
+        $message .= "</tr>";
         $message .= "</table>";
 
         $message .= "</body></html>";
 
-        $messageTwo = "Please find the below link to review the submitted request";
         $message_body = $message ;
 
         $ci = get_instance();
@@ -739,8 +780,6 @@ class Usragr extends CI_Controller
 
         $ci->email->subject("Research Agreement Confirmation");
         $ci->email->send();
-
-
     }
 
     public function InitiateWithMailAttachment()
