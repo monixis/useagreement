@@ -111,12 +111,13 @@
         var subject = $('input#subject').val();
         var collection = $('input#collection').val();
         var userInitials = $('input#initials').val();
-        // variables for hawArchives and purpose are defined above outside of this function
+        // variables for hawArchives, academic status, and purpose are defined above outside of this function
+
         var termsAndConditions = "false";
         if ($('#accept').prop('checked') && $('#condofuse').prop('checked')) {
           termsAndConditions = "true";
         }
-        /* Save the researcher to the database via the suragr controller */
+        /* Save the researcher to the database via the usragr controller */
         $.post("<?php echo base_url("?c=usragr&m=insertNewPhysicalResearcher");?>", {
             date: date,
             userName: userName,
@@ -169,7 +170,7 @@
 
                       $('#requestStatus').show().css('background', '#66cc00').append("#" + userId + ": A User Agreement Form has been sent to " + userName);
 
-                      // Disable the submit button to prevent the user from sending multiple emails to themselves and creating multiple duplicated entries
+                      /* Disable the submit button to prevent the user from sending multiple emails to themselves and creating multiple duplicated entries */
                       $('.btn').attr('disabled', true);
 
                   }

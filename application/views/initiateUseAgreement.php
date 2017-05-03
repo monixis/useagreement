@@ -364,6 +364,7 @@
                     <label class="label">Email:</label><br/><input type="text" id="email" class="textinput" />
                     <!--input type="text" id="request_collection" class="textinput"/-->
                 </div>
+
                 <div id="requests">
                     <h2>Requests:</h2>
                     <div class="formcontents" id="formcontents">
@@ -459,8 +460,7 @@
                     <h3>Add Attachment</h3><br/></br>
                     <input align="center" class='btn' type="file" name="uploaded_file" onchange="uploadedFile()" id="uploaded_file"><br/></br>
                        <div id="fileInfo"></div>
-                     <!-- formcontents -->
-                </div>
+                </div><!-- formcontents -->
 
                 <label class="label">Optional Message (This will be part of the email sent to the researcher):</label><br/><textarea id="comments" rows="8" cols="75" style="display: block; margin-bottom: 10px;"></textarea>
 

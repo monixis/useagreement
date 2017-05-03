@@ -318,6 +318,57 @@ public function countWithStatus($status){
 
 }
 
+  /* This function returns an email from a user based on his/her research argreement number number.
+  Used in the physical user agreement. - Dan Mopsick 5/2/2017 */
+  public function getEmailByResearchAgreementNumber($researchAgreementNumber){
+      $this ->db ->trans_start();
+
+      /* Create sql request to select the email where the research agreement number is the same as the one passed in the method */
+      $sql = "SELECT emailId FROM researcher WHERE researchAgreementNumber = '$researchAgreementNumber'";
+
+      /* Run the specified SQL query */
+      $rawResult = $this->db->query($sql);
+
+      $result = $rawResult->result();
+
+      $email = $result[0]->emailId;
+
+      return $email;
+  }
+
+  /* Returns the initials of a userbased on their research agreement number. Used in verifying
+  users in in-houseUseAgreement.php */
+  public function getInitialsByResearchAgreementNumber($researchAgreementNumber){
+    $this ->db ->trans_start();
+
+    /* Create sql request to select the email where the research agreement number is the same as the one passed in the method */
+    $sql = "SELECT userInitials FROM researcher WHERE researchAgreementNumber = '$researchAgreementNumber'";
+
+    /* Run the specified SQL query */
+    $rawResult = $this->db->query($sql);
+
+    $result = $rawResult->result();
+
+    $userInitials = $result[0]->userInitials;
+
+    return $userInitials;
+  }
+
+  public function getUsernameByResearchAgreementNumber($researchAgreementNumber){
+    $this ->db ->trans_start();
+
+    /* Create sql request to select the email where the research agreement number is the same as the one passed in the method */
+    $sql = "SELECT userName FROM researcher WHERE researchAgreementNumber = '$researchAgreementNumber'";
+
+    /* Run the specified SQL query */
+    $rawResult = $this->db->query($sql);
+
+    $result = $rawResult->result();
+
+    $user_name = $result[0]->userName;
+
+    return $user_name;
+  }
 
 }
 ?>

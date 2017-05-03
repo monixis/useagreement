@@ -2,7 +2,6 @@
 class Usragr extends CI_Controller
 {
 
-
     private $limit = 10;
 
     public function index()
@@ -10,7 +9,7 @@ class Usragr extends CI_Controller
         $this->load->model('usragr_model');
         $data['title'] = "COPY REQUEST/USE AGREEMENT FORM";
         $date = date_default_timezone_set('US/Eastern');
-        $this->load->view('researchAgreementForm', $data);
+        $this->load->view('in-houseUseAgreement', $data);
     }
 
 	 public function ack(){
@@ -26,7 +25,6 @@ class Usragr extends CI_Controller
 
     /*
      *Function to create new researcher.
-     *
      */
     public function insertNewResearcher()
     {
@@ -698,16 +696,6 @@ class Usragr extends CI_Controller
     /* By Dan Mopsick - This function sends an email to a researcher who is physically in the building performiing reserach.
     This email will serve as a receipt. Will be used by researchAgreementForm.php */
     public function mailResearchReceipt(){
-        $date = date("m/d/Y");
-        $userId = $this->input->get('userId');
-        $userId = (string)$userId;
-        $six_digit_random_number = mt_rand(100000, 999999);
-        $six_digit_random_string =  $this -> generateRandomString();
-        $UUID=$six_digit_random_string.$userId;
-        $six_digit_random_string =  $this -> generateRandomString();
-        $UUID = $UUID.$six_digit_random_string;
-        echo $UUID;
-
         // Process and Filter values from POST
         $researchAgreementNumber = filter_var($_POST['researchAgreementNumber'], FILTER_SANITIZE_STRING);
         $date = filter_var($_POST['date'], FILTER_SANITIZE_STRING);
@@ -784,15 +772,11 @@ class Usragr extends CI_Controller
         $ci->email->reply_to('maristarchives@gmail.com', "Marist Archives");
         $ci->email->message($message_body);
 
-
         $ci->email->subject("Research Agreement Confirmation");
         $ci->email->send();
     }
 
-    public function InitiateWithMailAttachment()
-    {
-
-        //$file_attached = false;
+    public function InitiateWithMailAttachment(){
         $date = date("m/d/Y");
         $userId = $this->input->get('userId');
         $userId = (string)$userId;
@@ -906,6 +890,138 @@ class Usragr extends CI_Controller
         }
     }
 
+
+    /* This function sends an email to the user confirming their request. The user's email is identified
+    based on their researchAgreementNumber */
+    public function InitiateWithMailAttachmentByResearchNum(){
+
+
+
+      $message = '<html><body>';
+
+      $message .= '<table width="100%"; rules="all" style="border:1px solid #3A5896;" cellpadding="10">';
+
+      $message .= "<tr ><td align='center'><img src='https://s.graphiq.com/sites/default/files/10/media/images/Marist_College_2_220374.jpg'  /><h3> Marist Archives and Special Collection </h3><h3>COPY/USE AGREEMENT REQUEST</h3> ";
+
+      $message .= "<br/><br/> <h4> Dear $user_name ,<br /><br />We have initiated use agreement form for you. Please click on the below link to edit and submit the request.</h4><br/> <I>Link:</I><br/><a href='$url'> $url </a></></tr>";
+
+//$message .= "<tr><td colspan=2 font='colr:#3A5896;'><I>Link:<br></I> $url </td></tr>";
+      $message .= "<tr><td colspan=2 font='colr:#3A5896;'><I>Comments/Instructions:<br></I><h4>$comments</h4></td></tr>";
+      $message .= "</table>";
+
+      $message .= "</body></html>";
+      // $message = "<html><body>";
+      //$messageOne = "$user_name.\".\n\r has submitted the new use agreement request. Please click on the below link to review and approve/disapprove the request";
+      $messageTwo = "Please find the below link to review the submitted request";
+      $message_body = $message ;
+      $file_attached = false;
+      if (isset($_FILES['file_attach'])) //check uploaded file
+      {
+
+          //get file details we need
+          $file_tmp_name = $_FILES['file_attach']['tmp_name'];
+          $file_name = $_FILES['file_attach']['name'];
+          $file_error = $_FILES['file_attach']['error'];
+          $file_size = $_FILES['file_attach']['size'];
+          $file_type = $_FILES['file_attach']['type'];
+
+          //exit script and output error if we encounter any
+          if ($file_error > 0) {
+              $mymsg = array(
+                  1 => "The uploaded file exceeds the upload_max_filesize directive in php.ini",
+                  2 => "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form",
+                  3 => "The uploaded file was only partially uploaded",
+                  4 => "No file was uploaded",
+                  6 => "Missing a temporary folder");
+              $output = json_encode(array('type' => 'error', 'text' => $mymsg[$file_error]));
+              die($output);
+          }
+
+          $file_attached = true;
+      }
+
+      $ci = get_instance();
+      $ci->load->library('email');
+      $config['protocol'] = "smtp";
+      $config['smtp_host'] = "tls://smtp.googlemail.com";
+      $config['smtp_port'] = "465";
+      $config['smtp_user'] = "maristarchives@gmail.com";
+      $config['smtp_pass'] = "MaristArchives2017";
+      $config['charset'] = "utf-8";
+      $config['mailtype'] = "html";
+      $config['newline'] = "\r\n";
+
+      $ci->email->initialize($config);
+
+      $ci->email->from('maristarchives@gmail.com', "Marist Archives");
+      //$ci->email->cc('dheeraj.karnati1@marist.edu');
+      $ci->email->to($_POST['user_email']);
+      $ci->email->reply_to('maristarchives@gmail.com', "Marist Archives");
+      $ci->email->message($message_body);
+      //If the attached file in requested format
+      if ($file_attached) {
+
+          $this->load->model('usragr_model');
+      //    $this->email->subject('UseAgreement Initiated');
+
+          $ci->email->subject("Marist Copy/Use Request - Initiated");
+
+
+          $ds= "/data/library/htdocs/archives/useagreement/";
+
+          $storeFolder = 'uploads/';//2
+          if (!empty($_FILES)) {
+
+              $targetPath =  $ds.$storeFolder ;  //4
+              // $targetFile =  $targetPath. $_FILES['file_attach']['name'];  //5
+              $file_info = pathinfo($_FILES['file_attach']['name']);
+              $six_digit_random_number = mt_rand(100000, 999999);
+              $filename = 'useagreement_request' . '_' . $userId. $six_digit_random_number .'.' . $file_info['extension'];
+              $targetFile =  $targetPath. $filename;
+              // $result = $this->usragr_model->update_attachment($filename, $userId);
+              $ci->email->attach($file_tmp_name, 'attachment', $filename);
+              if($ci->email->send()){
+                  $filepath= "http://library.marist.edu/archives/useagreement/uploads/$filename";
+                  if($this->usragr_model->update_attachment($filename,$filepath, $userId)){
+                      move_uploaded_file($file_tmp_name,$targetFile); //6
+                  }
+              }
+
+          }
+
+      }
+      // Mail without attachment
+      else {
+          $ci->email->subject("UseAgreement Initiated");
+          $ci->email->send();
+
+      }
+    }
+
+  /* This function will return 1 if the user is indentified as a valid researcher based on matching the researchAgreementNumber and initials with the pair saved in the database */
+  public function verifyResearcher(){
+    /* Parse info entered by the user. This data will be compared to the data from teh database */
+    $researchAgreementNumber = $_POST['researchAgreementNumber'];
+    $submittedInitials = $_POST['userInitials'];
+
+
+
+    /* Getin info from the database to verify that it is the same information */
+    $this->load->model('usragr_model');
+    $savedEmail = $this->usragr_model->getEmailByResearchAgreementNumber($researchAgreementNumber);
+    $savedInitials = $this->usragr_model->getInitialsByResearchAgreementNumber($researchAgreementNumber);
+
+
+    /* If both fields are the same as their counterparts in the database then it is a valid user */
+    if($savedEmail != null && $submittedInitials == $savedInitials){
+      echo 1;
+    }
+    /* There is either no such user or one of the fields is entered wrong */
+    else{
+      echo -1;
+    }
+  }
+
   function generateRandomString($length = 6) {
         $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHI0123456789JKLMNOPQRSTUVWXYZ';
         $charactersLength = strlen($characters);
@@ -934,9 +1050,7 @@ class Usragr extends CI_Controller
           echo $authorized;
     }
 
-
     public function admin(){
-
         $this->load->model('usragr_model');
         $query = $this->usragr_model->allRequests($this->limit);
 
