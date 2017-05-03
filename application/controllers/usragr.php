@@ -893,27 +893,24 @@ class Usragr extends CI_Controller
 
     /* This function sends an email to the user confirming their request. The user's email is identified
     based on their researchAgreementNumber */
-    public function InitiateWithMailAttachmentByResearchNum(){
+    public function initiateWithMailAttachmentByResearchNum(){
+      // Load post variables
+      $date = filter_var($_POST['date'], FILTER_SANITIZE_STRING);
+      $researchAgreementNumber = filter_var($_POST['researchAgreementNumber'], FILTER_SANITIZE_STRING);
 
+      $this->load->model('usragr_model');
 
+      $user_name = $this->$usragr_model->getUsernameByResearchAgreementNumber($researchAgreementNumber);
+      $user_email = $this->usragr_model->getEmailByResearchAgreementNumber($researchAgreementNumber);
 
       $message = '<html><body>';
 
       $message .= '<table width="100%"; rules="all" style="border:1px solid #3A5896;" cellpadding="10">';
 
-      $message .= "<tr ><td align='center'><img src='https://s.graphiq.com/sites/default/files/10/media/images/Marist_College_2_220374.jpg'  /><h3> Marist Archives and Special Collection </h3><h3>COPY/USE AGREEMENT REQUEST</h3> ";
+      $message .= "<tr ><td align='center'><img src='https://s.graphiq.com/sites/default/files/10/media/images/Marist_College_2_220374.jpg'  /><h3> Marist Archives and Special Collection </h3><h3>IN-HOUSE USE AGREEMENT</h3> ";
 
-      $message .= "<br/><br/> <h4> Dear $user_name ,<br /><br />We have initiated use agreement form for you. Please click on the below link to edit and submit the request.</h4><br/> <I>Link:</I><br/><a href='$url'> $url </a></></tr>";
+      $message .= "<br/>$date<br/> <h4> Dear $user_name,<br/>This email is a confirmation of the request for materials you have made.<br/>";
 
-//$message .= "<tr><td colspan=2 font='colr:#3A5896;'><I>Link:<br></I> $url </td></tr>";
-      $message .= "<tr><td colspan=2 font='colr:#3A5896;'><I>Comments/Instructions:<br></I><h4>$comments</h4></td></tr>";
-      $message .= "</table>";
-
-      $message .= "</body></html>";
-      // $message = "<html><body>";
-      //$messageOne = "$user_name.\".\n\r has submitted the new use agreement request. Please click on the below link to review and approve/disapprove the request";
-      $messageTwo = "Please find the below link to review the submitted request";
-      $message_body = $message ;
       $file_attached = false;
       if (isset($_FILES['file_attach'])) //check uploaded file
       {
@@ -936,6 +933,15 @@ class Usragr extends CI_Controller
               $output = json_encode(array('type' => 'error', 'text' => $mymsg[$file_error]));
               die($output);
           }
+          else{
+            $message .= "The file you uploaded containing your requests is attatched to this email.<br/>";
+          }
+
+          $message .= "</h4></tr></table>";
+
+          $message .= "</body></html>";
+
+          $message_body = $message;
 
           $file_attached = true;
       }
@@ -955,15 +961,11 @@ class Usragr extends CI_Controller
 
       $ci->email->from('maristarchives@gmail.com', "Marist Archives");
       //$ci->email->cc('dheeraj.karnati1@marist.edu');
-      $ci->email->to($_POST['user_email']);
+      $ci->email->to($user_email);
       $ci->email->reply_to('maristarchives@gmail.com', "Marist Archives");
       $ci->email->message($message_body);
       //If the attached file in requested format
       if ($file_attached) {
-
-          $this->load->model('usragr_model');
-      //    $this->email->subject('UseAgreement Initiated');
-
           $ci->email->subject("Marist Copy/Use Request - Initiated");
 
 
@@ -1004,8 +1006,6 @@ class Usragr extends CI_Controller
     $researchAgreementNumber = $_POST['researchAgreementNumber'];
     $submittedInitials = $_POST['userInitials'];
 
-
-
     /* Getin info from the database to verify that it is the same information */
     $this->load->model('usragr_model');
     $savedEmail = $this->usragr_model->getEmailByResearchAgreementNumber($researchAgreementNumber);
@@ -1014,7 +1014,8 @@ class Usragr extends CI_Controller
 
     /* If both fields are the same as their counterparts in the database then it is a valid user */
     if($savedEmail != null && $submittedInitials == $savedInitials){
-      echo 1;
+      $userId = $this->usragr_model->getUserIdByResearchAgreementNumber($researchAgreementNumber);
+      echo $userId;
     }
     /* There is either no such user or one of the fields is entered wrong */
     else{

@@ -370,5 +370,21 @@ public function countWithStatus($status){
     return $user_name;
   }
 
+  public function getUserIdByResearchAgreementNumber($researchAgreementNumber){
+    $this ->db ->trans_start();
+
+    /* Create sql request to select the email where the research agreement number is the same as the one passed in the method */
+    $sql = "SELECT userId FROM researcher WHERE researchAgreementNumber = '$researchAgreementNumber'";
+
+    /* Run the specified SQL query */
+    $rawResult = $this->db->query($sql);
+
+    $result = $rawResult->result();
+
+    $userId = $result[0]->userId;
+
+    return $userId;
+  }
+
 }
 ?>

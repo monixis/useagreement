@@ -77,150 +77,91 @@
 
     });
 
-    $("form").submit(function(){
-      var filesize = 0;
-      if($('input#uploaded_file')[0].files[0]) {
-          filesize  = $('input#uploaded_file')[0].files[0].size / 1024 / 1024;
-      }
-
-      /* Success case for making a request */
-      if(filesize <= 2){
-        var date = generateDate();
-        var researchAgreementNumber = $('input#researchAgreementNumber').val();
-        var userInitials = $('input#initials').val();
-        var requestCount = $("#formcontents > div").length - 1;
-        var requestList = [];
-        var termsAndConditions = "false";
-        if ($('#accept').prop('checked') && $('#condofuse').prop('checked')) {
-          termsAndConditions = "true";
+    $("#initiate").click(function(){
+      $("#useForm").submit(function(){
+        var filesize = 0;
+        if($('input#uploaded_file')[0].files[0]) {
+            filesize  = $('input#uploaded_file')[0].files[0].size / 1024 / 1024;
         }
 
-        //iterating multiple requests.
-        for (var i = 1; i <= requestCount; i++) {
-            var checked = [];
-            var imageResolutions = "";
-            var fileFormats = "";
-            var avFormats = "";
-            var str1 = "div#request_input";
-            var str2 = str1.concat(i);
-            var request = [];
-            var reqCollection = $(str2.concat(" select#collection")).val();
-            //var reqCollection = $(str2.concat(" input#request_collection")).val();
+        /* Success case for making a request */
+        if(filesize <= 2){
+          var date = generateDate();
+          var researchAgreementNumber = $('input#researchAgreementNumber').val();
+          var userInitials = $('input#initials').val();
+          var requestCount = $("#formcontents > div").length - 1;
+          var requestList = [];
+          var termsAndConditions = "false";
+          if ($('#accept').prop('checked') && $('#condofuse').prop('checked')) {
+            termsAndConditions = "true";
+          }
 
-            var boxNumber = "";//$(str2.concat(" input#request_boxno")).val()
-            var itemNumber = $(str2.concat(" input#request_itemno")).val();
-            var descOfUse = $(str2.concat(" textarea#request_desc")).val();
-            $.each($(str2.concat(" input:checked[name='dpi']")), function () {
-                imageResolutions = imageResolutions.concat($(this).val());
-                imageResolutions = imageResolutions.concat(":");
-            });
-            imageResolutions = imageResolutions.slice(0, -1);
+          //iterating multiple requests.
+          for (var i = 1; i <= requestCount; i++) {
+              var checked = [];
+              var imageResolutions = "";
+              var fileFormats = "";
+              var avFormats = "";
+              var str1 = "div#request_input";
+              var str2 = str1.concat(i);
+              var request = [];
+              var reqCollection = $(str2.concat(" select#collection")).val();
+              //var reqCollection = $(str2.concat(" input#request_collection")).val();
 
-            $.each($(str2.concat(" input:checked[name= 'format']")), function () {
-                checked.push($(this).val());
-                fileFormats = fileFormats.concat($(this).val());
-                fileFormats = fileFormats.concat(":");
-            });
-            fileFormats = fileFormats.slice(0, -1);
-
-            $.each($(str2.concat(" input:checked[name= 'avformat']")), function () {
-                checked.push($(this).val());
-                avFormats = avFormats.concat($(this).val());
-                avFormats = avFormats.concat(":");
-            });
-            avFormats = avFormats.slice(0, -1);
-            request.push(reqCollection);
-            request.push(boxNumber);
-            request.push(itemNumber);
-            request.push(imageResolutions);
-            request.push(fileFormats);
-            request.push(avFormats);
-            request.push(descOfUse);
-            requestList.push(request);
-        }
-
-        // Verify that the user exists in the database based on their researchAgreementNumber
-        $.post("<?php echo base_url("?c=usragr&m=verifyResearcher");?>", {
-            researchAgreementNumber: researchAgreementNumber,
-            userInitials: userInitials
-        }).done(function (verifiedUser) {
-          alert(verifiedUser);
-          if(verifiedUser == 1 ){
-            alert("User is validated");
-            if($('input#uploaded_file')[0].files[0]){
-              var m_data = new FormData();
-              m_data.append('file_attach', $('input#uploaded_file')[0].files[0]);
-              m_data.append('researchAgreementNumber', researchAgreementNumber);
-              m_data.append('date', date);
-              var pcdone = 0;
-              $.ajax({
-                  xhr: function () {
-                      var xhr = new window.XMLHttpRequest();
-                      xhr.upload.addEventListener("progress", function (evt) {
-                          if (evt.lengthComputable) {
-                              var percentComplete = evt.loaded / evt.total;
-                              console.log(percentComplete);
-                              pcdone = percentComplete;
-                              $('.progress').css({
-                                  width: percentComplete * 100 + '%'
-
-                              });
-                              if (percentComplete === 1) {
-                                  $("#progressstatus").html("<p color='black'>File Upload is in progress</p>");
-
-                              }
-                          }
-                      }, false);
-                      return xhr;
-                  },
-
-                  type: "POST",
-                  url: "<?php echo base_url("?c=usragr&m=InitiateWithMailAttachmentByResearchNum");?>",
-                  data: m_data,
-                  processData: false,
-                  contentType: false,
-                  cache: false,
-
-                  success: function (response) {
-                      //load json data from server and output message
-                      if (response.type == 'error') { //load json data from server and output message
-                          output = '<div class="error">' + response.text + '</div>';
-                      } else {
-                          setTimeout(function () {
-                              $('.progress').addClass('hide');
-                              $("#progressstatus").html("<p color='black'></p>");
-                              $('#requestStatus').show().css('background', '#66cc00').append("#" + userId + ": A User Agreement Form has been sent to " + userName);
-
-                          }, 5000);
-
-
-                          // output = '<div class="success">' + response.text + '</div>';
-                      }
-                      $("#contact_form #contact_results").hide().html(output).slideDown();
-                  }
+              var boxNumber = "";//$(str2.concat(" input#request_boxno")).val()
+              var itemNumber = $(str2.concat(" input#request_itemno")).val();
+              var descOfUse = $(str2.concat(" textarea#request_desc")).val();
+              $.each($(str2.concat(" input:checked[name='dpi']")), function () {
+                  imageResolutions = imageResolutions.concat($(this).val());
+                  imageResolutions = imageResolutions.concat(":");
               });
+              imageResolutions = imageResolutions.slice(0, -1);
+
+              $.each($(str2.concat(" input:checked[name= 'format']")), function () {
+                  checked.push($(this).val());
+                  fileFormats = fileFormats.concat($(this).val());
+                  fileFormats = fileFormats.concat(":");
+              });
+              fileFormats = fileFormats.slice(0, -1);
+
+              $.each($(str2.concat(" input:checked[name= 'avformat']")), function () {
+                  checked.push($(this).val());
+                  avFormats = avFormats.concat($(this).val());
+                  avFormats = avFormats.concat(":");
+              });
+              avFormats = avFormats.slice(0, -1);
+              request.push(reqCollection);
+              request.push(boxNumber);
+              request.push(itemNumber);
+              request.push(imageResolutions);
+              request.push(fileFormats);
+              request.push(avFormats);
+              request.push(descOfUse);
+              requestList.push(request);
+          }
+
+          // Verify that the user exists in the database based on their researchAgreementNumber
+          $.post("<?php echo base_url("?c=usragr&m=verifyResearcher");?>", {
+              researchAgreementNumber: researchAgreementNumber,
+              userInitials: userInitials
+          }).done(function (userId) {
+            if(userId > 0){
+              
             }
             else{
-
+              alert("user is not validated");
             }
+          });
 
 
-            /* Disable the submit button to prevent the user from sending multiple emails to themselves and creating multiple duplicated entries */
-            $('.btn').attr('disabled', true);
-          }
-          else{
-            alert("user is not validated");
-          }
-        });
-
-
-      }
-      /* Uploaded file is too big */
-      else{
-        $('#requestStatus').show().css('background', '#b31b1b').append("<div id='message'>Uploaded file size should be less than 2 MB</div>");
-      }
-      /* Make the page scroll to the top to show either a success or error message */
-      $("html, body").animate({scrollTop: 0}, 600);
+        }
+        /* Uploaded file is too big */
+        else{
+          $('#requestStatus').show().css('background', '#b31b1b').append("<div id='message'>Uploaded file size should be less than 2 MB</div>");
+        }
+        /* Make the page scroll to the top to show either a success or error message */
+        $("html, body").animate({scrollTop: 0}, 600);
+      });
     });
 
 });
@@ -244,6 +185,30 @@ function generateDate(){
   return (month + "/" + day + "/" + year);
 }
   </script>
+  <style>
+      .progress {
+          display: block;
+          text-align: center;
+          width: 0;
+          height: 15px;
+          background: #07bb6c;
+          transition: width 10.5s;
+          border-color: #0c0c0c;
+      }
+      .progress.hide {
+          opacity: 0;
+          transition: opacity 2.3s;
+      }
+      .progress.status {
+          top:3px;
+          left:5%;
+          position:absolute;
+          display:inline-block;
+          color: #000000;
+      }
+
+
+  </style>
   </head>
   <body>
     <div id = "headerContainer">
@@ -280,7 +245,7 @@ function generateDate(){
         <div class = "content">
           <p class = "breadcrumb">
             <a href="http://library.marist.edu" class="map_link"><img src="http://library.marist.edu/images/home.png" class="fox2"/></a>
-            > Forms > Research Agreement Forms
+            > Forms > In-House Use Agreement
           </p>
 
           <!-- Dan Mopsick - This is where the research form becomes different than the initiateUseAgreementForm -->
@@ -288,11 +253,14 @@ function generateDate(){
           <div id = "researcherInfo">
             <h1 class = "page_head" style = "float:none;">In-House Use Agreement</h1>
 
-            <!-- Is there a message that should be displayed here similiar to the pdf version of the form? -->
-
-
+            <div id="requestStatus" style="width: auto; height:40px; margin-bottom: 7px; margin-top: -15px; color:#000000; font-size: 12pt; text-align: center; padding-top: 10px; display: none;">
+            </div></br>
+            <div id ="progressstatus"></div>
+            <div class="progress"></div>
+            <br>
+            <h2>Researcher's Information:</h2>
             <!-- All of the inputs are in a form element for validaiton purposes (ex: required) -->
-            <form style = "float:none; margin-left:0;" action="javascript:void(0);">
+            <form id = "useForm" style = "float:none; margin-left:0;" action="javascript:void(0);">
               <div class = "formcontents">
               <!-- Should the date be time stamped by the datbase? If the person is in the library... the time they are using the archive material is now -->
                 <label class = "label">Confirmation Number:</label><br/><input type = "text" id = "researchAgreementNumber" class = "sizable_input" size = "10" minLength = "10" maxLength = "10" required autofocus/>
