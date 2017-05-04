@@ -13,7 +13,7 @@
     <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
     <link rel="stylesheet" type="text/css" href="http://library.marist.edu/archives/mainpage/mainStyles/style.css" />
     <link rel="stylesheet" type="text/css" href="http://library.marist.edu/archives/mainpage/mainStyles/main.css" />
-    <link rel="stylesheet" type="text/css" href="styles/researchAgreementForm.css" />
+    <link rel="stylesheet" type="text/css" href="styles/researchAgreementForm.css"/>
     <script type="text/javascript" src="http://library.marist.edu/archives/mainpage/scripts/archivesChildMenu.js"></script>
     <script type="text/javascript" src="js/cloneRequests.js"></script>
     <link rel="stylesheet" type="text/css" href="styles/useagreement.css"/>
