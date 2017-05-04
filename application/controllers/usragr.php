@@ -891,6 +891,7 @@ class Usragr extends CI_Controller
       // Load post variables
       $date = filter_var($_POST['date'], FILTER_SANITIZE_STRING);
       $researchAgreementNumber = filter_var($_POST['researchAgreementNumber'], FILTER_SANITIZE_STRING);
+      $userId = filter_var($_POST['userId'], FILTER_SANITIZE_STRING);
 
       $this->load->model('usragr_model');
 

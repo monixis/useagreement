@@ -79,77 +79,78 @@
 
     $("#initiate").click(function(){
       $("#useForm").submit(function(){
-        var filesize = 0;
-        if($('input#uploaded_file')[0].files[0]) {
-            filesize  = $('input#uploaded_file')[0].files[0].size / 1024 / 1024;
-        }
+        var researchAgreementNumber = $('input#researchAgreementNumber').val();
+        var userInitials = $('input#initials').val();
+        // Verify that the user exists in the database based on their researchAgreementNumber
+        $.post("<?php echo base_url("?c=usragr&m=verifyResearcher");?>", {
+            researchAgreementNumber: researchAgreementNumber,
+            userInitials: userInitials
+        }).done(function (userId) {
+          if(userId > 0){
+            var filesize = 0;
+            if($('input#uploaded_file')[0].files[0]) {
+              filesize  = $('input#uploaded_file')[0].files[0].size / 1024 / 1024;
+            }
 
-        /* Success case for making a request */
-        if(filesize <= 2){
-          var date = generateDate();
-          var researchAgreementNumber = $('input#researchAgreementNumber').val();
-          var userInitials = $('input#initials').val();
-          var requestCount = $("#formcontents > div").length - 1;
-          var requestList = [];
-          var termsAndConditions = "false";
-          if ($('#accept').prop('checked') && $('#condofuse').prop('checked')) {
-            termsAndConditions = "true";
-          }
+            /* Success case for making a request */
+            if(filesize <= 2){
+              var date = generateDate();
+              var requestCount = $("#formcontents > div").length - 1;
+              var requestList = [];
+              var termsAndConditions = "false";
+              if ($('#accept').prop('checked') && $('#condofuse').prop('checked')) {
+                termsAndConditions = "true";
+            }
 
-          //iterating multiple requests.
-          for (var i = 1; i <= requestCount; i++) {
-              var checked = [];
-              var imageResolutions = "";
-              var fileFormats = "";
-              var avFormats = "";
-              var str1 = "div#request_input";
-              var str2 = str1.concat(i);
-              var request = [];
-              var reqCollection = $(str2.concat(" select#collection")).val();
-              //var reqCollection = $(str2.concat(" input#request_collection")).val();
+            //iterating multiple requests.
+            for (var i = 1; i <= requestCount; i++) {
+                var checked = [];
+                var imageResolutions = "";
+                var fileFormats = "";
+                var avFormats = "";
+                var str1 = "div#request_input";
+                var str2 = str1.concat(i);
+                var request = [];
+                var reqCollection = $(str2.concat(" select#collection")).val();
+                //var reqCollection = $(str2.concat(" input#request_collection")).val();
 
-              var boxNumber = "";//$(str2.concat(" input#request_boxno")).val()
-              var itemNumber = $(str2.concat(" input#request_itemno")).val();
-              var descOfUse = $(str2.concat(" textarea#request_desc")).val();
-              $.each($(str2.concat(" input:checked[name='dpi']")), function () {
-                  imageResolutions = imageResolutions.concat($(this).val());
-                  imageResolutions = imageResolutions.concat(":");
-              });
-              imageResolutions = imageResolutions.slice(0, -1);
+                var boxNumber = "";//$(str2.concat(" input#request_boxno")).val()
+                var itemNumber = $(str2.concat(" input#request_itemno")).val();
+                var descOfUse = $(str2.concat(" textarea#request_desc")).val();
+                $.each($(str2.concat(" input:checked[name='dpi']")), function () {
+                    imageResolutions = imageResolutions.concat($(this).val());
+                    imageResolutions = imageResolutions.concat(":");
+                });
+                imageResolutions = imageResolutions.slice(0, -1);
 
-              $.each($(str2.concat(" input:checked[name= 'format']")), function () {
-                  checked.push($(this).val());
-                  fileFormats = fileFormats.concat($(this).val());
-                  fileFormats = fileFormats.concat(":");
-              });
-              fileFormats = fileFormats.slice(0, -1);
+                $.each($(str2.concat(" input:checked[name= 'format']")), function () {
+                    checked.push($(this).val());
+                    fileFormats = fileFormats.concat($(this).val());
+                    fileFormats = fileFormats.concat(":");
+                });
+                fileFormats = fileFormats.slice(0, -1);
 
-              $.each($(str2.concat(" input:checked[name= 'avformat']")), function () {
-                  checked.push($(this).val());
-                  avFormats = avFormats.concat($(this).val());
-                  avFormats = avFormats.concat(":");
-              });
-              avFormats = avFormats.slice(0, -1);
-              request.push(reqCollection);
-              request.push(boxNumber);
-              request.push(itemNumber);
-              request.push(imageResolutions);
-              request.push(fileFormats);
-              request.push(avFormats);
-              request.push(descOfUse);
-              requestList.push(request);
-          }
+                $.each($(str2.concat(" input:checked[name= 'avformat']")), function () {
+                    checked.push($(this).val());
+                    avFormats = avFormats.concat($(this).val());
+                    avFormats = avFormats.concat(":");
+                });
+                avFormats = avFormats.slice(0, -1);
+                request.push(reqCollection);
+                request.push(boxNumber);
+                request.push(itemNumber);
+                request.push(imageResolutions);
+                request.push(fileFormats);
+                request.push(avFormats);
+                request.push(descOfUse);
+                requestList.push(request);
+            }
 
-          // Verify that the user exists in the database based on their researchAgreementNumber
-          $.post("<?php echo base_url("?c=usragr&m=verifyResearcher");?>", {
-              researchAgreementNumber: researchAgreementNumber,
-              userInitials: userInitials
-          }).done(function (userId) {
-            if(userId > 0){
               if($('input#uploaded_file')[0].files[0]) {
                 var m_data = new FormData();
                 m_data.append('researchAgreementNumber', researchAgreementNumber);
                 m_data.append('date', date);
+                m_data.append('userId', userId);
                 m_data.append('file_attach', $('input#uploaded_file')[0].files[0]);
                 var pcdone = 0;
                 $.ajax({
@@ -188,7 +189,8 @@
                                 $("#progressstatus").html("<p color='black'></p>");
                                 $('#requestAStatus').hide();
                                 $('#requestStatus').show().css('background', '#66cc00').html("#" + userId + ": A confirmation email has been sent to the email associated with the entered Research Agreement Number.");
-
+                                /* Disable the submit button to prevent the user from sending multiple emails to themselves and creating multiple duplicated entries */
+                                $('.btn').attr('disabled', true);
                             }, 5000);
 
 
@@ -202,6 +204,7 @@
                 var m_data = new FormData();
                 m_data.append('researchAgreementNumber', researchAgreementNumber);
                 m_data.append('date', date);
+                m_data.append('userId', userId);
                 var pcdone = 0;
                 $.ajax({
                     type: "POST",
@@ -217,6 +220,8 @@
                             output = '<div class="error">' + response.text + '</div>';
                         } else {
                             $('#requestStatus').show().css('background', '#66cc00').html("#" + userId + ": A confirmation email has been sent to the email associated with the entered Research Agreement Number.");
+                            /* Disable the submit button to prevent the user from sending multiple emails to themselves and creating multiple duplicated entries */
+                            $('.btn').attr('disabled', true);
 
                         }
                         // $("#contact_form #contact_results").hide().html(output).slideDown();
@@ -225,17 +230,17 @@
               }
 
             }
+            /* Uploaded file is too big */
             else{
-              $('#requestStatus').show().css('background', '#b31b1b').html("Invalid Research Agreement Number or Initials. Please ensure your information has been typed in correctly.");
+              $('#requestStatus').show().css('background', '#b31b1b').append("<div id='message'>Uploaded file size should be less than 2 MB</div>");
             }
-          });
+          }
+          else{
+            $('#requestStatus').show().css('background', '#b31b1b').html("Invalid Research Agreement Number or Initials. Please ensure your information has been typed in correctly.");
+          }
+            });
 
 
-        }
-        /* Uploaded file is too big */
-        else{
-          $('#requestStatus').show().css('background', '#b31b1b').append("<div id='message'>Uploaded file size should be less than 2 MB</div>");
-        }
         /* Make the page scroll to the top to show either a success or error message */
         $("html, body").animate({scrollTop: 0}, 600);
       });
