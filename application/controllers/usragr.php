@@ -1079,6 +1079,17 @@ class Usragr extends CI_Controller
         $pagination_links = pagination($total_rows, $this->limit,$url);
         $this->load->view('page_view', compact('query', 'pagination_links','total_rows'));
     }
+
+    /* Used to display all in house researchers - Dan Mopsick */
+    public function researchRequests(){
+      $this->load->model('usragr_model');
+      $this->load->helper('app');
+      $query = $this->usragr_model->getRequestsWithResearchAgreementNum($this->limit);
+      $total_rows = $this->usragr_model->countWithResearchArgreement();
+      $pagination_links = pagination($total_rows, $this->limit);
+      $this->load->view('page_view', compact('query', 'pagination_links','total_rows'));
+    }
+
     public function getRequests(){
         $apasscode= $this-> input-> get('pass');
         $this->load->model('usragr_model');

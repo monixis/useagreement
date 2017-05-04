@@ -337,7 +337,7 @@ public function countWithStatus($status){
   }
 
   /* Returns the initials of a userbased on their research agreement number. Used in verifying
-  users in in-houseUseAgreement.php */
+  users in in-houseUseAgreement.php - Dan Mopsick */
   public function getInitialsByResearchAgreementNumber($researchAgreementNumber){
     $this ->db ->trans_start();
 
@@ -354,6 +354,7 @@ public function countWithStatus($status){
     return $userInitials;
   }
 
+  /* Dan Mopsick */
   public function getUsernameByResearchAgreementNumber($researchAgreementNumber){
     $this ->db ->trans_start();
 
@@ -370,6 +371,7 @@ public function countWithStatus($status){
     return $user_name;
   }
 
+  /* Dan Mopsick */
   public function getUserIdByResearchAgreementNumber($researchAgreementNumber){
     $this ->db ->trans_start();
 
@@ -386,5 +388,21 @@ public function countWithStatus($status){
     return $userId;
   }
 
+  /* Returns all of the researchers with a research agreement number in order to display all in house researchers - Dan Mopsick */
+  public function getRequestsWithResearchAgreementNum($limit = 0){
+    $this->db->limit($limit);
+    $this->db->offset($this->input ->get('per_page'));
+    $this->db-> where('researchAgreementNumber IS NOT NULL', null, false);
+    $this->db-> order_by('userId','desc');
+    return $this->db->get('researcher');
+  }
+
+  /* Returns the amount of in house researchers registred in the system. - Dan Mopsick */
+  public function countWithResearchArgreement(){
+    $this->db->select('userId');
+    $this->db->from('researcher');
+    $this->db-> where('researchAgreementNumber IS NOT NULL', null, false);
+    return $this->db->count_all_results();
+  }
 }
 ?>
