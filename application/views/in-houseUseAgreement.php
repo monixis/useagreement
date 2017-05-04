@@ -146,10 +146,87 @@
               userInitials: userInitials
           }).done(function (userId) {
             if(userId > 0){
-              
+              if($('input#uploaded_file')[0].files[0]) {
+                var m_data = new FormData();
+                m_data.append('researchAgreementNumber', researchAgreementNumber);
+                m_data.append('date', date);
+                m_data.append('file_attach', $('input#uploaded_file')[0].files[0]);
+                var pcdone = 0;
+                $.ajax({
+                    xhr: function () {
+                        var xhr = new window.XMLHttpRequest();
+                        xhr.upload.addEventListener("progress", function (evt) {
+                            if (evt.lengthComputable) {
+                                var percentComplete = evt.loaded / evt.total;
+                                console.log(percentComplete);
+                                pcdone = percentComplete;
+                                $('.progress').css({
+                                    width: percentComplete * 100 + '%'
+                                });
+                                if (percentComplete === 1) {
+                                    $("#progressstatus").html("<p color='black'>File Upload is in progress</p>");
+                                }
+                            }
+                        }, false);
+                        return xhr;
+                    },
+
+                    type: "POST",
+                    url: "<?php echo base_url("?c=usragr&m=initiateWithMailAttachmentByResearchNum");?>",
+                    data: m_data,
+                    processData: false,
+                    contentType: false,
+                    cache: false,
+
+                    success: function (response) {
+                        //load json data from server and output message
+                        if (response.type == 'error') { //load json data from server and output message
+                            output = '<div class="error">' + response.text + '</div>';
+                        } else {
+                            setTimeout(function () {
+                                $('.progress').addClass('hide');
+                                $("#progressstatus").html("<p color='black'></p>");
+                                $('#requestAStatus').hide();
+                                $('#requestStatus').show().css('background', '#66cc00').html("#" + userId + ": A confirmation email has been sent to the email associated with the entered Research Agreement Number.");
+
+                            }, 5000);
+
+
+                            // output = '<div class="success">' + response.text + '</div>';
+                        }
+                        $("#contact_form #contact_results").hide().html(output).slideDown();
+                    }
+                });
+              }
+              else{
+                var m_data = new FormData();
+                m_data.append('researchAgreementNumber', researchAgreementNumber);
+                m_data.append('date', date);
+                var pcdone = 0;
+                $.ajax({
+                    type: "POST",
+                    url: "<?php echo base_url("?c=usragr&m=initiateWithMailAttachmentByResearchNum");?>",
+                    data: m_data,
+                    processData: false,
+                    contentType: false,
+                    cache: false,
+
+                    success: function (response) {
+                        //load json data from server and output message
+                        if (response.type == 'error') { //load json data from server and output message
+                            output = '<div class="error">' + response.text + '</div>';
+                        } else {
+                            $('#requestStatus').show().css('background', '#66cc00').html("#" + userId + ": A confirmation email has been sent to the email associated with the entered Research Agreement Number.");
+
+                        }
+                        // $("#contact_form #contact_results").hide().html(output).slideDown();
+                    }
+                });
+              }
+
             }
             else{
-              alert("user is not validated");
+              $('#requestStatus').show().css('background', '#b31b1b').html("Invalid Research Agreement Number or Initials. Please ensure your information has been typed in correctly.");
             }
           });
 

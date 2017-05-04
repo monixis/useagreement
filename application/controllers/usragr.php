@@ -16,13 +16,6 @@ class Usragr extends CI_Controller
 	 	$this->load->view('ack');
 	 }
 
-   /* Function to display a given page - Dan Mopsick */
-   public function view($page = 'initiateUseAgreement'){
-     $this->load->model('usragr_model');
-     $date = date_default_timezone_set('US/Eastern');
-     $this->load->view($page, $data);
-   }
-
     /*
      *Function to create new researcher.
      */
@@ -117,7 +110,8 @@ class Usragr extends CI_Controller
             'userInitials'       => $_POST['userInitials'],
             'howArchives' => $_POST['howArchives'],
             'researchPurpose' => $_POST['researchPurpose'],
-            'phoneNumber'=> $_POST['phoneNumber']
+            'phoneNumber'=> $_POST['phoneNumber'],
+            'termsAndCond' => 'true'
         );
 
         $this->load->model('usragr_model');
@@ -892,7 +886,7 @@ class Usragr extends CI_Controller
 
 
     /* This function sends an email to the user confirming their request. The user's email is identified
-    based on their researchAgreementNumber */
+    based on their researchAgreementNumber - By Dan Mopsick */
     public function initiateWithMailAttachmentByResearchNum(){
       // Load post variables
       $date = filter_var($_POST['date'], FILTER_SANITIZE_STRING);
@@ -900,7 +894,7 @@ class Usragr extends CI_Controller
 
       $this->load->model('usragr_model');
 
-      $user_name = $this->$usragr_model->getUsernameByResearchAgreementNumber($researchAgreementNumber);
+      $user_name = $this->usragr_model->getUsernameByResearchAgreementNumber($researchAgreementNumber);
       $user_email = $this->usragr_model->getEmailByResearchAgreementNumber($researchAgreementNumber);
 
       $message = '<html><body>';
@@ -909,7 +903,7 @@ class Usragr extends CI_Controller
 
       $message .= "<tr ><td align='center'><img src='https://s.graphiq.com/sites/default/files/10/media/images/Marist_College_2_220374.jpg'  /><h3> Marist Archives and Special Collection </h3><h3>IN-HOUSE USE AGREEMENT</h3> ";
 
-      $message .= "<br/>$date<br/> <h4> Dear $user_name,<br/>This email is a confirmation of the request for materials you have made.<br/>";
+      $message .= "<br/>$date<br/> <h4> Dear $user_name,<br/><br/>This email is a confirmation of the request for materials you have made.<br/>";
 
       $file_attached = false;
       if (isset($_FILES['file_attach'])) //check uploaded file
@@ -936,15 +930,14 @@ class Usragr extends CI_Controller
           else{
             $message .= "The file you uploaded containing your requests is attatched to this email.<br/>";
           }
-
-          $message .= "</h4></tr></table>";
-
-          $message .= "</body></html>";
-
-          $message_body = $message;
-
           $file_attached = true;
       }
+
+      $message .= "</h4></tr></table>";
+
+      $message .= "</body></html>";
+
+      $message_body = $message;
 
       $ci = get_instance();
       $ci->load->library('email');
@@ -965,8 +958,8 @@ class Usragr extends CI_Controller
       $ci->email->reply_to('maristarchives@gmail.com', "Marist Archives");
       $ci->email->message($message_body);
       //If the attached file in requested format
+      $ci->email->subject("Marist In-House Use Agreement Confirmation");
       if ($file_attached) {
-          $ci->email->subject("Marist Copy/Use Request - Initiated");
 
 
           $ds= "/data/library/htdocs/archives/useagreement/";
@@ -994,13 +987,12 @@ class Usragr extends CI_Controller
       }
       // Mail without attachment
       else {
-          $ci->email->subject("UseAgreement Initiated");
           $ci->email->send();
 
       }
     }
 
-  /* This function will return 1 if the user is indentified as a valid researcher based on matching the researchAgreementNumber and initials with the pair saved in the database */
+  /* This function will return 1 if the user is indentified as a valid researcher based on matching the researchAgreementNumber and initials with the pair saved in the database - Dan Mopsick */
   public function verifyResearcher(){
     /* Parse info entered by the user. This data will be compared to the data from teh database */
     $researchAgreementNumber = $_POST['researchAgreementNumber'];
