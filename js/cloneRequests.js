@@ -15,7 +15,7 @@ $.fn.clone = function(){
 	 $("#buttonAdd-request").click(function(){
     	requestsCnt = requestsCnt + 1;
     	request_input = "request_input" + requestsCnt + "";
-    	var requests = "<div id=" + request_input + " style='border-bottom: 1px solid; padding: 10px;'>" + fields;
+    	var requests = "<div id=" + request_input + " class = 'myRequest' style='border-bottom: 1px solid; padding: 10px;'>" + fields;
     	$('div#formcontents').append(requests);
     	$('#buttonRemove-request').attr('disabled', false).css('opacity', 1);
     });
@@ -33,5 +33,3 @@ $.fn.clone = function(){
             }
     });
 }
-
-

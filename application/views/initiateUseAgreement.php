@@ -113,7 +113,7 @@
                     var phoneNumber = $('input#phoneNo').val();
                     var requestCount = $("#formcontents > div").length - 1;
                     var requestList = [];
-                    //alert (requestCount);
+                    alert (requestCount);
                     //iterating multiple requests.
                     for (var i = 1; i <= requestCount; i++) {
                         var checked = [];
@@ -157,7 +157,7 @@
                         request.push(descOfUse);
                         requestList.push(request);
                     }
-                    //alert(requestList);
+                    alert(requestList);
                     $.post("<?php echo base_url("?c=usragr&m=insertNewResearcher");?>", {
                         date: date,
                         userName: userName,
@@ -171,6 +171,7 @@
                         requestList: requestList
 
                     }).done(function (userId) {
+
                         if (userId > 0) {
                             if($('input#uploaded_file')[0].files[0]) {
                             var m_data = new FormData();
@@ -349,7 +350,7 @@
             <div id="researcherInfo"><h1 class="page_head" style="float: none;">User Agreement Initiation Form</h1>
 
                 <div id="requestStatus" style="width: auto; height:40px; margin-bottom: 7px; margin-top: -15px; color:#000000; font-size: 12pt; text-align: center; padding-top: 10px; display: none;">
-                </div></br>
+                </div>
                 <div id ="progressstatus"></div>
                 <div class="progress"></div>
                 <h2>Researcher's Information:</h2>
@@ -364,7 +365,6 @@
                     <label class="label">Email:</label><br/><input type="text" id="email" class="textinput" />
                     <!--input type="text" id="request_collection" class="textinput"/-->
                 </div>
-
                 <div id="requests">
                     <h2>Requests:</h2>
                     <div class="formcontents" id="formcontents">
@@ -460,7 +460,8 @@
                     <h3>Add Attachment</h3><br/></br>
                     <input align="center" class='btn' type="file" name="uploaded_file" onchange="uploadedFile()" id="uploaded_file"><br/></br>
                        <div id="fileInfo"></div>
-                </div><!-- formcontents -->
+                     <!-- formcontents -->
+                </div>
 
                 <label class="label">Optional Message (This will be part of the email sent to the researcher):</label><br/><textarea id="comments" rows="8" cols="75" style="display: block; margin-bottom: 10px;"></textarea>
 
@@ -474,10 +475,9 @@
             James A. Cannavino Library, 3399 North Road, Poughkeepsie, NY 12601; 845.575.3199
             <br />
             &#169; Copyright 2007-2016 Marist College. All Rights Reserved.
-
-            <a href="http://www.marist.edu/disclaimers.html" target="_blank" >Disclaimers</a> | <a href="http://www.marist.edu/privacy.html" target="_blank" >Privacy Policy</a> | <a href=<?php echo base_url("?c=usragr&m=ack");?> target="_blank">Acknowledgements</a>
+		<a href="http://www.marist.edu/disclaimers.html" target="_blank" >Disclaimers</a> | <a href="http://www.marist.edu/privacy.html" target="_blank" >Privacy Policy</a> | <a href=<?php echo base_url("?c=usragr&m=ack");?> target="_blank">Acknowledgements</a>
         </p>
     </div>
-    </doiv
+
 </body>
 </html>

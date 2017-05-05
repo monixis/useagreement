@@ -888,12 +888,11 @@ class Usragr extends CI_Controller
     /* This function sends an email to the user confirming their request. The user's email is identified
     based on their researchAgreementNumber - By Dan Mopsick */
     public function initiateWithMailAttachmentByResearchNum(){
+      $this->load->model('usragr_model');
+
       // Load post variables
       $date = filter_var($_POST['date'], FILTER_SANITIZE_STRING);
       $researchAgreementNumber = filter_var($_POST['researchAgreementNumber'], FILTER_SANITIZE_STRING);
-      $userId = filter_var($_POST['userId'], FILTER_SANITIZE_STRING);
-
-      $this->load->model('usragr_model');
 
       $user_name = $this->usragr_model->getUsernameByResearchAgreementNumber($researchAgreementNumber);
       $user_email = $this->usragr_model->getEmailByResearchAgreementNumber($researchAgreementNumber);
@@ -995,9 +994,11 @@ class Usragr extends CI_Controller
 
   /* This function will return 1 if the user is indentified as a valid researcher based on matching the researchAgreementNumber and initials with the pair saved in the database - Dan Mopsick */
   public function verifyResearcher(){
+    // echo print_r($_POST);
     /* Parse info entered by the user. This data will be compared to the data from teh database */
-    $researchAgreementNumber = $_POST['researchAgreementNumber'];
+    $researchAgreementNumber = filter_var($_POST['researchAgreementNumber'], FILTER_SANITIZE_STRING);
     $submittedInitials = $_POST['userInitials'];
+
 
     /* Getin info from the database to verify that it is the same information */
     $this->load->model('usragr_model');
@@ -1009,6 +1010,14 @@ class Usragr extends CI_Controller
     if($savedEmail != null && $submittedInitials == $savedInitials){
       $userId = $this->usragr_model->getUserIdByResearchAgreementNumber($researchAgreementNumber);
       echo $userId;
+
+      // Insert the user's requests into the request database
+      $requestCount = $_POST['requestCount'];
+      if($requestCount != 0){
+        $requestList = ['requestList']
+        insertRequest($userId, $requestCount, $requestList);
+      }
+
     }
     /* There is either no such user or one of the fields is entered wrong */
     else{
@@ -1025,6 +1034,37 @@ class Usragr extends CI_Controller
         }
         return $randomString;
     }
+
+    /* This function inserts a request into the request table - Dan Mopsick */
+    public function insertRequest($userId, $requestCount, $requestList){
+      $requestList = array($requestList);
+      //processiong array of requests
+      foreach ($requestList as $request) {
+          foreach ($request as $row) {
+              //data of request row
+              $data = array(
+                  'collection'      => $row[0],
+                  'boxNumber'       => $row[1],
+                  'itemNumber'      => $row[2],
+                  'imageResolution' => $row[3],
+                  'fileFormat'      => $row[4],
+                  'audOrVidFileFormat' => $row[5],
+                  'usageDescription' => $row[6],
+                  'userId'          => $userId
+              );
+              //insert the request
+              $this->load->model('usragr_model');
+              $response = $this->usragr_model->insertUserRequest($data, 'request');
+              if ($response > 0) {
+                return 1;
+              }else{
+                  return 0;
+              }
+          }
+        }// end of processing requests
+
+    }
+
 /*
  * Verifies admin passcode input with passcode saved in db
  *

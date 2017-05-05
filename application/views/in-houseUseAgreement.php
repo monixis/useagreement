@@ -2,7 +2,7 @@
 <html lang = 'en'>
   <head>
     <!-- Not sure what final title will be -->
-    <title>Physical User Agreement</title>
+    <title>In-House Use Agreement</title>
     <!-- Import dependencies, CSS, JS -->
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link rel="shortcut icon" href="http://library.marist.edu/archives/icon/box.png" />
@@ -19,7 +19,7 @@
     <script type="text/javascript" src="js/cloneRequests.js"></script>
     <link rel="stylesheet" type="text/css" href="styles/useagreement.css"/>
 
-    <!-- Not sure what JS I need to add here from the other page. But most likely at least some of the js from initiateUseAgreement.php -->
+    <!-- Not sure what JS I need to add here from the other page. But most likely at least some of the js from initiateUseAgeement.php -->
   <script type = "text/javascript">
     uploadedFile = function() {
       $('#message').remove();
@@ -41,9 +41,6 @@
       output.innerHTML += '</ul>';
 
   }
-
-  /* This variable prevents multiple emails from being sent to the same user */
-  var emailSent = false;
 
   $(document).ready(function(){
     $('div#request_input').clone();
@@ -82,15 +79,65 @@
 
     $("#initiate").click(function(){
       $("#useForm").unbind('submit').bind('submit',function() {
-        alert("Flag 1: Value of email sent is " + emailSent);
-        if(emailSent == false){
         var researchAgreementNumber = $('input#researchAgreementNumber').val();
         var userInitials = $('input#initials').val();
+        var requestCount =  $(".myRequest").length;
+        alert(researchAgreementNumber + " " + userInitials);
+        var requestList = [];
+
+        //iterating multiple requests.
+        for (var i = 1; i <= requestCount; i++) {
+            var checked = [];
+            var imageResolutions = "";
+            var fileFormats = "";
+            var avFormats = "";
+            var str1 = "div#request_input";
+            var str2 = str1.concat(i);
+            var request = [];
+            var reqCollection = $(str2.concat(" select#collection")).val();
+            //var reqCollection = $(str2.concat(" input#request_collection")).val();
+
+            var boxNumber = "";//$(str2.concat(" input#request_boxno")).val()
+            var itemNumber = $(str2.concat(" input#request_itemno")).val();
+            var descOfUse = $(str2.concat(" textarea#request_desc")).val();
+            $.each($(str2.concat(" input:checked[name='dpi']")), function () {
+                imageResolutions = imageResolutions.concat($(this).val());
+                imageResolutions = imageResolutions.concat(":");
+            });
+            imageResolutions = imageResolutions.slice(0, -1);
+
+            $.each($(str2.concat(" input:checked[name= 'format']")), function () {
+                checked.push($(this).val());
+                fileFormats = fileFormats.concat($(this).val());
+                fileFormats = fileFormats.concat(":");
+            });
+            fileFormats = fileFormats.slice(0, -1);
+
+            $.each($(str2.concat(" input:checked[name= 'avformat']")), function () {
+                checked.push($(this).val());
+                avFormats = avFormats.concat($(this).val());
+                avFormats = avFormats.concat(":");
+            });
+            avFormats = avFormats.slice(0, -1);
+            request.push(reqCollection);
+            request.push(boxNumber);
+            request.push(itemNumber);
+            request.push(imageResolutions);
+            request.push(fileFormats);
+            request.push(avFormats);
+            request.push(descOfUse);
+            requestList.push(request);
+        }
+        alert(requestList);
         // Verify that the user exists in the database based on their researchAgreementNumber
         $.post("<?php echo base_url("?c=usragr&m=verifyResearcher");?>", {
             researchAgreementNumber: researchAgreementNumber,
-            userInitials: userInitials
+            userInitials: userInitials,
+            requestCount: requestCount,
+            requestList: requestList
+
         }).done(function (userId) {
+          alert(userId);
           if(userId > 0){
             var filesize = 0;
             if($('input#uploaded_file')[0].files[0]) {
@@ -100,56 +147,6 @@
             /* Success case for making a request */
             if(filesize <= 2){
               var date = generateDate();
-              var requestCount = $("#formcontents > div").length - 1;
-              var requestList = [];
-              var termsAndConditions = "false";
-              if ($('#accept').prop('checked') && $('#condofuse').prop('checked')) {
-                termsAndConditions = "true";
-            }
-
-            //iterating multiple requests.
-            for (var i = 1; i <= requestCount; i++) {
-                var checked = [];
-                var imageResolutions = "";
-                var fileFormats = "";
-                var avFormats = "";
-                var str1 = "div#request_input";
-                var str2 = str1.concat(i);
-                var request = [];
-                var reqCollection = $(str2.concat(" select#collection")).val();
-                //var reqCollection = $(str2.concat(" input#request_collection")).val();
-
-                var boxNumber = "";//$(str2.concat(" input#request_boxno")).val()
-                var itemNumber = $(str2.concat(" input#request_itemno")).val();
-                var descOfUse = $(str2.concat(" textarea#request_desc")).val();
-                $.each($(str2.concat(" input:checked[name='dpi']")), function () {
-                    imageResolutions = imageResolutions.concat($(this).val());
-                    imageResolutions = imageResolutions.concat(":");
-                });
-                imageResolutions = imageResolutions.slice(0, -1);
-
-                $.each($(str2.concat(" input:checked[name= 'format']")), function () {
-                    checked.push($(this).val());
-                    fileFormats = fileFormats.concat($(this).val());
-                    fileFormats = fileFormats.concat(":");
-                });
-                fileFormats = fileFormats.slice(0, -1);
-
-                $.each($(str2.concat(" input:checked[name= 'avformat']")), function () {
-                    checked.push($(this).val());
-                    avFormats = avFormats.concat($(this).val());
-                    avFormats = avFormats.concat(":");
-                });
-                avFormats = avFormats.slice(0, -1);
-                request.push(reqCollection);
-                request.push(boxNumber);
-                request.push(itemNumber);
-                request.push(imageResolutions);
-                request.push(fileFormats);
-                request.push(avFormats);
-                request.push(descOfUse);
-                requestList.push(request);
-            }
 
               if($('input#uploaded_file')[0].files[0]) {
                 var m_data = new FormData();
@@ -159,8 +156,7 @@
                 m_data.append('file_attach', $('input#uploaded_file')[0].files[0]);
                 var pcdone = 0;
                 // Prevents multiple emails from being sent. Tells system that the email is being sent
-                emailSent = true;
-                alert("Flag 2: Value of email sent is " + emailSent);
+                // emailSent = true;
                 $.ajax({
                     xhr: function () {
                         var xhr = new window.XMLHttpRequest();
@@ -215,8 +211,7 @@
                 m_data.append('userId', userId);
                 var pcdone = 0;
                 // Prevents multiple emails from being sent. Tells system that the email is being sent
-                emailSent = true;
-                alert("Flag 3: Value of email sent is " + emailSent);
+                //emailSent = true;
                 $.ajax({
 
                     type: "POST",
@@ -252,10 +247,9 @@
           }
             });
 
-
         /* Make the page scroll to the top to show either a success or error message */
         $("html, body").animate({scrollTop: 0}, 600);
-      }
+
       });
     });
 
@@ -541,7 +535,9 @@ function generateDate(){
                   <h3>Add Attachment</h3><br/></br>
                   <input align="center" class='btn' type="file" name="uploaded_file" onchange="uploadedFile()" id="uploaded_file"><br/></br>
                      <div id="fileInfo"></div>
-              </div><!-- formcontents -->
+                   <!-- formcontents -->
+              </div>
+
 
                 <!-- The submit button that will send the email and handle the form info. -->
                 <input type = "submit" class="btn" id="initiate" value = "Initiate Use Agreement &amp; Send email">
