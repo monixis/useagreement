@@ -42,6 +42,9 @@
 
   }
 
+  /* This variable prevents multiple emails from being sent to the same user */
+  var emailSent = false;
+
   $(document).ready(function(){
     $('div#request_input').clone();
 
@@ -78,7 +81,9 @@
     });
 
     $("#initiate").click(function(){
-      $("#useForm").submit(function(){
+      $("#useForm").unbind('submit').bind('submit',function() {
+        alert("Flag 1: Value of email sent is " + emailSent);
+        if(emailSent == false){
         var researchAgreementNumber = $('input#researchAgreementNumber').val();
         var userInitials = $('input#initials').val();
         // Verify that the user exists in the database based on their researchAgreementNumber
@@ -153,6 +158,9 @@
                 m_data.append('userId', userId);
                 m_data.append('file_attach', $('input#uploaded_file')[0].files[0]);
                 var pcdone = 0;
+                // Prevents multiple emails from being sent. Tells system that the email is being sent
+                emailSent = true;
+                alert("Flag 2: Value of email sent is " + emailSent);
                 $.ajax({
                     xhr: function () {
                         var xhr = new window.XMLHttpRequest();
@@ -206,7 +214,11 @@
                 m_data.append('date', date);
                 m_data.append('userId', userId);
                 var pcdone = 0;
+                // Prevents multiple emails from being sent. Tells system that the email is being sent
+                emailSent = true;
+                alert("Flag 3: Value of email sent is " + emailSent);
                 $.ajax({
+
                     type: "POST",
                     url: "<?php echo base_url("?c=usragr&m=initiateWithMailAttachmentByResearchNum");?>",
                     data: m_data,
@@ -243,6 +255,7 @@
 
         /* Make the page scroll to the top to show either a success or error message */
         $("html, body").animate({scrollTop: 0}, 600);
+      }
       });
     });
 
