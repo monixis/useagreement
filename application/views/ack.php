@@ -17,8 +17,9 @@ body {font-family: Helvetica,Arial;}
 			</li>
 			<li>
 				Lead Developer: Dheeraj Karnati
+        Developer: Dan Mopsick
 			</li>
-			
+
 		</ul>
 	</body>
 </html>

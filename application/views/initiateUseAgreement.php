@@ -24,10 +24,10 @@
             }
         }
 
-        var output = document.getElementById('fileInfo');
         uploadedFile = function() {
             $('#message').remove();
             var input = document.getElementById('uploaded_file');
+            var output = document.getElementById('fileInfo');
 
             output.innerHTML = '<ul>';
 

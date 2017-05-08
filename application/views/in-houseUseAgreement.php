@@ -11,33 +11,27 @@
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
     <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
     <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-    <link rel="stylesheet" type="text/css" href="http://library.marist.edu/archives/mainpage/mainStyles/style.css" />
-    <link rel="stylesheet" type="text/css" href="http://library.marist.edu/archives/mainpage/mainStyles/main.css" />
+    <link rel="stylesheet" type="text/css" href="http://library.marist.edu/archives/mainpage/mainStyles/style.css"/>
+    <link rel="stylesheet" type="text/css" href="http://library.marist.edu/archives/mainpage/mainStyles/main.css"/>
 
-    <link rel="stylesheet" type="text/css" href="styles/researchAgreementForm.css" />
+    <link rel="stylesheet" type="text/css" href="styles/researchAgreementForm.css"/>
     <script type="text/javascript" src="http://library.marist.edu/archives/mainpage/scripts/archivesChildMenu.js"></script>
     <script type="text/javascript" src="js/cloneRequests.js"></script>
     <link rel="stylesheet" type="text/css" href="styles/useagreement.css"/>
 
     <!-- Not sure what JS I need to add here from the other page. But most likely at least some of the js from initiateUseAgeement.php -->
   <script type = "text/javascript">
+
     uploadedFile = function() {
-      $('#message').remove();
+      $("#requestStatus").hide().html();
+      $('.submitbtn').attr('disabled', false);
       var input = document.getElementById('uploaded_file');
       var output = document.getElementById('fileInfo');
-
       output.innerHTML = '<ul>';
-
-    //  for (var i = 0; i < input.files.length; ++i) {
-          if(input.files.item(0).size> 2000000){
-
-              output.innerHTML += '<li>' + input.files.item(0).name + "<h4 style='color: red'>(Exceeded 2 MB File size limit)<h4>"+'</li>';
-
-          }else {
-             // output.innerHTML += '<li>' + input.files.item(i).name + '</li>';
-              //output.innerHTML += '<li>' + input.files.item(i).size + '</li>';
-          }
-   //   }
+      if(input.files.item(0).size > 2000000){
+        output.innerHTML += '<li>' + input.files.item(0).name + "<h4 style='color: red'>(Exceeded 2 MB File size limit)<h4>"+'</li>';
+        $('.submitbtn').attr('disabled', true);
+      }
       output.innerHTML += '</ul>';
 
   }
@@ -537,7 +531,7 @@ function generateDate(){
 
 
                 <!-- The submit button that will send the email and handle the form info. -->
-                <input type = "submit" class="btn" id="initiate" value = "Initiate Use Agreement &amp; Send email">
+                <input type = "submit" class="btn submitbtn" id="initiate" value = "Initiate Use Agreement &amp; Send email">
               </div> <!-- researcherInfo -->
           </form>
         </div> <!-- content -->
