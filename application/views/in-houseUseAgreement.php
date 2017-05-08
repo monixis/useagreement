@@ -135,7 +135,6 @@
             requestList: requestList
 
         }).done(function (userId) {
-          alert(userId);
           if(userId > 0){
             var filesize = 0;
             if($('input#uploaded_file')[0].files[0]) {

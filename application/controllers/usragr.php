@@ -1038,8 +1038,6 @@ class Usragr extends CI_Controller
           }
       }
       echo $userId;
-      echo print_r($_POST);
-
     }
     /* There is either no such user or one of the fields is entered wrong */
     else{
