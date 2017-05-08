@@ -130,9 +130,12 @@
         // Verify that the user exists in the database based on their researchAgreementNumber
         $.post("<?php echo base_url("?c=usragr&m=verifyResearcher");?>", {
             researchAgreementNumber: researchAgreementNumber,
-            userInitials: userInitials
+            userInitials: userInitials,
+            requestCount: requestCount,
+            requestList: requestList
 
         }).done(function (userId) {
+          alert(userId);
           if(userId > 0){
             var filesize = 0;
             if($('input#uploaded_file')[0].files[0]) {
