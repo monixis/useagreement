@@ -994,30 +994,21 @@ class Usragr extends CI_Controller
 
   /* This function will return 1 if the user is indentified as a valid researcher based on matching the researchAgreementNumber and initials with the pair saved in the database - Dan Mopsick */
   public function verifyResearcher(){
-    // echo print_r($_POST);
-    /* Parse info entered by the user. This data will be compared to the data from teh database */
-    $researchAgreementNumber = filter_var($_POST['researchAgreementNumber'], FILTER_SANITIZE_STRING);
-    $submittedInitials = $_POST['userInitials'];
 
+    /* Parse info entered by the user. This data will be compared to the data from teh database */
+    $researchAgreementNumber = $_POST['researchAgreementNumber'];
+    $submittedInitials = $_POST['userInitials'];
 
     /* Getin info from the database to verify that it is the same information */
     $this->load->model('usragr_model');
     $savedEmail = $this->usragr_model->getEmailByResearchAgreementNumber($researchAgreementNumber);
     $savedInitials = $this->usragr_model->getInitialsByResearchAgreementNumber($researchAgreementNumber);
 
-
     /* If both fields are the same as their counterparts in the database then it is a valid user */
     if($savedEmail != null && $submittedInitials == $savedInitials){
-      $userId = $this->usragr_model->getUserIdByResearchAgreementNumber($researchAgreementNumber);
+      $userId = $this->usragr_model ->getUserIdByResearchAgreementNumber($researchAgreementNumber);
+
       echo $userId;
-
-      // Insert the user's requests into the request database
-      $requestCount = $_POST['requestCount'];
-      if($requestCount != 0){
-        $requestList = ['requestList']
-        insertRequest($userId, $requestCount, $requestList);
-      }
-
     }
     /* There is either no such user or one of the fields is entered wrong */
     else{
@@ -1037,32 +1028,32 @@ class Usragr extends CI_Controller
 
     /* This function inserts a request into the request table - Dan Mopsick */
     public function insertRequest($userId, $requestCount, $requestList){
-      $requestList = array($requestList);
-      //processiong array of requests
-      foreach ($requestList as $request) {
-          foreach ($request as $row) {
-              //data of request row
-              $data = array(
-                  'collection'      => $row[0],
-                  'boxNumber'       => $row[1],
-                  'itemNumber'      => $row[2],
-                  'imageResolution' => $row[3],
-                  'fileFormat'      => $row[4],
-                  'audOrVidFileFormat' => $row[5],
-                  'usageDescription' => $row[6],
-                  'userId'          => $userId
-              );
-              //insert the request
-              $this->load->model('usragr_model');
-              $response = $this->usragr_model->insertUserRequest($data, 'request');
-              if ($response > 0) {
-                return 1;
-              }else{
-                  return 0;
-              }
-          }
-        }// end of processing requests
-
+      // $requestList = array($requestList);
+      // //processiong array of requests
+      // foreach ($requestList as $request) {
+      //     foreach ($request as $row) {
+      //         //data of request row
+      //         $data = array(
+      //             'collection'      => $row[0],
+      //             'boxNumber'       => $row[1],
+      //             'itemNumber'      => $row[2],
+      //             'imageResolution' => $row[3],
+      //             'fileFormat'      => $row[4],
+      //             'audOrVidFileFormat' => $row[5],
+      //             'usageDescription' => $row[6],
+      //             'userId'          => $userId
+      //         );
+      //         //insert the request
+      //         $this->load->model('usragr_model');
+      //         $response = $this->usragr_model->insertUserRequest($data, 'request');
+      //         if ($response > 0) {
+      //           return 1;
+      //         }else{
+      //             return 0;
+      //         }
+      //     }
+      //   }// end of processing requests
+      echo "FLAG 5";
     }
 
 /*

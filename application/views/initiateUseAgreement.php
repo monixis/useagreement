@@ -23,10 +23,11 @@
                 return false;
             }
         }
+
+        var output = document.getElementById('fileInfo');
         uploadedFile = function() {
             $('#message').remove();
             var input = document.getElementById('uploaded_file');
-            var output = document.getElementById('fileInfo');
 
             output.innerHTML = '<ul>';
 
@@ -113,7 +114,6 @@
                     var phoneNumber = $('input#phoneNo').val();
                     var requestCount = $("#formcontents > div").length - 1;
                     var requestList = [];
-                    alert (requestCount);
                     //iterating multiple requests.
                     for (var i = 1; i <= requestCount; i++) {
                         var checked = [];
@@ -157,7 +157,6 @@
                         request.push(descOfUse);
                         requestList.push(request);
                     }
-                    alert(requestList);
                     $.post("<?php echo base_url("?c=usragr&m=insertNewResearcher");?>", {
                         date: date,
                         userName: userName,
@@ -257,7 +256,8 @@
 
                                     success: function (response) {
                                         //load json data from server and output message
-                                        if (response.type == 'error') { //load json data from server and output message
+                                        if (response.type == 'error') {
+                                           //load json data from server and output message
                                             output = '<div class="error">' + response.text + '</div>';
                                         } else {
 
