@@ -9,7 +9,7 @@ class Usragr extends CI_Controller
         $this->load->model('usragr_model');
         $data['title'] = "COPY REQUEST/USE AGREEMENT FORM";
         $date = date_default_timezone_set('US/Eastern');
-        $this->load->view('in-houseUseAgreement', $data);
+        $this->load->view('researchAgreementForm', $data);
     }
 
 	 public function ack(){
@@ -89,12 +89,10 @@ class Usragr extends CI_Controller
 
     }
 
-    /* Function to insert a physical researcher.inot the database */
-    public function insertNewPhysicalResearcher()
-    {
-        date_default_timezone_set('US/Eastern');
-        $date = date("m/d/Y");
-
+    /* Function to insert a physical (in-house) researcher.inot the database - Dan Mopsick */
+    public function insertNewPhysicalResearcher(){
+        /* Parse data sent from researchAgreementForm into an array. termsAndCond is
+        auto set to true because they must have agreed to the terms to make it this far. */
         $data = array(
             'userName'   => $_POST['userName'],
             'date' => $_POST['date'],
@@ -706,19 +704,19 @@ class Usragr extends CI_Controller
         $user_purpose = filter_var($_POST['user_purpose'], FILTER_SANITIZE_STRING);
         $user_initials = filter_var($_POST['user_initials'], FILTER_SANITIZE_STRING);
 
-        $url = base_url()."?c=usragr&m=useagreement&userId=". $UUID;
-
-        /* Create the contents of the email */
+        /* Create the contents of the email in HTML */
         $message = '<html><body>';
-
         $message .= '<table width="100%"; rules="all" style="border:1px solid #3A5896;" cellpadding="10">';
 
-        $message .= "<tr ><td align='center'><img src='https://s.graphiq.com/sites/default/files/10/media/images/Marist_College_2_220374.jpg'/><h3> Marist Archives and Special Collection </h3><h3>RESEARCH AGREEMENT CONFIRMATION</h3>";
+        $message .= "<tr><td align='center'><img src='https://s.graphiq.com/sites/default/files/10/media/images/Marist_College_2_220374.jpg'/><h3> Marist Archives and Special Collection </h3><h3>RESEARCH AGREEMENT CONFIRMATION</h3>";
 
-        $message .= "<br/><h4> Dear $user_name,<br /><br /> Your research agreement has been confirmed.</h4>";
+        // Display a message to the user
+        $message .= "<br/><h4> Dear $user_name,<br/><br/> Your research agreement has been confirmed.<br/>You must use your Research Agreement Number in order to request materials from the Archives.<br/>See an archivist for more information.</h4>";
 
+        // Display the researchAgreementNumber needed to take out materials from archive. Created in researchAgreementForm
         $message .= "<h3><b>Research Agreement Number:</b> $researchAgreementNumber</h3>";
 
+        // Display the user's recorded information
         $message .= "<h3>Recorded Information</h3>";
         $message .= "<div align = 'center' style = 'width:50%; text-align:left;'><p><b>Date:</b> $date</p>";
         $message .= "<p><b>Name:</b> $user_name</p>";
@@ -726,6 +724,8 @@ class Usragr extends CI_Controller
         $message .= "<p><b>City/State:</b> $user_citystate</p>";
         $message .= "<p><b>Zip Code:</b> $user_zipCode</p>";
         $message .= "<p><b>Phone Number:</b> $user_phoneNumber</p>";
+
+        // Display optional fields if they are entered by the user
         if($user_affiliation != ""){
           $message .= "<p><b>Affiliation:</b> $user_affiliation</p>";
         }
@@ -739,14 +739,11 @@ class Usragr extends CI_Controller
         $message.= "<p><b>Purpose of Research:</b>" .  rtrim($user_purpose, ", ") . "</p>";
 
         $message .= "<p><b>Initials:</b> $user_initials</p></div>";
-
-        $message .= "</tr>";
-        $message .= "</table>";
-
-        $message .= "</body></html>";
+        $message .= "</tr></table></body></html>";
 
         $message_body = $message ;
 
+        // Send the actual email. Code taken from mailAttachment()
         $ci = get_instance();
         $ci->load->library('email');
         $config['protocol'] = "smtp";

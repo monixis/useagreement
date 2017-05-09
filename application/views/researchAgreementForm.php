@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang = 'en'>
   <head>
-    <!-- Not sure what final title will be -->
     <title>Research Agreement Form</title>
     <!-- Import dependencies, CSS, JS -->
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -22,6 +21,7 @@
   <script type = "text/javascript">
   $(document).ready(function(){
 
+    /* Handles the drop down for the conditons */
     $('div.accordion').click(function(){
       var div =$(this).attr('id');
       if(div == '1'){
@@ -36,6 +36,7 @@
 
     });
 
+    /* Records the value for the data represented by <select> tags */
     var howArchives = "";
     var purpose = "";
     var status = "";
@@ -63,15 +64,14 @@
       tis.click(function(){
         if(tis.is(':checked')){
           purpose += (value + ", ");
-          // alert("Check!" + purpose);
         }
         else{
           purpose = purpose.replace(value + ", ", "");
-          // alert("Uncheck!" + purpose);
         }
       });
     });
 
+    /* Processes the value of the optional "Academic Statuts" radio button */
     $("#statusDiv input").each(function(){
       var tis = $(this);
       var value = tis.val();
@@ -82,23 +82,30 @@
       });
     });
 
-
+    /* This code functions on the sucessful submission of the form generated below.
+    It is run on submit in order to make use of HTML5 validation (required) */
     $("form").submit(function(){
 
+      /* Validation. Ensures an option is chosen for how a user discovered the archives and reserach purposes */
       if(!howArchives && !purpose){
-        alert("Please select at least one Purpose of Research and one way in which you learned about the archives.");
+        $('#requestStatus').show().css('background', '#b31b1b').html("Please select at least one Purpose of Research and one way in which you learned about the archives.");
+        $("html, body").animate({scrollTop: 0}, 600);
         return false;
       }
       else if(!howArchives){
-        alert("Please select at least one way in which you learned about the archives.");
+        $('#requestStatus').show().css('background', '#b31b1b').html("Please select at least one way in which you learned about the archives.");
+        $("html, body").animate({scrollTop: 0}, 600);
         return false;
       }
       else if(!purpose){
-        alert("Please select at least one Purpose of Research.");
+        $('#requestStatus').show().css('background', '#b31b1b').html("Please select at least one purpose of research.");
+        $("html, body").animate({scrollTop: 0}, 600);
         return false;
       }
+
       // Code that will operate only if the page is validated
       else{
+        /* Parse variables from the form */
         var researchAgreementNumber = generateResearchAgreementNumber(10);
         var date = generateDate();
         var userName = $('input#name').val();
@@ -111,12 +118,8 @@
         var subject = $('input#subject').val();
         var collection = $('input#collection').val();
         var userInitials = $('input#initials').val();
-        // variables for hawArchives, academic status, and purpose are defined above outside of this function
 
-        var termsAndConditions = "false";
-        if ($('#accept').prop('checked') && $('#condofuse').prop('checked')) {
-          termsAndConditions = "true";
-        }
+      }
         /* Save the researcher to the database via the usragr controller */
         $.post("<?php echo base_url("?c=usragr&m=insertNewPhysicalResearcher");?>", {
             date: date,
@@ -152,6 +155,7 @@
           m_data.append('user_initials', userInitials);
           m_data.append('user_purpose', purpose);
           var pcdone = 0;
+          /* Email code modeled after code from initiateUseAgreement */
           $.ajax({
 
               type: "POST",
@@ -167,7 +171,7 @@
                       output = '<div class="error">' + response.text + '</div>';
                   } else {
 
-                      $('#requestStatus').show().css('background', '#66cc00').append("#" + userId + ": A User Agreement Form has been sent to " + userName);
+                      $('#requestStatus').show().css('background', '#66cc00').html("#" + userId + ": A User Agreement Form has been sent to " + userName);
 
                       /* Disable the submit button to prevent the user from sending multiple emails to themselves and creating multiple duplicated entries */
                       $('.btn').attr('disabled', true);
@@ -182,7 +186,7 @@
     });
   });
 
-  /* This function generates the current date */
+  /* This function generates the current date in mm/dd/yyyy format */
   function generateDate(){
     var today = new Date();
     var month = today.getMonth() + 1;
@@ -201,8 +205,11 @@
     return (month + "/" + day + "/" + year);
   }
 
-  /* This function generates a random alphanumeric of the specified length of the parameter */
+  /* This function generates a random alphanumeric of the specified length of the parameter
+  This id is used in this system to assign each researcher a unique number that they can use to
+  request materials from the archives */
   function generateResearchAgreementNumber(idLength){
+    // Create a list of all possible characters in the code
     var characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
     var researchAgreementNumber = "";
@@ -210,6 +217,8 @@
     // Holds the highest possible value to select a character from the string
     var max = characters.length - 1;
 
+    /* Populates the researchAgreementNumber string with a random character. Amount based on
+    the argument passed into the function */
     for(var i = 0; i < idLength; i ++){
       researchAgreementNumber += characters.charAt((Math.random() * max));
     }
