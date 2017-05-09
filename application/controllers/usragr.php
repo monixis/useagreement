@@ -895,7 +895,6 @@ class Usragr extends CI_Controller
       $user_email = $this->usragr_model->getEmailByResearchAgreementNumber($researchAgreementNumber);
 
       $message = '<html><body>';
-
       $message .= '<table width="100%"; rules="all" style="border:1px solid #3A5896;" cellpadding="10">';
 
       $message .= "<tr ><td align='center'><img src='https://s.graphiq.com/sites/default/files/10/media/images/Marist_College_2_220374.jpg'  /><h3> Marist Archives and Special Collection </h3><h3>IN-HOUSE USE AGREEMENT</h3> ";
@@ -929,10 +928,7 @@ class Usragr extends CI_Controller
           }
           $file_attached = true;
       }
-
-      $message .= "</h4></tr></table>";
-
-      $message .= "</body></html>";
+      $message .= "</h4></tr></table></body></html>";
 
       $message_body = $message;
 
@@ -956,14 +952,13 @@ class Usragr extends CI_Controller
       $ci->email->message($message_body);
       //If the attached file in requested format
       $ci->email->subject("Marist In-House Use Agreement Confirmation");
+
+      /* Handles the sending of the email confirmation with an attachment */
       if ($file_attached) {
-
-
           $ds= "/data/library/htdocs/archives/useagreement/";
 
           $storeFolder = 'uploads/';//2
           if (!empty($_FILES)) {
-
               $targetPath =  $ds.$storeFolder ;  //4
               // $targetFile =  $targetPath. $_FILES['file_attach']['name'];  //5
               $file_info = pathinfo($_FILES['file_attach']['name']);
@@ -982,7 +977,7 @@ class Usragr extends CI_Controller
           }
 
       }
-      // Mail without attachment
+      /* Send mail without attachment */
       else {
           $ci->email->send();
 

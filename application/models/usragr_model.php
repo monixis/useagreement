@@ -336,6 +336,7 @@ public function countWithStatus($status){
       return $email;
   }
 
+
   /* Returns the initials of a userbased on their research agreement number. Used in verifying
   users in in-houseUseAgreement.php - Dan Mopsick */
   public function getInitialsByResearchAgreementNumber($researchAgreementNumber){
@@ -354,7 +355,7 @@ public function countWithStatus($status){
     return $userInitials;
   }
 
-  /* Dan Mopsick */
+  /* This function returns a user's username based on their researchAgreementNumber - Dan Mopsick */
   public function getUsernameByResearchAgreementNumber($researchAgreementNumber){
     $this ->db ->trans_start();
 
@@ -371,7 +372,9 @@ public function countWithStatus($status){
     return $user_name;
   }
 
-  /* Dan Mopsick */
+  /* Returns the userId of a user based on an entered researchAgreementNumber. This
+  is used to locate the user associated with a request made from in-houseUseAgreement.php
+  - Dan Mopsick */
   public function getUserIdByResearchAgreementNumber($researchAgreementNumber){
     $this ->db ->trans_start();
 
@@ -397,7 +400,7 @@ public function countWithStatus($status){
     return $this->db->get('researcher');
   }
 
-  /* Returns the amount of in house researchers registred in the system. - Dan Mopsick */
+  /* Returns the amount of in house researchers registered in the system. - Dan Mopsick */
   public function countWithResearchArgreement(){
     $this->db->select('userId');
     $this->db->from('researcher');

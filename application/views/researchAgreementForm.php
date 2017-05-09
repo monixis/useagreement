@@ -399,10 +399,6 @@
                 <input type = "submit" id = "initiate" style = "display:none;"/>
               </div> <!-- researcherInfo -->
           </form>
-
-
-
-
         </div> <!-- content -->
       </div> <!-- container_home_child -->
 

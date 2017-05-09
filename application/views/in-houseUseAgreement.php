@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang = 'en'>
   <head>
-    <!-- Not sure what final title will be -->
     <title>In-House Use Agreement</title>
     <!-- Import dependencies, CSS, JS -->
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -22,6 +21,8 @@
     <!-- Not sure what JS I need to add here from the other page. But most likely at least some of the js from initiateUseAgeement.php -->
   <script type = "text/javascript">
 
+    /* Handles the uploading of a file containg a request. Disables the submit form if the file is over
+    2mb to prevent a user submitting a file that is too large */
     uploadedFile = function() {
       $("#requestStatus").hide().html();
       $('.submitbtn').attr('disabled', false);
@@ -39,7 +40,7 @@
   $(document).ready(function(){
     $('div#request_input').clone();
 
-
+    /* This function handles the behavior of the progress bar. Taken from intiiateUserAgreement */
     function progress(e) {
 
         if (e.lengthComputable) {
@@ -71,14 +72,17 @@
 
     });
 
+    /* unbind and bind are used to prevent the form from being submitted multiple times. */
     $("#initiate").click(function(){
       $("#useForm").unbind('submit').bind('submit',function() {
+        /* Parse the data from the form into variables. */
         var researchAgreementNumber = $('input#researchAgreementNumber').val();
         var userInitials = $('input#initials').val();
         var requestCount =  $(".myRequest").length;
         var requestList = [];
 
-        //iterating multiple requests.
+        /* Iterate multiple requests into the request list array.
+        Code taken from initiateUseAgreement */
         for (var i = 1; i <= requestCount; i++) {
             var checked = [];
             var imageResolutions = "";
@@ -121,7 +125,8 @@
             request.push(descOfUse);
             requestList.push(request);
         }
-        // Verify that the user exists in the database based on their researchAgreementNumber
+        /* Verify that the user exists in the database based on their researchAgreementNumber
+        If the user is verified. This method will insert the passed requests into the request database.*/
         $.post("<?php echo base_url("?c=usragr&m=verifyResearcher");?>", {
             researchAgreementNumber: researchAgreementNumber,
             userInitials: userInitials,
@@ -129,6 +134,8 @@
             requestList: requestList
 
         }).done(function (userId) {
+          /* If the user is validated, there userId will be returned. If the user is no validated
+          a '-1' will be returned. */
           if(userId > 0){
             var filesize = 0;
             if($('input#uploaded_file')[0].files[0]) {
@@ -139,6 +146,8 @@
             if(filesize <= 2){
               var date = generateDate();
 
+              /* Handles the email confirmation if a file has been uploaded by the user.
+              Code for mailing based off of initiateUseAgreement */
               if($('input#uploaded_file')[0].files[0]) {
                 var m_data = new FormData();
                 m_data.append('researchAgreementNumber', researchAgreementNumber);
@@ -146,8 +155,6 @@
                 m_data.append('userId', userId);
                 m_data.append('file_attach', $('input#uploaded_file')[0].files[0]);
                 var pcdone = 0;
-                // Prevents multiple emails from being sent. Tells system that the email is being sent
-                // emailSent = true;
                 $.ajax({
                     xhr: function () {
                         var xhr = new window.XMLHttpRequest();
@@ -195,6 +202,7 @@
                     }
                 });
               }
+              /* Hanldes the sending of the email confirmation without a file attachment */
               else{
                 var m_data = new FormData();
                 m_data.append('researchAgreementNumber', researchAgreementNumber);
@@ -246,7 +254,7 @@
 
 });
 
-/* This function generates the current date */
+/* This function generates the current date in mm/dd/yyyy format */
 function generateDate(){
   var today = new Date();
   var month = today.getMonth() + 1;
@@ -264,7 +272,9 @@ function generateDate(){
 
   return (month + "/" + day + "/" + year);
 }
+
   </script>
+  <!-- Style for progress bar taken from intiiateUserAgreement -->
   <style>
       .progress {
           display: block;
