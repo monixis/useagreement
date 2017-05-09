@@ -9,7 +9,7 @@ class Usragr extends CI_Controller
         $this->load->model('usragr_model');
         $data['title'] = "COPY REQUEST/USE AGREEMENT FORM";
         $date = date_default_timezone_set('US/Eastern');
-        $this->load->view('researchAgreementForm', $data);
+        $this->load->view('in-houseUseAgreement', $data);
     }
 
 	 public function ack(){
@@ -891,15 +891,16 @@ class Usragr extends CI_Controller
       $date = filter_var($_POST['date'], FILTER_SANITIZE_STRING);
       $researchAgreementNumber = filter_var($_POST['researchAgreementNumber'], FILTER_SANITIZE_STRING);
 
-      $user_name = $this->usragr_model->getUsernameByResearchAgreementNumber($researchAgreementNumber);
-      $user_email = $this->usragr_model->getEmailByResearchAgreementNumber($researchAgreementNumber);
+      $researcher = $this->usragr_model->getResearcherByResearchAgreementNumber($researchAgreementNumber);
+      $user_name = $researcher->userName;
+      $user_email = $researcher->emailId;
 
       $message = '<html><body>';
       $message .= '<table width="100%"; rules="all" style="border:1px solid #3A5896;" cellpadding="10">';
 
-      $message .= "<tr ><td align='center'><img src='https://s.graphiq.com/sites/default/files/10/media/images/Marist_College_2_220374.jpg'  /><h3> Marist Archives and Special Collection </h3><h3>IN-HOUSE USE AGREEMENT</h3> ";
+      $message .= "<tr><td align='center'><img src='https://s.graphiq.com/sites/default/files/10/media/images/Marist_College_2_220374.jpg'  /><h3> Marist Archives and Special Collection </h3><h3>IN-HOUSE USE AGREEMENT</h3> ";
 
-      $message .= "<br/>$date<br/> <h4> Dear $user_name,<br/><br/>This email is a confirmation of the request for materials you have made.<br/>";
+      $message .= "<h4>$date</h4><h4> Dear $user_name,<br/><br/>This email is a confirmation of the request for materials you have made.<br/>";
 
       $file_attached = false;
       if (isset($_FILES['file_attach'])) //check uploaded file
@@ -986,26 +987,24 @@ class Usragr extends CI_Controller
 
   /* This function will return 1 if the user is indentified as a valid researcher based on matching the researchAgreementNumber and initials with the pair saved in the database - Dan Mopsick */
   public function verifyResearcher(){
-
     /* Parse info entered by the user. This data will be compared to the data from teh database */
     $researchAgreementNumber = $_POST['researchAgreementNumber'];
     $submittedInitials = $_POST['userInitials'];
 
-
     /* Getin info from the database to verify that it is the same information */
     $this->load->model('usragr_model');
-    $savedEmail = $this->usragr_model->getEmailByResearchAgreementNumber($researchAgreementNumber);
-    $savedInitials = $this->usragr_model->getInitialsByResearchAgreementNumber($researchAgreementNumber);
+    $researcher = $this->usragr_model->getResearcherByResearchAgreementNumber($researchAgreementNumber);
+    $savedInitials = $researcher->userInitials;
+    $savedEmail = $researcher->userInitials;
 
     /* If both fields are the same as their counterparts in the database then it is a valid user */
     if($savedEmail != null && $submittedInitials == $savedInitials){
-      $userId = $this->usragr_model ->getUserIdByResearchAgreementNumber($researchAgreementNumber);
+      $userId = $researcher->userId;
 
       $requestCount = $_POST['requestCount'];
-      $requestList = $_POST['requestList'];
 
       if($requestCount != 0){
-
+        $requestList = $_POST['requestList'];
         //processiong array of requests
           foreach ($requestList as $row) {
               //data of request row
