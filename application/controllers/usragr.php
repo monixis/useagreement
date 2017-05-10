@@ -1,54 +1,46 @@
 <?php
-class Usragr extends CI_Controller
-{
-
+class Usragr extends CI_Controller{
     private $limit = 10;
 
-    public function index()
-    {
-        $this->load->model('usragr_model');
-        $data['title'] = "COPY REQUEST/USE AGREEMENT FORM";
-        $date = date_default_timezone_set('US/Eastern');
-        $this->load->view('in-houseUseAgreement', $data);
+    public function index(){
+      $this->load->model('usragr_model');
+      $data['title'] = "COPY REQUEST/USE AGREEMENT FORM";
+      $date = date_default_timezone_set('US/Eastern');
+      $this->load->view('initiateUseAgreement', $data);
     }
 
 	 public function ack(){
-	 	$this->load->view('ack');
+	    $this->load->view('ack');
 	 }
 
-    /*
-     *Function to create new researcher.
-     */
-    public function insertNewResearcher()
-    {
+    /* Function to create new researcher. */
+    public function insertNewResearcher(){
         date_default_timezone_set('US/Eastern');
         $date = date("m/d/Y");
 
         $data = array(
-            'userName'   => $_POST['userName'],
-            'emailId'    => $_POST['emailId'],
-            'citystate'  => $_POST['citystate'],
-            'address'    => $_POST['address'],
-            'zipCode'    => $_POST['zipCode'],
-            'date'       => $_POST['date'],
-            'phoneNumber'=> $_POST['phoneNumber'],
-            'status'     => 0
+          'userName'   => $_POST['userName'],
+          'emailId'    => $_POST['emailId'],
+          'citystate'  => $_POST['citystate'],
+          'address'    => $_POST['address'],
+          'zipCode'    => $_POST['zipCode'],
+          'date'       => $_POST['date'],
+          'phoneNumber'=> $_POST['phoneNumber'],
+          'status'     => 0
         );
         $this->load->model('usragr_model');
         $result = $this->usragr_model->insert_researcher($data, 'researcher');
         if($_POST['comments']>0 ||$_POST['comments']!= null) {
-            $data = array(
-                'comment' => $_POST['comments'],
-                'commentType' => "INSTRUCTIONS",
-                'userId' => $result
-            );
-            $this->load->model('usragr_model');
-            $chat_result = $this->usragr_model->saveChat($data, 'chat');
-            if ($chat_result > 0) {
-            }
-            }
-        if ($result > 0) {
+          $data = array(
+            'comment' => $_POST['comments'],
+            'commentType' => "INSTRUCTIONS",
+            'userId' => $result
+          );
+          $this->load->model('usragr_model');
+          $chat_result = $this->usragr_model->saveChat($data, 'chat');
+        }
 
+        if ($result > 0) {
             $userId = $result; // As the result from model returns maximum value of research table
             $requestCount = $_POST['requestCount'];
             //check if there is any requests
@@ -56,37 +48,29 @@ class Usragr extends CI_Controller
                 $requestList = array($_POST['requestList']);
                 //processiong array of requests
                 foreach ($requestList as $request) {
-                    foreach ($request as $row) {
-                        //data of request row
-                        $data = array(
-                            'collection'      => $row[0],
-                            'boxNumber'       => $row[1],
-                            'itemNumber'      => $row[2],
-                            'imageResolution' => $row[3],
-                            'fileFormat'      => $row[4],
-                            'audOrVidFileFormat' => $row[5],
-                            'usageDescription' => $row[6],
-                            'userId'          => $userId
-                        );
-                        //insert the request
-                        $response = $this->usragr_model->insertUserRequest($data, 'request');
-                        if ($response > 0) {
-
-                        }else{
-                            return 0;
-                        }
-                    }}// end of processing requests
+                  foreach ($request as $row) {
+                    //data of request row
+                    $data = array(
+                      'collection'      => $row[0],
+                      'boxNumber'       => $row[1],
+                      'itemNumber'      => $row[2],
+                      'imageResolution' => $row[3],
+                      'fileFormat'      => $row[4],
+                      'audOrVidFileFormat' => $row[5],
+                      'usageDescription' => $row[6],
+                      'userId'          => $userId
+                    );
+                    //insert the request
+                    $response = $this->usragr_model->insertUserRequest($data, 'request');
+                    if ($response > 0) {}
+                    else{
+                        return 0;
+                    }
+                  }
+                }// end of processing requests
             }
         }
-
             echo $result;
-
-        //}else{
-
-          //  $rollback = $this->usragr_model->deleteUser($result);
-            //echo $rollback;
-       // }
-
     }
 
     /* Function to insert a physical (in-house) researcher.inot the database - Dan Mopsick */
@@ -94,22 +78,22 @@ class Usragr extends CI_Controller
         /* Parse data sent from researchAgreementForm into an array. termsAndCond is
         auto set to true because they must have agreed to the terms to make it this far. */
         $data = array(
-            'userName'   => $_POST['userName'],
-            'date' => $_POST['date'],
-            'emailId'    => $_POST['emailId'],
-            'citystate'  => $_POST['citystate'],
-            'address'    => $_POST['address'],
-            'zipCode'    => $_POST['zipCode'],
-            'researchAgreementNumber' => $_POST['researchAgreementNumber'],
-            'affiliation'=> $_POST['affiliation'],
-            'academicStatus' => $_POST['academicStatus'],
-            'researchSubject' => $_POST['researchSubject'],
-            'collection'       => $_POST['collection'],
-            'userInitials'       => $_POST['userInitials'],
-            'howArchives' => $_POST['howArchives'],
-            'researchPurpose' => $_POST['researchPurpose'],
-            'phoneNumber'=> $_POST['phoneNumber'],
-            'termsAndCond' => 'true'
+          'userName'   => $_POST['userName'],
+          'date' => $_POST['date'],
+          'emailId'    => $_POST['emailId'],
+          'citystate'  => $_POST['citystate'],
+          'address'    => $_POST['address'],
+          'zipCode'    => $_POST['zipCode'],
+          'researchAgreementNumber' => $_POST['researchAgreementNumber'],
+          'affiliation'=> $_POST['affiliation'],
+          'academicStatus' => $_POST['academicStatus'],
+          'researchSubject' => $_POST['researchSubject'],
+          'collection'       => $_POST['collection'],
+          'userInitials'       => $_POST['userInitials'],
+          'howArchives' => $_POST['howArchives'],
+          'researchPurpose' => $_POST['researchPurpose'],
+          'phoneNumber'=> $_POST['phoneNumber'],
+          'termsAndCond' => 'true'
         );
 
         $this->load->model('usragr_model');
@@ -117,714 +101,261 @@ class Usragr extends CI_Controller
         echo $result;
     }
 
-    /*
-     * function to fetch the researcher with userId.
-     * loads useAgreement view form
-     */
-    public function useagreement()
-    {
-        /*WORKING*/
-        $this->load->model('usragr_model');
-        $userId = $this->input->get('userId');
-        $userId=substr($userId,6,-6);
+    /* function to fetch the researcher with userId.
+     * loads useAgreement view form */
+    public function useagreement(){
+      $this->load->model('usragr_model');
+      $userId = $this->input->get('userId');
+      $userId=substr($userId,6,-6);
 
-        $result = $this->usragr_model->getresearcher($userId);
-        $chat_array =  $this->usragr_model -> getChat($userId);
-        if($chat_array>0) {
-            $chat_list = json_decode(json_encode($chat_array), true);
-            //   print_r($chat_list);
-            $data['chatList'] = $chat_list;
-            }
-        if($result!=null) {
-            //  $rscrAndReqInfo= array();
-            $researcher = array();
-            // foreach($result as $row){
-            //   echo sizeof($row);
-            $info = json_decode(json_encode($result), true);
-               $data['user_Id'] = $userId;
-            foreach ($info as $row) {
-                //  $data['userName'] =
-                $request = array();
-                if (sizeof($researcher) == 0) {
-                    array_push($researcher,$row['userName'], $row['citystate'],
-                        $row['address'], $row['emailId'], $row['zipCode'],
-                         $row['date'], $row['phoneNumber'], $row['status'], $row['attachment'], $row['userInitials'], $row['termsAndCond'], $row['requestAddedBy'],$row['attachmentLink']);
-                    $data['researcher'] = $researcher;
-                }
-
-                if ($row['requestId'] != null) {
-                    $request[] = $row['requestId'];
-                    $request[] = $row['collection'];
-                    $request[] = $row['boxNumber'];
-                    $request[] = $row['itemNumber'];
-                    $request[] = $row['usageDescription'];
-                    $request[] = explode(':', $row['imageResolution']);
-                    $request[] = explode(':', $row['fileFormat']);
-                    $request[] = explode(':', $row['audOrVidFileFormat']);
-                    //  print_r($request);
-                    $requests[] = $request;
-
-                    $data['requests'] = $requests;
-                }else{
-                    $data['requests'] = null;
-
-                }
-            }
-            $this->load->view('useAgreement', $data);
-        }else{
-            echo '<html>', "\n"; // I'm sure there's a better way!
-            echo '<head>', "\n";
-            echo '</head>', "\n";
-            echo '<body>', "\n";
-            echo '<h1 align="center">404: User Not Found</h1>', "\n";
-            echo '</body>', "\n";
-            echo '</html>', "\n";
-        }
-    }
-    /*
-     * function to fetch the researcher with userId
-     * loads reviewUseAgreement view form
-     */
-    public function reviewRequest()
-    {
-        /*WORKING*/
-        $this->load->model('usragr_model');
-        $userId = $this->input->get('userId');
-        $result = $this->usragr_model->getresearcher($userId);
-        $chat_array =  $this->usragr_model -> getChat($userId);
-        if($chat_array>0) {
-            $chat_list = json_decode(json_encode($chat_array), true);
-            //   print_r($chat_list);
-            $data['chatList'] = $chat_list;
-        }
-        if ($result != null) {
-            //  $rscrAndReqInfo= array();
-            $researcher = array();
-            // foreach($result as $row){
-            //   echo sizeof($row);
-            $info = json_decode(json_encode($result), true);
-      $data['user_id'] = $userId;
-            foreach ($info as $row) {
-                //  $data['userName'] =
-                $request = array();
-                if (sizeof($researcher) == 0) {
-                    array_push($researcher, $row['userName'], $row['citystate'],
-                        $row['address'], $row['emailId'], $row['zipCode'],
-                        $row['date'], $row['phoneNumber'], $row['status'],$row['attachment'], $row['userInitials'], $row['termsAndCond'], $row['emailSubject'], $row['receiver'], $row['requestAddedBy'],$row['attachmentLink'],$row['copies_sent']);
-                    $data['researcher'] = $researcher;
-                }
-                if ($row['requestId'] != null) {
-
-                    $request[] = $row['requestId'];
-                    $request[] = $row['collection'];
-                    $request[] = $row['boxNumber'];
-                    $request[] = $row['itemNumber'];
-                    $request[] = $row['usageDescription'];
-                    $request[] = explode(':', $row['imageResolution']);
-                    $request[] = explode(':', $row['fileFormat']);
-                    $request[] = explode(':', $row['audOrVidFileFormat']);
-                    //  print_r($request);
-                    $requests[] = $request;
-                    $data['requests'] = $requests;
-                }                else {
-                    $data['requests'] = null;
-
-                }
-            }
-            //print_r($data);
-            //  print_r(sizeof($rscrAndReqInfo));
-            $this->load->view('reviewUseAgreement', $data);
-        }else{
-            echo "please provide valid userId";
-
-        }
-    }
-    /*
-     * Function to save/update researcher.
-     * to update the existing researcher and request.
-     */
-    public function saveResearcher()
-    {
-        $userId = $this->input->get('userId');
-        $userId=substr($userId,6,-6);
-        //  $id= $this->input->post($researcherId);
-        date_default_timezone_set('US/Eastern');
-        $date = date("m/d/Y");
-        $this->load->model('usragr_model');
-
-        //updating researcher information
-        $result = $this->usragr_model->update_researcher($_POST['userName'], $_POST['citystate'], $_POST['address'], $_POST['emailId'],
-            $_POST['zipCode'], $_POST['date'], $_POST['phoneNumber'], $_POST['userInitials'],$_POST['termsAndConditions'],$userId);
-
-        if($result>0) {   //Deleting existing requests
-            $result = $this->usragr_model->deleteRequests($userId);
-        }
-        //echo $result;
-        if ($result > 0) { //Inserting New Requests
-            // $userId = $result; // As the result from model returns maximum value of research table
-            $requestCount = $_POST['requestCount'];
-            //check if there is any requests
-            if ($requestCount != 0) {
-                $requestList = array($_POST['requestList']);
-                //processiong array of requests
-                foreach ($requestList as $request) {
-                    foreach ($request as $row) {
-
-                        $usageDesc = $str = str_replace("\n", '',$row[6] );
-                        //data of request row
-                        $data = array(
-                            'collection'         => $row[0],
-                            'boxNumber'          => $row[1],
-                            'itemNumber'         => $row[2],
-                            'imageResolution'    => $row[3],
-                            'fileFormat'         => $row[4],
-                            'audOrVidFileFormat' => $row[5],
-                            'usageDescription' =>$usageDesc,
-                            'userId'             => $userId
-                        );
-                        //insert the request
-                        $result = $this->usragr_model->insertUserRequest($data, 'request');
-                    }
-                }// end of processing requests
-            }
-/*                $six_digit_random_number = mt_rand(100000, 999999);
-               $userId = $six_digit_random_number.$userId;*/
-            $six_digit_random_string =  $this -> generateRandomString();
-            $UUID=$six_digit_random_string.$userId;
-            $six_digit_random_string =  $this -> generateRandomString();
-            $UUID = $UUID.$six_digit_random_string;
-            echo $UUID;
-        }
-    }
-    /*
-     * Function to submit/update researcher.
-     * Function update researcher and request details.
-     * Updates the status of the transaction to 2.That indicates that user submitted the form for approval.
-     * Trigger email to librarian with URL to review the request.
-     */
-    public function submitResearcher()
-    {
-        $userId = $this->input->get('userId');
-        $userId=substr($userId,6,-6);
-        //  $id= $this->input->post($researcherId);
-        date_default_timezone_set('US/Eastern');
-        $date = date("m/d/Y");
-        $this->load->model('usragr_model');
-
-
-        if($_POST['message']>0 ||$_POST['message']!= null) {
-                $data = array(
-                    'comment' => $_POST['message'],
-                    'commentType' => "MESSAGE",
-                    'userId' => $userId
-                );
-                $this->load->model('usragr_model');
-                $chat_result = $this->usragr_model->saveChat($data, 'chat');
-                if ($chat_result > 0) {
-                }
-        }
-
-        //updating researcher information
-            $result = $this->usragr_model->update_researcherWithStatus($_POST['userName'], $_POST['citystate'], $_POST['address'], $_POST['emailId'],
-                $_POST['zipCode'], $_POST['date'], $_POST['phoneNumber'], 2, $_POST['userInitials'], $_POST['termsAndConditions'], $userId);
-
-        if($result>0) {   //Deleting existing requests
-            $result = $this->usragr_model->deleteRequests($userId);
-        }
-        //echo $result;
-        if ($result > 0) { //Inserting New Requests
-            // $userId = $result; // As the result from model returns maximum value of research table
-            $requestCount = $_POST['requestCount'];
-            //check if there is any requests
-            if ($requestCount != 0) {
-                $requestList = array($_POST['requestList']);
-                //processiong array of requests
-                foreach ($requestList as $request) {
-                    foreach ($request as $row) {
-                        //data of request row
-                        $data = array(
-                            'collection'         => $row[0],
-                            'boxNumber'          => $row[1],
-                            'itemNumber'         => $row[2],
-                            'imageResolution'    => $row[3],
-                            'fileFormat'         => $row[4],
-                            'audOrVidFileFormat' => $row[5],
-                            'usageDescription' =>$row[6],
-                            'userId'             => $userId
-                        );
-                        //insert the request
-                        $result = $this->usragr_model->insertUserRequest($data, 'request');
-                    }}// end of processing requests
-            }
-            if($result>0){
-
-                $six_digit_random_string =  $this -> generateRandomString();
-                $UUID=$six_digit_random_string.$userId;
-                $six_digit_random_string =  $this -> generateRandomString();
-                $UUID = $UUID.$six_digit_random_string;
-                echo $UUID;
-
-            }
-        }
-    }
-
-    /*
-     * Function to disapprove request.
-     * Change the transactions status to 1. That enables the user to edit and resubmit the request.
-     * Adds Instructions to the user.
-     */
-    public function disapproveRequest()
-    {
-        $userId = $this->input->get('userId');
-        // $id= $this->input->post($researcherId);
-        date_default_timezone_set('US/Eastern');
-        $date = date("m/d/Y");
-        $this->load->model('usragr_model');
-        //updating researcher information
-        $result = $this->usragr_model->approveOrDisapprove_request($_POST['date'],1,$userId);
-
-        //Deleting existing requests
-        //echo $result;
-
-        if( $_POST['instructions'] != null){
-            $data = array(
-                'comment' => $_POST['instructions'],
-                'commentType' => "INSTRUCTIONS",
-                'userId' => $userId
-            );
-            $this->load->model('usragr_model');
-            $chat_result = $this->usragr_model->saveChat($data, 'chat');
-            if ($chat_result > 0) {
-                echo "success";
-            }
-        }
-
-        if($result){
-            $this->load->library('email');
-            $config['protocol'] = "smtp";
-            $config['smtp_host'] = "tls://smtp.googlemail.com";
-            $config['smtp_port'] = "465";
-            $config['smtp_user'] = "maristarchives@gmail.com";
-            $config['smtp_pass'] = "MaristArchives2017";
-            $config['charset'] = "utf-8";
-            $config['mailtype'] = "html";
-            $config['newline'] = "\r\n";
-            $this->email->initialize($config);
-            $this->email->from('maristarchives@gmail.com', ' Marist Archives');
-            $this->email->to($_POST['emailId']);
-			$this->email->cc('ann.sandri@marist.edu');
-          //  $this->email->cc('dheeraj.karnati1@marist.edu');
-            //  $this->email->cc('another@another-example.com');
-            //$this->email->bcc('them@their-example.com');
-            $this->email->subject('Returned for review');
-            $greeting        = "Dear ".$_POST['userName'];
-            $messageOne     = "As we found some errors in the form, we have returned it for review. Please click on the below link to resubmit the form (Please follow the instructions provided in the bottom of the form) ";
-            $six_digit_random_string =  $this -> generateRandomString();
-            $UUID=$six_digit_random_string.$userId;
-            $six_digit_random_string =  $this -> generateRandomString();
-            $UUID = $UUID.$six_digit_random_string;
-            $url = base_url()."?c=usragr&m=useagreement&userId=".$UUID ;
-            $instructions = $_POST['instructions'];
-            $message = '<html><body>';
-
-            $message .= '<table width="100%"; rules="all" style="border:1px solid #3A5896;" cellpadding="10">';
-
-            $message .= "<tr ><td align='center'><img src='https://s.graphiq.com/sites/default/files/10/media/images/Marist_College_2_220374.jpg'  /><h3> Marist Archives and Special Collection </h3><h3>COPY/USE AGREEMENT REQUEST</h3> ";
-
-            $message .= "<br/><br/> <h4>$greeting ,<br /><br />As we found some errors in the form, we have returned it for review.  Please click on the below link to resubmit the form (Please follow the instructions provided in the bottom of the form)</h4><br/> <I>Link:</I><br/><a href='$url'>$url</a>  </></tr>";
-
-            //$message .= "<tr><td colspan=2 font='colr:#3A5896;'><I>Link:<br></I> $url </td></tr>";
-            $message .= "<tr><td colspan=2 font='colr:#3A5896;'><I>Instructions:<br></I><h4>$instructions</h4></td></tr>";
-            $message .= "</table>";
-
-            $message .= "</body></html>";
-
-
-            $this->email->message($message);
-            if(  $this->email->send()){
-                echo $userId;
-
-            }else{
-
-                echo "failed to send email";
+      $result = $this->usragr_model->getresearcher($userId);
+      $chat_array = $this->usragr_model -> getChat($userId);
+      if($chat_array > 0) {
+          $chat_list = json_decode(json_encode($chat_array), true);
+          //   print_r($chat_list);
+          $data['chatList'] = $chat_list;
+          }
+      if($result! = null) {
+          //  $rscrAndReqInfo= array();
+          $researcher = array();
+          // foreach($result as $row){
+          //   echo sizeof($row);
+          $info = json_decode(json_encode($result), true);
+             $data['user_Id'] = $userId;
+          foreach ($info as $row) {
+            //  $data['userName'] =
+            $request = array();
+            if (sizeof($researcher) == 0) {
+              array_push($researcher,$row['userName'], $row['citystate'],
+              $row['address'], $row['emailId'], $row['zipCode'],
+              $row['date'], $row['phoneNumber'], $row['status'], $row['attachment'], $row['userInitials'], $row['termsAndCond'], $row['requestAddedBy'],$row['attachmentLink']);
+              $data['researcher'] = $researcher;
             }
 
-        }
-    }
+            if ($row['requestId'] != null) {
+                $request[] = $row['requestId'];
+                $request[] = $row['collection'];
+                $request[] = $row['boxNumber'];
+                $request[] = $row['itemNumber'];
+                $request[] = $row['usageDescription'];
+                $request[] = explode(':', $row['imageResolution']);
+                $request[] = explode(':', $row['fileFormat']);
+                $request[] = explode(':', $row['audOrVidFileFormat']);
+                //  print_r($request);
+                $requests[] = $request;
 
-    /*
-     *Function to approve request.
-     *Trigger email to user about the approval status.
-     */
-    public function approveRequest()
-    {
-        $userId = $this->input->get('userId');
-
-        //  $id= $this->input->post($researcherId);
-        date_default_timezone_set('US/Eastern');
-        $date = date("m/d/Y");
-        $this->load->model('usragr_model');
-        //updating researcher information
-        $result = $this->usragr_model->approveOrDisapprove_request($_POST['date'],3,$userId);
-
-        if($result>0){
-            $this->load->library('email');
-            $config['protocol'] = "smtp";
-            $config['smtp_host'] = "tls://smtp.googlemail.com";
-            $config['smtp_port'] = "465";
-            $config['smtp_user'] = "maristarchives@gmail.com";
-            $config['smtp_pass'] = "MaristArchives2017";
-            $config['charset'] = "utf-8";
-            $config['mailtype'] = "html";
-            $config['newline'] = "\r\n";
-            $this->email->initialize($config);
-            $this->email->from('maristarchives@gmail.com', ' Marist Archives');
-            $this->email->to($_POST['emailId']);
-            $this->email->cc('ann.sandri@marist.edu');
-            //  $this->email->cc('another@another-example.com');
-            //$this->email->bcc('them@their-example.com');
-            $this->email->subject('Marist Copy/Use Request - Approved');
-            $greeting        = "Dear ".$_POST['userName'];
-            $six_digit_random_string =  $this -> generateRandomString();
-            $UUID=$six_digit_random_string.$userId;
-            $six_digit_random_string =  $this -> generateRandomString();
-            $UUID = $UUID.$six_digit_random_string;
-            $url = base_url()."?c=usragr&m=useagreement&userId=".$UUID ;
-            $instructions = $_POST['instructions'];
-            $message = '<html><body>';
-
-            $message .= '<table width="100%"; rules="all" style="border:1px solid #3A5896;" cellpadding="10">';
-
-            $message .= "<tr ><td align='center'><img src='https://s.graphiq.com/sites/default/files/10/media/images/Marist_College_2_220374.jpg'  /><h3> Marist Archives and Special Collection </h3> <br/><h3>COPY/USE AGREEMENT REQUEST</h3> ";
-
-            $message .= "<br/><br/> <h4>$greeting ,<br/><br/> Your Copy/Use Request has been appproved. Requested copies will be sent to you shortly.</h4><br/> <I>Link:</I><br/><a href='$url'> $url </a>  </></tr>";
-
-   //$message .= "<tr><td colspan=2 font='colr:#3A5896;'><I>Link:<br></I> $url </td></tr>";
-            $message .= "<tr><td colspan=2 font='colr:#3A5896;'><I>Instructions:<br></I><h4>$instructions</h4></td></tr>";
-            $message .= "</table>";
-
-            $message .= "</body></html>";
-
-
-            //$message        = "Dear ".$_POST['userName'].",";
-            //$messageOne        = "Your COPY/USEAGREEMENT Request has been appproved, we will send you the requested copies shortly";
-            $this->email->message($message);
-            $this->email->send();
-            echo $userId;
-
-        }
-    }
-    public function saveChat(){
-        date_default_timezone_set('US/Eastern');
-        $date = date("m/d/Y");
-        $time = time();
-        $data = array(
-            'instructions'   => $_POST['comments'],
-            'instructions_added_date'    => $date,
-            'instructions_added_time'  => $time,
-            'userId' => $_POST['userId']
-        );
-        $this->load->model('usragr_model');
-        $result = $this->usragr_model->saveChat($data, 'chat');
-        if ($result > 0) {
-
-        }
-    }
-
-
-    public function mailAttachment()
-    {
-
-        //$file_attached = false;
-        $date = date("m/d/Y");
-
-        $userId = $this->input->get('userId');
-        $userId= substr($userId,6,-6);
-        $user_name = filter_var($_POST["user_name"], FILTER_SANITIZE_STRING);
-        $url = base_url()."?c=usragr&m=reviewRequest&userId=". $userId;
-        $message = '<html><body>';
-
-        $message .= '<table width="100%"; rules="all" style="border:1px solid #3A5896;" cellpadding="10">';
-
-        $message .= "<tr ><td align='center'><img src='https://s.graphiq.com/sites/default/files/10/media/images/Marist_College_2_220374.jpg'  /><h3> Marist Archives and Special Collection </h3><h3>COPY/USE AGREEMENT REQUEST</h3> ";
-
-        $message .= "<br/><br/> <h4>Hi,<br /><br />$user_name has submitted the new use agreement request. Please click on the below link to review and approve/reject the request</h4><br/> <I>Link:</I><br/> <a href='$url' >$url </a></></tr>";
-
-        //$message .= "<tr><td colspan=2 font='colr:#3A5896;'><I>Link:<br></I> $url </td></tr>";
-        //$message .= "<tr><td colspan=2 font='colr:#3A5896;'><I>Instructions:<br></I><h4>$instructions</h4></td></tr>";
-        $message .= "</table>";
-
-        $message .= "</body></html>";
-       // $message = "<html><body>";
-        //$messageOne = "$user_name.\".\n\r has submitted the new use agreement request. Please click on the below link to review and approve/disapprove the request";
-        $messageTwo = "Please find the below link to review the submitted request";
-        $message_body = $message ;
-        $file_attached = false;
-        if (isset($_FILES['file_attach'])) //check uploaded file
-        {
-
-            //get file details we need
-            $file_tmp_name = $_FILES['file_attach']['tmp_name'];
-            $file_name = $_FILES['file_attach']['name'];
-            $file_error = $_FILES['file_attach']['error'];
-            $file_size = $_FILES['file_attach']['size'];
-            $file_type = $_FILES['file_attach']['type'];
-
-            //exit script and output error if we encounter any
-            if ($file_error > 0) {
-                $mymsg = array(
-                    1 => "The uploaded file exceeds the upload_max_filesize directive in php.ini",
-                    2 => "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form",
-                    3 => "The uploaded file was only partially uploaded",
-                    4 => "No file was uploaded",
-                    6 => "Missing a temporary folder");
-                $output = json_encode(array('type' => 'error', 'text' => $mymsg[$file_error]));
-                die($output);
-            }
-
-            $file_attached = true;
-        }
-
-        $ci = get_instance();
-        $ci->load->library('email');
-        $config['protocol'] = "smtp";
-        $config['smtp_host'] = "tls://smtp.googlemail.com";
-        $config['smtp_port'] = "465";
-        $config['smtp_user'] = "maristarchives@gmail.com";
-        $config['smtp_pass'] = "MaristArchives2017";
-        $config['charset'] = "utf-8";
-        $config['mailtype'] = "html";
-        $config['newline'] = "\r\n";
-
-        $ci->email->initialize($config);
-
-        $ci->email->from('maristarchives@gmail.com', "Marist Archives");
-        $list = array('maristarchives@gmail.com');
-
-       // $ci->email->to($list);
-        $ci->email->to('john.ansley@marist.edu');
-		$ci->email->cc('maristarchives@gmail.com');
-        $this->email->reply_to($_POST["user_email"], $user_name);
-        $ci->email->message($message_body);
-
-        //If the attached file in requested format
-        if ($file_attached) {
-            $ds= "/data/library/htdocs/archives/useagreement/";
-            $this->load->model('usragr_model');
-            $ci->email->subject($userId.'_Use Agreement Request(Attachment)');
-              $storeFolder = 'uploads/';//2
-
-                $targetPath =  $ds.$storeFolder ;  //4
-                // $targetFile =  $targetPath. $_FILES['file_attach']['name'];  //5
-                $file_info = pathinfo($_FILES['file_attach']['name']);
-                  $six_digit_random_string = $this-> generateRandomString();
-                $six_digit_random_string2 = $this-> generateRandomString();
-                $filename = 'useagreement_request' . '_' .$six_digit_random_string2. $userId . $six_digit_random_string .'.' . $file_info['extension'];
-                $targetFile =  $targetPath. $filename;
-                // $result = $this->usragr_model->update_attachment($filename, $userId);
-                $ci->email->attach($file_tmp_name, 'attachment', $filename);
-                if($ci->email->send()){
-                    $filepath= "http://library.marist.edu/archives/useagreement/uploads/$filename";
-                    if($this->usragr_model->update_attachment($filename,$filepath, $userId)){
-                        move_uploaded_file($file_tmp_name,$targetFile); //6
-                    }
-                }
-
-
-            echo $file_type;
-/*            if ($file_type == "application/pdf") {
-                $result = $this->usragr_model->update_attachment('UseAgreement_Request_' . $userId . "(" . $date . ")" . '.pdf', $userId);
-                if ($result > 0) {
-                    $ci->email->attach($file_tmp_name, 'attachment', 'UseAgreement_Request_' . $userId . "(" . $date . ")" . '.pdf');
-                    $ci->email->send();
-                }
-            } else if ($file_type == "image/jpeg") {
-                $result = $this->usragr_model->update_attachment('UseAgreement_Request_' . $userId . "(" . $date . ")" . '.jpeg', $userId);
-                if ($result > 0) {
-                    $ci->email->attach($file_tmp_name, 'attachment', 'UseAgreement_Request_' . $userId . "(" . $date . ")" . '.jpeg');
-                    $ci->email->send();
-                }
-            } else if ($file_type == "image/png") {
-                $result = $this->usragr_model->update_attachment('UseAgreement_Request_' . $userId . "(" . $date . ")" . '.png', $userId);
-                if ($result > 0) {
-                    $ci->email->attach($file_tmp_name, 'attachment', 'UseAgreement_Request_' . $userId . "(" . $date . ")" . '.png');
-                    $ci->email->send();
-                }
-            }
-            else if($file_type == "application/msword"){
-
-                $result = $this->usragr_model->update_attachment('UseAgreement_Request_' . $userId . "(" . $date . ")" . '.doc', $userId);
-                if ($result > 0) {
-                    $ci->email->attach($file_tmp_name, 'attachment', 'UseAgreement_Request_' . $userId . "(" . $date . ")" . '.doc');
-                    $ci->email->send();
-                }
-
-            } else if($file_type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document"){
-
-                $result = $this->usragr_model->update_attachment('UseAgreement_Request_' . $userId . "(" . $date . ")" . '.docx', $userId);
-                if ($result > 0) {
-                    $ci->email->attach($file_tmp_name, 'attachment', 'UseAgreement_Request_' . $userId . "(" . $date . ")" . '.docx');
-                    $ci->email->send();
-                }
-
+                $data['requests'] = $requests;
             }
             else{
-                $result = $this->usragr_model->update_attachment('UseAgreement_Request_' . $userId . "(" . $date . ")", $userId);
-                if ($result > 0) {
-                    $ci->email->attach($file_tmp_name, 'attachment', 'UseAgreement_Request_' . $userId . "(" . $date . ")");
-                    $ci->email->send();
-                }
-
-            }*/
-
-        } // Mail without attachment
-        else {
-            $ci->email->subject($userId.'_Use Agreement Request');
-            $ci->email->send();
-
-        }
+              $data['requests'] = null;
+            }
+          }
+          $this->load->view('useAgreement', $data);
+      }
+      else{
+        echo '<html>', "\n"; // I'm sure there's a better way!
+        echo '<head>', "\n";
+        echo '</head>', "\n";
+        echo '<body>', "\n";
+        echo '<h1 align="center">404: User Not Found</h1>', "\n";
+        echo '</body>', "\n";
+        echo '</html>', "\n";
+      }
     }
 
-    /* By Dan Mopsick - This function sends an email to a researcher who is physically in the building performiing reserach.
-    This email will serve as a receipt. Will be used by researchAgreementForm.php */
-    public function mailResearchReceipt(){
-        // Process and Filter values from POST
-        $researchAgreementNumber = filter_var($_POST['researchAgreementNumber'], FILTER_SANITIZE_STRING);
-        $date = filter_var($_POST['date'], FILTER_SANITIZE_STRING);
-        $user_name = filter_var($_POST['user_name'], FILTER_SANITIZE_STRING);
-        $user_address = filter_var($_POST['user_address'], FILTER_SANITIZE_STRING);
-        $user_citystate = filter_var($_POST['user_citystate'], FILTER_SANITIZE_STRING);
-        $user_email = filter_var($_POST['user_email'], FILTER_SANITIZE_STRING);
-        $user_zipCode = filter_var($_POST['user_zipCode'], FILTER_SANITIZE_STRING);
-        $user_phoneNumber = filter_var($_POST['user_phoneNumber'], FILTER_SANITIZE_STRING);
-        $user_affiliation = filter_var($_POST['user_affiliation'], FILTER_SANITIZE_STRING);
-        $user_status = filter_var($_POST['user_status'], FILTER_SANITIZE_STRING);
-        $user_subject = filter_var($_POST['user_subject'], FILTER_SANITIZE_STRING);
-        $user_collection = filter_var($_POST['user_collection'], FILTER_SANITIZE_STRING);
-        $user_purpose = filter_var($_POST['user_purpose'], FILTER_SANITIZE_STRING);
-        $user_initials = filter_var($_POST['user_initials'], FILTER_SANITIZE_STRING);
+    /* function to fetch the researcher with userId
+     * loads reviewUseAgreement view form */
+    public function reviewRequest(){
+      $this->load->model('usragr_model');
+      $userId = $this->input->get('userId');
+      $result = $this->usragr_model->getresearcher($userId);
+      $chat_array =  $this->usragr_model -> getChat($userId);
+      if($chat_array>0) {
+        $chat_list = json_decode(json_encode($chat_array), true);
+        //   print_r($chat_list);
+        $data['chatList'] = $chat_list;
+      }
+      if ($result != null) {
+        $researcher = array();
+        $info = json_decode(json_encode($result), true);
+        $data['user_id'] = $userId;
+        foreach ($info as $row) {
+          $request = array();
+          if (sizeof($researcher) == 0) {
+            array_push($researcher, $row['userName'], $row['citystate'],
+              $row['address'], $row['emailId'], $row['zipCode'],
+              $row['date'], $row['phoneNumber'], $row['status'],$row['attachment'], $row['userInitials'], $row['termsAndCond'], $row['emailSubject'], $row['receiver'], $row['requestAddedBy'],$row['attachmentLink'],$row['copies_sent']);
+            $data['researcher'] = $researcher;
+          }
+          if ($row['requestId'] != null) {
+            $request[] = $row['requestId'];
+            $request[] = $row['collection'];
+            $request[] = $row['boxNumber'];
+            $request[] = $row['itemNumber'];
+            $request[] = $row['usageDescription'];
+            $request[] = explode(':', $row['imageResolution']);
+            $request[] = explode(':', $row['fileFormat']);
+            $request[] = explode(':', $row['audOrVidFileFormat']);
 
-        /* Create the contents of the email in HTML */
-        $message = '<html><body>';
-        $message .= '<table width="100%"; rules="all" style="border:1px solid #3A5896;" cellpadding="10">';
-
-        $message .= "<tr><td align='center'><img src='https://s.graphiq.com/sites/default/files/10/media/images/Marist_College_2_220374.jpg'/><h3> Marist Archives and Special Collection </h3><h3>RESEARCH AGREEMENT CONFIRMATION</h3>";
-
-        // Display a message to the user
-        $message .= "<br/><h4> Dear $user_name,<br/><br/> Your research agreement has been confirmed.<br/>You must use your Research Agreement Number in order to request materials from the Archives.<br/>See an archivist for more information.</h4>";
-
-        // Display the researchAgreementNumber needed to take out materials from archive. Created in researchAgreementForm
-        $message .= "<h3><b>Research Agreement Number:</b> $researchAgreementNumber</h3>";
-
-        // Display the user's recorded information
-        $message .= "<h3>Recorded Information</h3>";
-        $message .= "<div align = 'center' style = 'width:50%; text-align:left;'><p><b>Date:</b> $date</p>";
-        $message .= "<p><b>Name:</b> $user_name</p>";
-        $message .= "<p><b>Address:</b> $user_address</p>";
-        $message .= "<p><b>City/State:</b> $user_citystate</p>";
-        $message .= "<p><b>Zip Code:</b> $user_zipCode</p>";
-        $message .= "<p><b>Phone Number:</b> $user_phoneNumber</p>";
-
-        // Display optional fields if they are entered by the user
-        if($user_affiliation != ""){
-          $message .= "<p><b>Affiliation:</b> $user_affiliation</p>";
+            $requests[] = $request;
+            $data['requests'] = $requests;
+          }
+          else{
+            $data['requests'] = null;
+          }
         }
-        if($user_status != ""){
-          $message .= "<p><b>Academic Status:</b> $user_status</p>";
-        }
-        $message .= "<p><b>Subject of Research:</b> $user_subject</p>";
-        if($user_collection != ""){
-          $message .= "<p><b>Collection:</b> $user_collection</p>";
-        }
-        $message.= "<p><b>Purpose of Research:</b>" .  rtrim($user_purpose, ", ") . "</p>";
-
-        $message .= "<p><b>Initials:</b> $user_initials</p></div>";
-        $message .= "</tr></table></body></html>";
-
-        $message_body = $message ;
-
-        // Send the actual email. Code taken from mailAttachment()
-        $ci = get_instance();
-        $ci->load->library('email');
-        $config['protocol'] = "smtp";
-        $config['smtp_host'] = "tls://smtp.googlemail.com";
-        $config['smtp_port'] = "465";
-        $config['smtp_user'] = "maristarchives@gmail.com";
-        $config['smtp_pass'] = "MaristArchives2017";
-        $config['charset'] = "utf-8";
-        $config['mailtype'] = "html";
-        $config['newline'] = "\r\n";
-
-        $ci->email->initialize($config);
-
-        $ci->email->from('maristarchives@gmail.com', "Marist Archives");
-        //$ci->email->cc('dheeraj.karnati1@marist.edu');
-        $ci->email->to($_POST['user_email']);
-        $ci->email->reply_to('maristarchives@gmail.com', "Marist Archives");
-        $ci->email->message($message_body);
-
-        $ci->email->subject("Research Agreement Confirmation");
-        $ci->email->send();
+        $this->load->view('reviewUseAgreement', $data);
+      }
+      else{
+          echo "please provide valid userId";
+      }
     }
 
-    public function InitiateWithMailAttachment(){
-        $date = date("m/d/Y");
-        $userId = $this->input->get('userId');
-        $userId = (string)$userId;
-        $six_digit_random_number = mt_rand(100000, 999999);
+    /* Function to save/update researcher, to update the existing researcher and request. */
+    public function saveResearcher(){
+      $userId = $this->input->get('userId');
+      $userId=substr($userId,6,-6);
+      //  $id= $this->input->post($researcherId);
+      date_default_timezone_set('US/Eastern');
+      $date = date("m/d/Y");
+      $this->load->model('usragr_model');
+
+      //updating researcher information
+      $result = $this->usragr_model->update_researcher($_POST['userName'], $_POST['citystate'], $_POST['address'], $_POST['emailId'],
+      $_POST['zipCode'], $_POST['date'], $_POST['phoneNumber'], $_POST['userInitials'],$_POST['termsAndConditions'],$userId);
+
+      if($result>0) {   //Deleting existing requests
+        $result = $this->usragr_model->deleteRequests($userId);
+      }
+
+      if ($result > 0) { //Inserting New Requests
+        // $userId = $result; // As the result from model returns maximum value of research table
+        $requestCount = $_POST['requestCount'];
+        //check if there is any requests
+        if ($requestCount != 0) {
+          $requestList = array($_POST['requestList']);
+          //processiong array of requests
+          foreach ($requestList as $request) {
+            foreach ($request as $row) {
+              $usageDesc = $str = str_replace("\n", '',$row[6] );
+              //data of request row
+              $data = array(
+                  'collection'         => $row[0],
+                  'boxNumber'          => $row[1],
+                  'itemNumber'         => $row[2],
+                  'imageResolution'    => $row[3],
+                  'fileFormat'         => $row[4],
+                  'audOrVidFileFormat' => $row[5],
+                  'usageDescription' =>$usageDesc,
+                  'userId'             => $userId
+              );
+              //insert the request
+              $result = $this->usragr_model->insertUserRequest($data, 'request');
+            }
+          }// end of processing requests
+        }
+/*                $six_digit_random_number = mt_rand(100000, 999999);
+           $userId = $six_digit_random_number.$userId;*/
         $six_digit_random_string =  $this -> generateRandomString();
         $UUID=$six_digit_random_string.$userId;
         $six_digit_random_string =  $this -> generateRandomString();
         $UUID = $UUID.$six_digit_random_string;
         echo $UUID;
-        $comments = $_POST['comments'];
-        $user_name = filter_var($_POST['user_name'], FILTER_SANITIZE_STRING);
-        $url = base_url()."?c=usragr&m=useagreement&userId=". $UUID;
-        $message = '<html><body>';
+    }
+    }
 
-        $message .= '<table width="100%"; rules="all" style="border:1px solid #3A5896;" cellpadding="10">';
+    /* Function to submit/update researcher. Function update researcher and request details.
+     * Updates the status of the transaction to 2.That indicates that user submitted the form for approval.
+     * Trigger email to librarian with URL to review the request. */
+    public function submitResearcher(){
+      $userId = $this->input->get('userId');
+      $userId=substr($userId,6,-6);
+      date_default_timezone_set('US/Eastern');
+      $date = date("m/d/Y");
+      $this->load->model('usragr_model');
 
-        $message .= "<tr ><td align='center'><img src='https://s.graphiq.com/sites/default/files/10/media/images/Marist_College_2_220374.jpg'  /><h3> Marist Archives and Special Collection </h3><h3>COPY/USE AGREEMENT REQUEST</h3> ";
+      if($_POST['message']>0 ||$_POST['message']!= null) {
+        $data = array(
+          'comment' => $_POST['message'],
+          'commentType' => "MESSAGE",
+          'userId' => $userId
+        );
+        $this->load->model('usragr_model');
+        $chat_result = $this->usragr_model->saveChat($data, 'chat');
+      }
 
-        $message .= "<br/><br/> <h4> Dear $user_name ,<br /><br />We have initiated use agreement form for you. Please click on the below link to edit and submit the request.</h4><br/> <I>Link:</I><br/><a href='$url'> $url </a></></tr>";
+      //updating researcher information
+      $result = $this->usragr_model->update_researcherWithStatus($_POST['userName'], $_POST['citystate'], $_POST['address'], $_POST['emailId'],
+      $_POST['zipCode'], $_POST['date'], $_POST['phoneNumber'], 2, $_POST['userInitials'], $_POST['termsAndConditions'], $userId);
 
-//$message .= "<tr><td colspan=2 font='colr:#3A5896;'><I>Link:<br></I> $url </td></tr>";
-        $message .= "<tr><td colspan=2 font='colr:#3A5896;'><I>Comments/Instructions:<br></I><h4>$comments</h4></td></tr>";
-        $message .= "</table>";
-
-        $message .= "</body></html>";
-        // $message = "<html><body>";
-        //$messageOne = "$user_name.\".\n\r has submitted the new use agreement request. Please click on the below link to review and approve/disapprove the request";
-        $messageTwo = "Please find the below link to review the submitted request";
-        $message_body = $message ;
-        $file_attached = false;
-        if (isset($_FILES['file_attach'])) //check uploaded file
-        {
-
-            //get file details we need
-            $file_tmp_name = $_FILES['file_attach']['tmp_name'];
-            $file_name = $_FILES['file_attach']['name'];
-            $file_error = $_FILES['file_attach']['error'];
-            $file_size = $_FILES['file_attach']['size'];
-            $file_type = $_FILES['file_attach']['type'];
-
-            //exit script and output error if we encounter any
-            if ($file_error > 0) {
-                $mymsg = array(
-                    1 => "The uploaded file exceeds the upload_max_filesize directive in php.ini",
-                    2 => "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form",
-                    3 => "The uploaded file was only partially uploaded",
-                    4 => "No file was uploaded",
-                    6 => "Missing a temporary folder");
-                $output = json_encode(array('type' => 'error', 'text' => $mymsg[$file_error]));
-                die($output);
+      if($result > 0) {   //Deleting existing requests
+          $result = $this->usragr_model->deleteRequests($userId);
+      }
+      //echo $result;
+      if ($result > 0) { //Inserting New Requests
+        // $userId = $result; // As the result from model returns maximum value of research table
+        $requestCount = $_POST['requestCount'];
+        //check if there is any requests
+        if ($requestCount != 0) {
+          $requestList = array($_POST['requestList']);
+          //processiong array of requests
+          foreach ($requestList as $request) {
+            foreach ($request as $row) {
+              //data of request row
+              $data = array(
+                'collection'         => $row[0],
+                'boxNumber'          => $row[1],
+                'itemNumber'         => $row[2],
+                'imageResolution'    => $row[3],
+                'fileFormat'         => $row[4],
+                'audOrVidFileFormat' => $row[5],
+                'usageDescription' =>$row[6],
+                'userId'             => $userId
+              );
+              //insert the request
+              $result = $this->usragr_model->insertUserRequest($data, 'request');
             }
-
-            $file_attached = true;
+          }// end of processing requests
         }
 
-        $ci = get_instance();
-        $ci->load->library('email');
+        if($result > 0){
+          $six_digit_random_string =  $this -> generateRandomString();
+          $UUID=$six_digit_random_string.$userId;
+          $six_digit_random_string =  $this -> generateRandomString();
+          $UUID = $UUID.$six_digit_random_string;
+          echo $UUID;
+        }
+      }
+    }
+
+    /*  Function to disapprove request.
+     * Change the transactions status to 1. That enables the user to edit and resubmit the request.
+     * Adds Instructions to the user. */
+    public function disapproveRequest(){
+      $userId = $this->input->get('userId');
+      // $id= $this->input->post($researcherId);
+      date_default_timezone_set('US/Eastern');
+      $date = date("m/d/Y");
+      $this->load->model('usragr_model');
+      //updating researcher information
+      $result = $this->usragr_model->approveOrDisapprove_request($_POST['date'],1,$userId);
+
+      //Deleting existing requests
+      if( $_POST['instructions'] != null){
+        $data = array(
+          'comment' => $_POST['instructions'],
+          'commentType' => "INSTRUCTIONS",
+          'userId' => $userId
+        );
+        $this->load->model('usragr_model');
+        $chat_result = $this->usragr_model->saveChat($data, 'chat');
+        if($chat_result > 0) {
+            echo "success";
+        }
+      }
+
+      if($result){
+        $this->load->library('email');
         $config['protocol'] = "smtp";
         $config['smtp_host'] = "tls://smtp.googlemail.com";
         $config['smtp_port'] = "465";
@@ -833,61 +364,420 @@ class Usragr extends CI_Controller
         $config['charset'] = "utf-8";
         $config['mailtype'] = "html";
         $config['newline'] = "\r\n";
+        $this->email->initialize($config);
+        $this->email->from('maristarchives@gmail.com', ' Marist Archives');
+        $this->email->to($_POST['emailId']);
+	      $this->email->cc('ann.sandri@marist.edu');
+        $this->email->subject('Returned for review');
+        $greeting = "Dear ".$_POST['userName'];
+        $messageOne = "As we found some errors in the form, we have returned it for review. Please click on the below link to resubmit the form (Please follow the instructions provided in the bottom of the form) ";
+        $six_digit_random_string =  $this -> generateRandomString();
+        $UUID=$six_digit_random_string.$userId;
+        $six_digit_random_string =  $this -> generateRandomString();
+        $UUID = $UUID.$six_digit_random_string;
+        $url = base_url()."?c=usragr&m=useagreement&userId=".$UUID ;
+        $instructions = $_POST['instructions'];
+        $message = '<html><body>';
 
-        $ci->email->initialize($config);
+        $message .= '<table width="100%"; rules="all" style="border:1px solid #3A5896;" cellpadding="10">';
 
-        $ci->email->from('maristarchives@gmail.com', "Marist Archives");
-        //$ci->email->cc('dheeraj.karnati1@marist.edu');
-        $ci->email->to($_POST['user_email']);
-        $ci->email->reply_to('maristarchives@gmail.com', "Marist Archives");
-        $ci->email->message($message_body);
-        //If the attached file in requested format
-        if ($file_attached) {
+        $message .= "<tr ><td align='center'><img src='https://s.graphiq.com/sites/default/files/10/media/images/Marist_College_2_220374.jpg'  /><h3> Marist Archives and Special Collection </h3><h3>COPY/USE AGREEMENT REQUEST</h3> ";
 
-            $this->load->model('usragr_model');
-        //    $this->email->subject('UseAgreement Initiated');
+        $message .= "<br/><br/> <h4>$greeting ,<br /><br />As we found some errors in the form, we have returned it for review.  Please click on the below link to resubmit the form (Please follow the instructions provided in the bottom of the form)</h4><br/> <I>Link:</I><br/><a href='$url'>$url</a>  </></tr>";
 
-            $ci->email->subject("Marist Copy/Use Request - Initiated");
+        //$message .= "<tr><td colspan=2 font='colr:#3A5896;'><I>Link:<br></I> $url </td></tr>";
+        $message .= "<tr><td colspan=2 font='colr:#3A5896;'><I>Instructions:<br></I><h4>$instructions</h4></td></tr>";
+        $message .= "</table></body></html>";
 
-
-            $ds= "/data/library/htdocs/archives/useagreement/";
-
-            $storeFolder = 'uploads/';//2
-            if (!empty($_FILES)) {
-
-                $targetPath =  $ds.$storeFolder ;  //4
-                // $targetFile =  $targetPath. $_FILES['file_attach']['name'];  //5
-                $file_info = pathinfo($_FILES['file_attach']['name']);
-                $six_digit_random_number = mt_rand(100000, 999999);
-                $filename = 'useagreement_request' . '_' . $userId. $six_digit_random_number .'.' . $file_info['extension'];
-                $targetFile =  $targetPath. $filename;
-                // $result = $this->usragr_model->update_attachment($filename, $userId);
-                $ci->email->attach($file_tmp_name, 'attachment', $filename);
-                if($ci->email->send()){
-                    $filepath= "http://library.marist.edu/archives/useagreement/uploads/$filename";
-                    if($this->usragr_model->update_attachment($filename,$filepath, $userId)){
-                        move_uploaded_file($file_tmp_name,$targetFile); //6
-                    }
-                }
-
-            }
-
+        $this->email->message($message);
+        if($this->email->send()){
+          echo $userId;
         }
-        // Mail without attachment
-        else {
-            $ci->email->subject("UseAgreement Initiated");
-            $ci->email->send();
-
+        else{
+          echo "Failed to send email";
         }
+      }
     }
 
+    /*Function to approve request. Trigger email to user about the approval status. */
+    public function approveRequest(){
+      $userId = $this->input->get('userId');
+
+      date_default_timezone_set('US/Eastern');
+      $date = date("m/d/Y");
+      $this->load->model('usragr_model');
+      //updating researcher information
+      $result = $this->usragr_model->approveOrDisapprove_request($_POST['date'],3,$userId);
+
+      if($result > 0){
+        $this->load->library('email');
+        $config['protocol'] = "smtp";
+        $config['smtp_host'] = "tls://smtp.googlemail.com";
+        $config['smtp_port'] = "465";
+        $config['smtp_user'] = "maristarchives@gmail.com";
+        $config['smtp_pass'] = "MaristArchives2017";
+        $config['charset'] = "utf-8";
+        $config['mailtype'] = "html";
+        $config['newline'] = "\r\n";
+        $this->email->initialize($config);
+        $this->email->from('maristarchives@gmail.com', ' Marist Archives');
+        $this->email->to($_POST['emailId']);
+        $this->email->cc('ann.sandri@marist.edu');
+        $this->email->subject('Marist Copy/Use Request - Approved');
+        $greeting        = "Dear ".$_POST['userName'];
+        $six_digit_random_string =  $this -> generateRandomString();
+        $UUID=$six_digit_random_string.$userId;
+        $six_digit_random_string =  $this -> generateRandomString();
+        $UUID = $UUID.$six_digit_random_string;
+        $url = base_url()."?c=usragr&m=useagreement&userId=".$UUID ;
+        $instructions = $_POST['instructions'];
+
+        $message = '<html><body>';
+        $message .= '<table width="100%"; rules="all" style="border:1px solid #3A5896;" cellpadding="10">';
+
+        $message .= "<tr ><td align='center'><img src='https://s.graphiq.com/sites/default/files/10/media/images/Marist_College_2_220374.jpg'  /><h3> Marist Archives and Special Collection </h3> <br/><h3>COPY/USE AGREEMENT REQUEST</h3> ";
+
+        $message .= "<br/><br/> <h4>$greeting ,<br/><br/> Your Copy/Use Request has been appproved. Requested copies will be sent to you shortly.</h4><br/> <I>Link:</I><br/><a href='$url'> $url </a>  </></tr>";
+
+        $message .= "<tr><td colspan=2 font='colr:#3A5896;'><I>Instructions:<br></I><h4>$instructions</h4></td></tr>";
+        $message .= "</table></body></html>";
+
+        $this->email->message($message);
+        $this->email->send();
+        echo $userId;
+      }
+    }
+
+    public function saveChat(){
+      date_default_timezone_set('US/Eastern');
+      $date = date("m/d/Y");
+      $time = time();
+      $data = array(
+        'instructions'   => $_POST['comments'],
+        'instructions_added_date'    => $date,
+        'instructions_added_time'  => $time,
+        'userId' => $_POST['userId']
+      );
+      $this->load->model('usragr_model');
+      $result = $this->usragr_model->saveChat($data, 'chat');
+  }
+
+  public function mailAttachment(){
+      $date = date("m/d/Y");
+
+      $userId = $this->input->get('userId');
+      $userId= substr($userId,6,-6);
+      $user_name = filter_var($_POST["user_name"], FILTER_SANITIZE_STRING);
+      $url = base_url()."?c=usragr&m=reviewRequest&userId=". $userId;
+
+      $message = '<html><body><table width="100%"; rules="all" style="border:1px solid #3A5896;" cellpadding="10">';
+      $message .= "<tr ><td align='center'><img src='https://s.graphiq.com/sites/default/files/10/media/images/Marist_College_2_220374.jpg'  /><h3> Marist Archives and Special Collection </h3><h3>COPY/USE AGREEMENT REQUEST</h3> ";
+
+      $message .= "<br/><br/> <h4>Hi,<br /><br />$user_name has submitted the new use agreement request. Please click on the below link to review and approve/reject the request</h4><br/> <I>Link:</I><br/> <a href='$url' >$url </a></></tr>";
+
+      $message .= "</table></body></html>";
+      $messageTwo = "Please find the below link to review the submitted request";
+      $message_body = $message;
+
+      $file_attached = false;
+      if (isset($_FILES['file_attach'])){
+        //get file details we need
+        $file_tmp_name = $_FILES['file_attach']['tmp_name'];
+        $file_name = $_FILES['file_attach']['name'];
+        $file_error = $_FILES['file_attach']['error'];
+        $file_size = $_FILES['file_attach']['size'];
+        $file_type = $_FILES['file_attach']['type'];
+
+        //exit script and output error if we encounter any
+        if ($file_error > 0) {
+          $mymsg = array(
+            1 => "The uploaded file exceeds the upload_max_filesize directive in php.ini",
+            2 => "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form",
+            3 => "The uploaded file was only partially uploaded",
+            4 => "No file was uploaded",
+            6 => "Missing a temporary folder");
+          $output = json_encode(array('type' => 'error', 'text' => $mymsg[$file_error]));
+          die($output);
+        }
+        $file_attached = true;
+      }
+
+      $ci = get_instance();
+      $ci->load->library('email');
+      $config['protocol'] = "smtp";
+      $config['smtp_host'] = "tls://smtp.googlemail.com";
+      $config['smtp_port'] = "465";
+      $config['smtp_user'] = "maristarchives@gmail.com";
+      $config['smtp_pass'] = "MaristArchives2017";
+      $config['charset'] = "utf-8";
+      $config['mailtype'] = "html";
+      $config['newline'] = "\r\n";
+
+      $ci->email->initialize($config);
+
+      $ci->email->from('maristarchives@gmail.com', "Marist Archives");
+      $list = array('maristarchives@gmail.com');
+
+     // $ci->email->to($list);
+      $ci->email->to('john.ansley@marist.edu');
+	    $ci->email->cc('maristarchives@gmail.com');
+      $this->email->reply_to($_POST["user_email"], $user_name);
+      $ci->email->message($message_body);
+
+      //If the attached file in requested format
+      if ($file_attached) {
+        $ds= "/data/library/htdocs/archives/useagreement/";
+        $this->load->model('usragr_model');
+        $ci->email->subject($userId.'_Use Agreement Request(Attachment)');
+        $storeFolder = 'uploads/';//2
+
+        $targetPath =  $ds.$storeFolder ;  //4
+        // $targetFile =  $targetPath. $_FILES['file_attach']['name'];  //5
+        $file_info = pathinfo($_FILES['file_attach']['name']);
+        $six_digit_random_string = $this-> generateRandomString();
+        $six_digit_random_string2 = $this-> generateRandomString();
+        $filename = 'useagreement_request' . '_' .$six_digit_random_string2. $userId . $six_digit_random_string .'.' . $file_info['extension'];
+        $targetFile =  $targetPath. $filename;
+        // $result = $this->usragr_model->update_attachment($filename, $userId);
+        $ci->email->attach($file_tmp_name, 'attachment', $filename);
+        if($ci->email->send()){
+          $filepath= "http://library.marist.edu/archives/useagreement/uploads/$filename";
+          if($this->usragr_model->update_attachment($filename,$filepath, $userId)){
+              move_uploaded_file($file_tmp_name,$targetFile); //6
+          }
+        }
+          echo $file_type;
+/*            if ($file_type == "application/pdf") {
+              $result = $this->usragr_model->update_attachment('UseAgreement_Request_' . $userId . "(" . $date . ")" . '.pdf', $userId);
+              if ($result > 0) {
+                  $ci->email->attach($file_tmp_name, 'attachment', 'UseAgreement_Request_' . $userId . "(" . $date . ")" . '.pdf');
+                  $ci->email->send();
+              }
+          } else if ($file_type == "image/jpeg") {
+              $result = $this->usragr_model->update_attachment('UseAgreement_Request_' . $userId . "(" . $date . ")" . '.jpeg', $userId);
+              if ($result > 0) {
+                  $ci->email->attach($file_tmp_name, 'attachment', 'UseAgreement_Request_' . $userId . "(" . $date . ")" . '.jpeg');
+                  $ci->email->send();
+              }
+          } else if ($file_type == "image/png") {
+              $result = $this->usragr_model->update_attachment('UseAgreement_Request_' . $userId . "(" . $date . ")" . '.png', $userId);
+              if ($result > 0) {
+                  $ci->email->attach($file_tmp_name, 'attachment', 'UseAgreement_Request_' . $userId . "(" . $date . ")" . '.png');
+                  $ci->email->send();
+              }
+          }
+          else if($file_type == "application/msword"){
+
+              $result = $this->usragr_model->update_attachment('UseAgreement_Request_' . $userId . "(" . $date . ")" . '.doc', $userId);
+              if ($result > 0) {
+                  $ci->email->attach($file_tmp_name, 'attachment', 'UseAgreement_Request_' . $userId . "(" . $date . ")" . '.doc');
+                  $ci->email->send();
+              }
+
+          } else if($file_type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document"){
+
+              $result = $this->usragr_model->update_attachment('UseAgreement_Request_' . $userId . "(" . $date . ")" . '.docx', $userId);
+              if ($result > 0) {
+                  $ci->email->attach($file_tmp_name, 'attachment', 'UseAgreement_Request_' . $userId . "(" . $date . ")" . '.docx');
+                  $ci->email->send();
+              }
+
+          }
+          else{
+              $result = $this->usragr_model->update_attachment('UseAgreement_Request_' . $userId . "(" . $date . ")", $userId);
+              if ($result > 0) {
+                  $ci->email->attach($file_tmp_name, 'attachment', 'UseAgreement_Request_' . $userId . "(" . $date . ")");
+                  $ci->email->send();
+              }
+
+          }*/
+
+      } // Mail without attachment
+      else {
+        $ci->email->subject($userId.'_Use Agreement Request');
+        $ci->email->send();
+      }
+    }
+
+    /* This function sends an email to a researcher who is physically in the building performiing reserach.
+    This email will serve as a receipt. Will be used by researchAgreementForm.php - Dan Mopsick*/
+    public function mailResearchReceipt(){
+      // Process and Filter values from POST
+      $researchAgreementNumber = filter_var($_POST['researchAgreementNumber'], FILTER_SANITIZE_STRING);
+      $date = filter_var($_POST['date'], FILTER_SANITIZE_STRING);
+      $user_name = filter_var($_POST['user_name'], FILTER_SANITIZE_STRING);
+      $user_address = filter_var($_POST['user_address'], FILTER_SANITIZE_STRING);
+      $user_citystate = filter_var($_POST['user_citystate'], FILTER_SANITIZE_STRING);
+      $user_email = filter_var($_POST['user_email'], FILTER_SANITIZE_STRING);
+      $user_zipCode = filter_var($_POST['user_zipCode'], FILTER_SANITIZE_STRING);
+      $user_phoneNumber = filter_var($_POST['user_phoneNumber'], FILTER_SANITIZE_STRING);
+      $user_affiliation = filter_var($_POST['user_affiliation'], FILTER_SANITIZE_STRING);
+      $user_status = filter_var($_POST['user_status'], FILTER_SANITIZE_STRING);
+      $user_subject = filter_var($_POST['user_subject'], FILTER_SANITIZE_STRING);
+      $user_collection = filter_var($_POST['user_collection'], FILTER_SANITIZE_STRING);
+      $user_purpose = filter_var($_POST['user_purpose'], FILTER_SANITIZE_STRING);
+      $user_initials = filter_var($_POST['user_initials'], FILTER_SANITIZE_STRING);
+
+      /* Create the contents of the email in HTML */
+      $message = '<html><body><table width="100%"; rules="all" style="border:1px solid #3A5896;" cellpadding="10">';
+      $message .= "<tr><td align='center'><img src='https://s.graphiq.com/sites/default/files/10/media/images/Marist_College_2_220374.jpg'/><h3> Marist Archives and Special Collection </h3><h3>RESEARCH AGREEMENT CONFIRMATION</h3>";
+
+      // Display a message to the user
+      $message .= "<br/><h4> Dear $user_name,<br/><br/> Your research agreement has been confirmed.<br/>You must use your Research Agreement Number in order to request materials from the Archives.<br/>See an archivist for more information.</h4>";
+
+      // Display the researchAgreementNumber needed to take out materials from archive. Created in researchAgreementForm
+      $message .= "<h3><b>Research Agreement Number:</b> $researchAgreementNumber</h3>";
+
+      // Display the user's recorded information
+      $message .= "<h3>Recorded Information</h3>";
+      $message .= "<div align = 'center' style = 'width:50%; text-align:left;'><p><b>Date:</b> $date</p>";
+      $message .= "<p><b>Name:</b> $user_name</p>";
+      $message .= "<p><b>Address:</b> $user_address</p>";
+      $message .= "<p><b>City/State:</b> $user_citystate</p>";
+      $message .= "<p><b>Zip Code:</b> $user_zipCode</p>";
+      $message .= "<p><b>Phone Number:</b> $user_phoneNumber</p>";
+
+      // Display optional fields if they are entered by the user
+      if($user_affiliation != ""){
+        $message .= "<p><b>Affiliation:</b> $user_affiliation</p>";
+      }
+      if($user_status != ""){
+        $message .= "<p><b>Academic Status:</b> $user_status</p>";
+      }
+      $message .= "<p><b>Subject of Research:</b> $user_subject</p>";
+      if($user_collection != ""){
+        $message .= "<p><b>Collection:</b> $user_collection</p>";
+      }
+      $message.= "<p><b>Purpose of Research:</b>" .  rtrim($user_purpose, ", ") . "</p>";
+
+      $message .= "<p><b>Initials:</b> $user_initials</p></div></tr></table></body></html>";
+
+      $message_body = $message ;
+
+      // Send the actual email. Code taken from mailAttachment()
+      $ci = get_instance();
+      $ci->load->library('email');
+      $config['protocol'] = "smtp";
+      $config['smtp_host'] = "tls://smtp.googlemail.com";
+      $config['smtp_port'] = "465";
+      $config['smtp_user'] = "maristarchives@gmail.com";
+      $config['smtp_pass'] = "MaristArchives2017";
+      $config['charset'] = "utf-8";
+      $config['mailtype'] = "html";
+      $config['newline'] = "\r\n";
+
+      $ci->email->initialize($config);
+      $ci->email->from('maristarchives@gmail.com', "Marist Archives");
+      $ci->email->to($_POST['user_email']);
+      $ci->email->reply_to('maristarchives@gmail.com', "Marist Archives");
+      $ci->email->message($message_body);
+      $ci->email->subject("Research Agreement Confirmation");
+      $ci->email->send();
+    }
+
+    public function InitiateWithMailAttachment(){
+      $date = date("m/d/Y");
+      $userId = $this->input->get('userId');
+      $userId = (string)$userId;
+      $six_digit_random_number = mt_rand(100000, 999999);
+      $six_digit_random_string =  $this -> generateRandomString();
+      $UUID=$six_digit_random_string.$userId;
+      $six_digit_random_string =  $this -> generateRandomString();
+      $UUID = $UUID.$six_digit_random_string;
+      echo $UUID;
+      $comments = $_POST['comments'];
+      $user_name = filter_var($_POST['user_name'], FILTER_SANITIZE_STRING);
+
+      $url = base_url()."?c=usragr&m=useagreement&userId=". $UUID;
+      $message .= '<html><body><table width="100%"; rules="all" style="border:1px solid #3A5896;" cellpadding="10">';
+
+      $message .= "<tr ><td align='center'><img src='https://s.graphiq.com/sites/default/files/10/media/images/Marist_College_2_220374.jpg'  /><h3> Marist Archives and Special Collection </h3><h3>COPY/USE AGREEMENT REQUEST</h3> ";
+
+      $message .= "<br/><br/> <h4> Dear $user_name ,<br /><br />We have initiated use agreement form for you. Please click on the below link to edit and submit the request.</h4><br/> <I>Link:</I><br/><a href='$url'> $url </a></></tr>";
+
+      $message .= "<tr><td colspan=2 font='colr:#3A5896;'><I>Comments/Instructions:<br></I><h4>$comments</h4></td></tr>";
+      $message .= "</table></body></html>";
+
+      //$messageOne = "$user_name.\".\n\r has submitted the new use agreement request. Please click on the below link to review and approve/disapprove the request";
+      $messageTwo = "Please find the below link to review the submitted request";
+      $message_body = $message ;
+      $file_attached = false;
+      if (isset($_FILES['file_attach'])){
+        //get file details we need
+        $file_tmp_name = $_FILES['file_attach']['tmp_name'];
+        $file_name = $_FILES['file_attach']['name'];
+        $file_error = $_FILES['file_attach']['error'];
+        $file_size = $_FILES['file_attach']['size'];
+        $file_type = $_FILES['file_attach']['type'];
+
+        //exit script and output error if we encounter any
+        if ($file_error > 0) {
+          $mymsg = array(
+            1 => "The uploaded file exceeds the upload_max_filesize directive in php.ini",
+            2 => "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form",
+            3 => "The uploaded file was only partially uploaded",
+            4 => "No file was uploaded",
+            6 => "Missing a temporary folder");
+          $output = json_encode(array('type' => 'error', 'text' => $mymsg[$file_error]));
+          die($output);
+        }
+        $file_attached = true;
+      }
+
+      $ci = get_instance();
+      $ci->load->library('email');
+      $config['protocol'] = "smtp";
+      $config['smtp_host'] = "tls://smtp.googlemail.com";
+      $config['smtp_port'] = "465";
+      $config['smtp_user'] = "maristarchives@gmail.com";
+      $config['smtp_pass'] = "MaristArchives2017";
+      $config['charset'] = "utf-8";
+      $config['mailtype'] = "html";
+      $config['newline'] = "\r\n";
+
+      $ci->email->initialize($config);
+      $ci->email->from('maristarchives@gmail.com', "Marist Archives");
+      //$ci->email->cc('dheeraj.karnati1@marist.edu');
+      $ci->email->to($_POST['user_email']);
+      $ci->email->reply_to('maristarchives@gmail.com', "Marist Archives");
+      $ci->email->message($message_body);
+      //If the attached file in requested format
+      if ($file_attached) {
+        $this->load->model('usragr_model');
+
+        $ci->email->subject("Marist Copy/Use Request - Initiated");
+        $ds= "/data/library/htdocs/archives/useagreement/";
+
+        $storeFolder = 'uploads/';//2
+        if (!empty($_FILES)) {
+          $targetPath =  $ds.$storeFolder ;  //4
+          // $targetFile =  $targetPath. $_FILES['file_attach']['name'];  //5
+          $file_info = pathinfo($_FILES['file_attach']['name']);
+          $six_digit_random_number = mt_rand(100000, 999999);
+          $filename = 'useagreement_request' . '_' . $userId. $six_digit_random_number .'.' . $file_info['extension'];
+          $targetFile =  $targetPath. $filename;
+
+          $ci->email->attach($file_tmp_name, 'attachment', $filename);
+          if($ci->email->send()){
+            $filepath= "http://library.marist.edu/archives/useagreement/uploads/$filename";
+            if($this->usragr_model->update_attachment($filename,$filepath, $userId)){
+                move_uploaded_file($file_tmp_name,$targetFile); //6
+            }
+          }
+        }
+      }
+      // Mail without attachment
+      else{
+          $ci->email->subject("UseAgreement Initiated");
+          $ci->email->send();
+      }
+    }
 
     /* This function sends an email to the user confirming their request. The user's email is identified
     based on their researchAgreementNumber - By Dan Mopsick */
     public function initiateWithMailAttachmentByResearchNum(){
       $this->load->model('usragr_model');
 
-      // Load post variables
       $date = filter_var($_POST['date'], FILTER_SANITIZE_STRING);
       $researchAgreementNumber = filter_var($_POST['researchAgreementNumber'], FILTER_SANITIZE_STRING);
 
@@ -895,39 +785,35 @@ class Usragr extends CI_Controller
       $user_name = $researcher->userName;
       $user_email = $researcher->emailId;
 
-      $message = '<html><body>';
-      $message .= '<table width="100%"; rules="all" style="border:1px solid #3A5896;" cellpadding="10">';
-
-      $message .= "<tr><td align='center'><img src='https://s.graphiq.com/sites/default/files/10/media/images/Marist_College_2_220374.jpg'  /><h3> Marist Archives and Special Collection </h3><h3>IN-HOUSE USE AGREEMENT</h3> ";
-
+      $message = '<html><body><table width="100%"; rules="all" style="border:1px solid #3A5896;" cellpadding="10">';
+      $message .= "<tr><td align='center'><img src='https://s.graphiq.com/sites/default/files/10/media/images/Marist_College_2_220374.jpg'/><h3> Marist Archives and Special Collection </h3><h3>IN-HOUSE USE AGREEMENT</h3>";
       $message .= "<h4>$date</h4><h4> Dear $user_name,<br/><br/>This email is a confirmation of the request for materials you have made.<br/>";
 
       $file_attached = false;
-      if (isset($_FILES['file_attach'])) //check uploaded file
-      {
+      if (isset($_FILES['file_attach'])){
+        //get file details we need
+        $file_tmp_name = $_FILES['file_attach']['tmp_name'];
+        $file_name = $_FILES['file_attach']['name'];
+        $file_error = $_FILES['file_attach']['error'];
+        $file_size = $_FILES['file_attach']['size'];
+        $file_type = $_FILES['file_attach']['type'];
 
-          //get file details we need
-          $file_tmp_name = $_FILES['file_attach']['tmp_name'];
-          $file_name = $_FILES['file_attach']['name'];
-          $file_error = $_FILES['file_attach']['error'];
-          $file_size = $_FILES['file_attach']['size'];
-          $file_type = $_FILES['file_attach']['type'];
-
-          //exit script and output error if we encounter any
-          if ($file_error > 0) {
-              $mymsg = array(
-                  1 => "The uploaded file exceeds the upload_max_filesize directive in php.ini",
-                  2 => "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form",
-                  3 => "The uploaded file was only partially uploaded",
-                  4 => "No file was uploaded",
-                  6 => "Missing a temporary folder");
-              $output = json_encode(array('type' => 'error', 'text' => $mymsg[$file_error]));
-              die($output);
-          }
-          else{
-            $message .= "The file you uploaded containing your requests is attatched to this email.<br/>";
-          }
-          $file_attached = true;
+        //exit script and outputs error if we encounter any
+        if ($file_error > 0) {
+          $mymsg = array(
+            1 => "The uploaded file exceeds the upload_max_filesize directive in php.ini",
+            2 => "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form",
+            3 => "The uploaded file was only partially uploaded",
+            4 => "No file was uploaded",
+            6 => "Missing a temporary folder");
+          $output = json_encode(array('type' => 'error', 'text' => $mymsg[$file_error]));
+          die($output);
+        }
+        /* File succesfully uploaded */
+        else{
+          $message .= "The file you uploaded containing your requests is attatched to this email.<br/>";
+        }
+        $file_attached = true;
       }
       $message .= "</h4></tr></table></body></html>";
 
@@ -956,42 +842,40 @@ class Usragr extends CI_Controller
 
       /* Handles the sending of the email confirmation with an attachment */
       if ($file_attached) {
-          $ds= "/data/library/htdocs/archives/useagreement/";
-
-          $storeFolder = 'uploads/';//2
-          if (!empty($_FILES)) {
-              $targetPath =  $ds.$storeFolder ;  //4
-              // $targetFile =  $targetPath. $_FILES['file_attach']['name'];  //5
-              $file_info = pathinfo($_FILES['file_attach']['name']);
-              $six_digit_random_number = mt_rand(100000, 999999);
-              $filename = 'useagreement_request' . '_' . $userId. $six_digit_random_number .'.' . $file_info['extension'];
-              $targetFile =  $targetPath. $filename;
-              // $result = $this->usragr_model->update_attachment($filename, $userId);
-              $ci->email->attach($file_tmp_name, 'attachment', $filename);
-              if($ci->email->send()){
-                  $filepath= "http://library.marist.edu/archives/useagreement/uploads/$filename";
-                  if($this->usragr_model->update_attachment($filename,$filepath, $userId)){
-                      move_uploaded_file($file_tmp_name,$targetFile); //6
-                  }
-              }
-
+        $ds= "/data/library/htdocs/archives/useagreement/";
+        $storeFolder = 'uploads/';//2
+        if (!empty($_FILES)) {
+          $targetPath =  $ds.$storeFolder ;  //4
+          // $targetFile =  $targetPath. $_FILES['file_attach']['name'];  //5
+          $file_info = pathinfo($_FILES['file_attach']['name']);
+          $six_digit_random_number = mt_rand(100000, 999999);
+          $filename = 'useagreement_request' . '_' . $userId. $six_digit_random_number .'.' . $file_info['extension'];
+          $targetFile =  $targetPath. $filename;
+          // $result = $this->usragr_model->update_attachment($filename, $userId);
+          $ci->email->attach($file_tmp_name, 'attachment', $filename);
+          if($ci->email->send()){
+            $filepath= "http://library.marist.edu/archives/useagreement/uploads/$filename";
+            if($this->usragr_model->update_attachment($filename,$filepath, $userId)){
+                move_uploaded_file($file_tmp_name,$targetFile); //6
+            }
           }
-
+        }
       }
       /* Send mail without attachment */
       else {
           $ci->email->send();
-
       }
     }
 
-  /* This function will return 1 if the user is indentified as a valid researcher based on matching the researchAgreementNumber and initials with the pair saved in the database - Dan Mopsick */
+  /* This function will return the researchers userid if the user is indentified as a valid researcher based
+  on matching the researchAgreementNumber and initials with the pair saved in the database.
+  The function will return a '-1' if the user is not validated. - Dan Mopsick */
   public function verifyResearcher(){
     /* Parse info entered by the user. This data will be compared to the data from teh database */
     $researchAgreementNumber = $_POST['researchAgreementNumber'];
     $submittedInitials = $_POST['userInitials'];
 
-    /* Getin info from the database to verify that it is the same information */
+    /* Geting info from the database to verify that it is the same information */
     $this->load->model('usragr_model');
     $researcher = $this->usragr_model->getResearcherByResearchAgreementNumber($researchAgreementNumber);
     $savedInitials = $researcher->userInitials;
@@ -999,134 +883,127 @@ class Usragr extends CI_Controller
 
     /* If both fields are the same as their counterparts in the database then it is a valid user */
     if($savedEmail != null && $submittedInitials == $savedInitials){
+      /* Get the user id from the returned researcher object */
       $userId = $researcher->userId;
-
+      /* Retunrs the amount of requests made by the validated researcher */
       $requestCount = $_POST['requestCount'];
 
+      /* If the researcher made one or more requests, they are saved into the db */
       if($requestCount != 0){
         $requestList = $_POST['requestList'];
         //processiong array of requests
-          foreach ($requestList as $row) {
-              //data of request row
-              $data = array(
-                  'collection'      => $row[0],
-                  'boxNumber'       => $row[1],
-                  'itemNumber'      => $row[2],
-                  'imageResolution' => $row[3],
-                  'fileFormat'      => $row[4],
-                  'audOrVidFileFormat' => $row[5],
-                  'usageDescription' => $row[6],
-                  'userId'          => $userId
-              );
-              //insert the request
-              $this->load->model('usragr_model');
-              $response = $this->usragr_model->insertUserRequest($data, 'request');
-              if ($response > 0) {
-                // return 1;
-              }else{
-                  // return 0;
-              }
-          }
+        foreach ($requestList as $row) {
+          //data of request row
+          $data = array(
+            'collection'      => $row[0],
+            'boxNumber'       => $row[1],
+            'itemNumber'      => $row[2],
+            'imageResolution' => $row[3],
+            'fileFormat'      => $row[4],
+            'audOrVidFileFormat' => $row[5],
+            'usageDescription' => $row[6],
+            'userId'          => $userId
+          );
+          //insert the request
+          $response = $this->usragr_model->insertUserRequest($data, 'request');
+        }
       }
       echo $userId;
     }
-    /* There is either no such user or one of the fields is entered wrong */
+    /* There is either no such user or one of the fields is entered wrong. User not validated */
     else{
       echo -1;
     }
   }
 
   function generateRandomString($length = 6) {
-        $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHI0123456789JKLMNOPQRSTUVWXYZ';
-        $charactersLength = strlen($characters);
-        $randomString = '';
-        for ($i = 0; $i < $length; $i++) {
-            $randomString .= $characters[rand(0, $charactersLength - 1)];
-        }
-        return $randomString;
+    $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHI0123456789JKLMNOPQRSTUVWXYZ';
+    $charactersLength = strlen($characters);
+    $randomString = '';
+    for ($i = 0; $i < $length; $i++) {
+      $randomString .= $characters[rand(0, $charactersLength - 1)];
     }
-/*
- * Verifies admin passcode input with passcode saved in db
- *
- */
+    return $randomString;
+  }
+
+    /* Verifies admin passcode input with passcode saved in db */
     public function admin_verify(){
         $apasscode = $this->input->get('pass');
         $this->load->model('usragr_model');
         $passcode = $this->usragr_model -> getPasscode(1);
+
         if($passcode == $apasscode){
-
-          $authorized =1;
-
-         }else{
-
-          $authorized=0;
+          $authorized = 1;
+        }
+        else{
+          $authorized = 0;
         }
           echo $authorized;
     }
 
     public function admin(){
-        $this->load->model('usragr_model');
-        $query = $this->usragr_model->allRequests($this->limit);
+      $this->load->model('usragr_model');
+      $query = $this->usragr_model->allRequests($this->limit);
 
-        $total_rows = $this->usragr_model->count();
-        $this->load->helper('app');
-        $pagination_links = pagination($total_rows, $this->limit);
-        $this->load->view('admin_view', compact('query', 'pagination_links','total_rows'));
+      $total_rows = $this->usragr_model->count();
+      $this->load->helper('app');
+      $pagination_links = pagination($total_rows, $this->limit);
+      $this->load->view('admin_view', compact('query', 'pagination_links','total_rows'));
     }
 
     public function pages(){
-
-        $this->load->model('usragr_model');
-        $query = $this->usragr_model->allRequests($this->limit);
-        $total_rows = $this->usragr_model->count();
-        $this->load->helper('app');
-        $pagination_links = pagination($total_rows, $this->limit);
-        $this->load->view('page_view', compact('query', 'pagination_links','total_rows'));
-
+      $this->load->model('usragr_model');
+      $query = $this->usragr_model->allRequests($this->limit);
+      $total_rows = $this->usragr_model->count();
+      $this->load->helper('app');
+      $pagination_links = pagination($total_rows, $this->limit);
+      $this->load->view('page_view', compact('query', 'pagination_links','total_rows'));
     }
+
     public function useAgreementRequests(){
-        $status = $this ->input -> get('status');
-        if($status != null) {
-            $url = base_url("?c=usragr&m=useAgreementRequests&status=$status");
-        }
-        else{
-            $url = null;
-        }
-        $this->load->model('usragr_model');
-        $query = $this->usragr_model ->RequestsWithStatus($this->limit,$status);
-        $total_rows = $this->usragr_model->countWithStatus($status);
-        $this->load->helper('status');
-        $pagination_links = pagination($total_rows, $this->limit,$url);
-        $this->load->view('page_view', compact('query', 'pagination_links','total_rows'));
+      $status = $this ->input -> get('status');
+      if($status != null) {
+        $url = base_url("?c=usragr&m=useAgreementRequests&status=$status");
+      }
+      else{
+        $url = null;
+      }
+      $this->load->model('usragr_model');
+      $query = $this->usragr_model ->RequestsWithStatus($this->limit,$status);
+      $total_rows = $this->usragr_model->countWithStatus($status);
+      $this->load->helper('status');
+      $pagination_links = pagination($total_rows, $this->limit,$url);
+      $this->load->view('page_view', compact('query', 'pagination_links','total_rows'));
     }
 
     /* Used to display all in house researchers - Dan Mopsick */
     public function researchRequests(){
       $this->load->model('usragr_model');
       $this->load->helper('app');
+      /* Returns all of the in-house researchers. Able to determine if a researcher is in-house
+      based on whether they have a researchAgreementNumber */
       $query = $this->usragr_model->getRequestsWithResearchAgreementNum($this->limit);
+      /* Returns the amount of in-house researchers */
       $total_rows = $this->usragr_model->countWithResearchArgreement();
       $pagination_links = pagination($total_rows, $this->limit);
       $this->load->view('page_view', compact('query', 'pagination_links','total_rows'));
     }
 
     public function getRequests(){
-        $apasscode= $this-> input-> get('pass');
-        $this->load->model('usragr_model');
-        $passcode = $this->usragr_model -> getPasscode(1);
-        if($passcode == $apasscode){
+      $apasscode= $this-> input-> get('pass');
+      $this->load->model('usragr_model');
+      $passcode = $this->usragr_model -> getPasscode(1);
+      if($passcode == $apasscode){
         $this->load->model('usragr_model');
         $query = $this->usragr_model->allRequests($this->limit);
         $total_rows = $this->usragr_model->count();
         $this->load->helper('app');
         $pagination_links = pagination($total_rows, $this->limit);
         $this->load->view('admin', compact('query', 'pagination_links','total_rows'));
-
-        } else{
-            echo "<h1 align='center' style=\"color:#B31B1B;\" >401 - Unauthorized access</h1>";
-
-
-        }
+      }
+      else{
+        echo "<h1 align='center' style=\"color:#B31B1B;\" >401 - Unauthorized access</h1>";
+      }
     }
 
 /*    public function uploadFile(){
@@ -1146,65 +1023,43 @@ class Usragr extends CI_Controller
         }
 
     }*/
+
     public function update_status(){
-        $userId=$this->input->get('userId');
-        $status = $this->input->get('status');
-      //  $files = array();
-        if($this ->input -> get('files')) {
-            $files = $this->input->get('files');
-            $this->load->model('usragr_model');
-            $response = $this->usragr_model->updateStatus($status,$userId,$files);
-        }else{
-            $files= "";
-            $this->load->model('usragr_model');
-            $response = $this->usragr_model->updateStatus($status,$userId,$files);
+      $userId=$this->input->get('userId');
+      $status = $this->input->get('status');
 
-        }
-        echo $response;
-
+      if($this ->input -> get('files')) {
+        $files = $this->input->get('files');
+        $this->load->model('usragr_model');
+        $response = $this->usragr_model->updateStatus($status,$userId,$files);
+      }
+      else{
+        $files= "";
+        $this->load->model('usragr_model');
+        $response = $this->usragr_model->updateStatus($status,$userId,$files);
+      }
+      echo $response;
     }
 
- public function completetransaction()
- {
+ public function completetransaction(){
+   $comment = $_POST["message"];
+   $userName = $_POST['user_name'];
+   $emailId = $_POST['user_email'];
+   $userId = $this->input->get('userId');
+   $status = 4;
+   $files = "";
+   $this->load->model('usragr_model');
+   $response = $this->usragr_model->updateStatus($status, $userId, $files);
 
-     $comment = $_POST["message"];
-     $userName = $_POST['user_name'];
-     $emailId = $_POST['user_email'];
-     $userId = $this->input->get('userId');
-     $status = 4;
-     $files = "";
-     $this->load->model('usragr_model');
-     $response = $this->usragr_model->updateStatus($status, $userId, $files);
-     if ($response == 1){
-         $message = '<html><body>';
-
-     $message .= '<table width="100%"; rules="all" style="border:1px solid #3A5896;" cellpadding="10">';
+   if($response == 1){
+     $message = '<html><body><table width="100%"; rules="all" style="border:1px solid #3A5896;" cellpadding="10">';
 
      $message .= "<tr ><td align='center'><img src='https://s.graphiq.com/sites/default/files/10/media/images/Marist_College_2_220374.jpg'  /><h3> Marist Archives and Special Collection </h3><h3>COPY/USE AGREEMENT REQUEST</h3> ";
 
      $message .= "<br/><br/> <h4> Dear $userName ,<br /><br />We have sent you the requested copies through Marist Dropbox. Please verify them and let us know in case of any issues.</h4></tr>";
-
-//$message .= "<tr><td colspan=2 font='colr:#3A5896;'><I>Link:<br></I> $url </td></tr>";
-     /*         $filestring = "";
-             $i=0;
-             for ($i=0;$i<sizeof($files);$i++){
-                 $message.= "<tr><td><I>Link: </I><a href='$files[$i]'> $files[$i]</a> </td></tr>";
-                 $filestring =$filestring.$files[$i];
-                 if($i<(sizeof($files)-1)){
-                     $filestring= $filestring.'||';
-                 }
-             }*/
-     /*        foreach($files as $file){
-                 $message.= "<tr><td><I>Link:</I></br>$file </td></tr>";
-                 $filestring =$filestring.$file;
-                 $filestring= $filestring.'||';
-             }*/
-
      $message .= "<tr><td colspan=2 font='colr:#3A5896;'><I>Comments/Instructions:<br></I><h4>$comment</h4></td></tr>";
-     $message .= "</table>";
+     $message .= "</table></body></html>";
 
-     $message .= "</body></html>";
-     // }
      $message_body = $message;
      $ci = get_instance();
      $ci->load->library('email');
@@ -1226,12 +1081,9 @@ class Usragr extends CI_Controller
      $ci->email->message($message_body);
      $ci->email->subject("Marist Copy/Use Request-Copies Available");
      if ($ci->email->send()) {
-
-         echo 1;
+       echo 1;
      }
-
- }
+   }
  }
 }
-
 ?>

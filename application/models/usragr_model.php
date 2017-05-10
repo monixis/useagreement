@@ -321,17 +321,14 @@ public function countWithStatus($status){
   /* Returns a researcher object based on an entered researchAgreement number */
   public function getResearcherByResearchAgreementNumber($researchAgreementNumber){
     $this ->db ->trans_start();
-
     /* Create sql request to select tje researcher wit ha specified research agreement number */
     $sql = "SELECT * FROM researcher WHERE researchAgreementNumber = '$researchAgreementNumber'";
 
     /* Run the specified SQL query */
     $rawResult = $this->db->query($sql);
-
     $result = $rawResult->result();
 
     $researcher = $result[0];
-
     return $researcher;
   }
 
@@ -340,17 +337,14 @@ public function countWithStatus($status){
   - Dan Mopsick */
   public function getUserIdByResearchAgreementNumber($researchAgreementNumber){
     $this ->db ->trans_start();
-
     /* Create sql request to select the email where the research agreement number is the same as the one passed in the method */
     $sql = "SELECT userId FROM researcher WHERE researchAgreementNumber = '$researchAgreementNumber'";
 
     /* Run the specified SQL query */
     $rawResult = $this->db->query($sql);
-
     $result = $rawResult->result();
 
     $userId = $result[0]->userId;
-
     return $userId;
   }
 
