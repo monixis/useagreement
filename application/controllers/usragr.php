@@ -811,7 +811,7 @@ class Usragr extends CI_Controller{
         }
         /* File succesfully uploaded */
         else{
-          $message .= "The file you uploaded containing your requests is attatched to this email.<br/>";
+          $message .= "The file you uploaded containing your requests is attached to this email.<br/>";
         }
         $file_attached = true;
       }
