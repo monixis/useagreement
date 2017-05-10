@@ -15,62 +15,62 @@ class Usragr extends CI_Controller{
 
     /* Function to create new researcher. */
     public function insertNewResearcher(){
-        date_default_timezone_set('US/Eastern');
-        $date = date("m/d/Y");
+      date_default_timezone_set('US/Eastern');
+      $date = date("m/d/Y");
 
+      $data = array(
+        'userName'   => $_POST['userName'],
+        'emailId'    => $_POST['emailId'],
+        'citystate'  => $_POST['citystate'],
+        'address'    => $_POST['address'],
+        'zipCode'    => $_POST['zipCode'],
+        'date'       => $_POST['date'],
+        'phoneNumber'=> $_POST['phoneNumber'],
+        'status'     => 0
+      );
+      $this->load->model('usragr_model');
+      $result = $this->usragr_model->insert_researcher($data, 'researcher');
+      if($_POST['comments']>0 ||$_POST['comments']!= null) {
         $data = array(
-          'userName'   => $_POST['userName'],
-          'emailId'    => $_POST['emailId'],
-          'citystate'  => $_POST['citystate'],
-          'address'    => $_POST['address'],
-          'zipCode'    => $_POST['zipCode'],
-          'date'       => $_POST['date'],
-          'phoneNumber'=> $_POST['phoneNumber'],
-          'status'     => 0
+          'comment' => $_POST['comments'],
+          'commentType' => "INSTRUCTIONS",
+          'userId' => $result
         );
         $this->load->model('usragr_model');
-        $result = $this->usragr_model->insert_researcher($data, 'researcher');
-        if($_POST['comments']>0 ||$_POST['comments']!= null) {
-          $data = array(
-            'comment' => $_POST['comments'],
-            'commentType' => "INSTRUCTIONS",
-            'userId' => $result
-          );
-          $this->load->model('usragr_model');
-          $chat_result = $this->usragr_model->saveChat($data, 'chat');
-        }
+        $chat_result = $this->usragr_model->saveChat($data, 'chat');
+      }
 
-        if ($result > 0) {
-            $userId = $result; // As the result from model returns maximum value of research table
-            $requestCount = $_POST['requestCount'];
-            //check if there is any requests
-            if ($requestCount != 0) {
-                $requestList = array($_POST['requestList']);
-                //processiong array of requests
-                foreach ($requestList as $request) {
-                  foreach ($request as $row) {
-                    //data of request row
-                    $data = array(
-                      'collection'      => $row[0],
-                      'boxNumber'       => $row[1],
-                      'itemNumber'      => $row[2],
-                      'imageResolution' => $row[3],
-                      'fileFormat'      => $row[4],
-                      'audOrVidFileFormat' => $row[5],
-                      'usageDescription' => $row[6],
-                      'userId'          => $userId
-                    );
-                    //insert the request
-                    $response = $this->usragr_model->insertUserRequest($data, 'request');
-                    if ($response > 0) {}
-                    else{
-                        return 0;
-                    }
-                  }
-                }// end of processing requests
-            }
+      if ($result > 0) {
+        $userId = $result; // As the result from model returns maximum value of research table
+        $requestCount = $_POST['requestCount'];
+        //check if there is any requests
+        if ($requestCount != 0) {
+            $requestList = array($_POST['requestList']);
+            //processiong array of requests
+            foreach ($requestList as $request){
+              foreach ($request as $row) {
+                //data of request row
+                $data = array(
+                  'collection'      => $row[0],
+                  'boxNumber'       => $row[1],
+                  'itemNumber'      => $row[2],
+                  'imageResolution' => $row[3],
+                  'fileFormat'      => $row[4],
+                  'audOrVidFileFormat' => $row[5],
+                  'usageDescription' => $row[6],
+                  'userId'          => $userId
+                );
+                //insert the request
+                $response = $this->usragr_model->insertUserRequest($data, 'request');
+                if ($response > 0) {}
+                else{
+                    return 0;
+                }
+              }
+          }// end of processing requests
         }
-            echo $result;
+      }
+      echo $result;
     }
 
     /* Function to insert a physical (in-house) researcher.inot the database - Dan Mopsick */
