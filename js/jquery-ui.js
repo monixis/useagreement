@@ -10946,7 +10946,7 @@ var effectDrop = $.effects.effect.drop = function( o, done ) {
 		}
 	});
 };
-
+
 
 /*!
  * jQuery UI Effects Explode 1.11.4
