@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
     <script src="//code.jquery.com/jquery-1.10.2.js"></script>
     <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script src="//geodata.solutions/includes/countrystatecity.js"></script> <!--country/state/city dropdown -->
     <link rel="stylesheet" type="text/css" href="http://library.marist.edu/archives/mainpage/mainStyles/style.css" />
     <link rel="stylesheet" type="text/css" href="http://library.marist.edu/archives/mainpage/mainStyles/main.css" />
     <link rel="stylesheet" type="text/css" href="styles/useagreement.css" />
@@ -106,14 +107,19 @@
                     var date = $('input#datepicker').val();
                     var userName = $('input#name').val();
                     var address = $('input#address').val();
-                    var citystate = $('input#citystate').val();
+                    var country = $('select#countryId').val();
+                    var state = $('select#stateId').val();
+                    var city = $('select#cityId').val();
+                    //var citystate = $('input#citystate').val();
                     var zipCode = $('input#zip').val();
                     var emailId = $('input#email').val();
                     var comments = $('textarea#comments').val();
                     var phoneNumber = $('input#phoneNo').val();
                     var requestCount = $("#formcontents > div").length - 1;
                     var requestList = [];
-                    //alert (requestCount);
+                    alert (state);
+                    alert (state);
+                    alert (city);
                     //iterating multiple requests.
                     for (var i = 1; i <= requestCount; i++) {
                         var checked = [];
@@ -162,8 +168,10 @@
                         date: date,
                         userName: userName,
                         address: address,
+                        country: country,
+                        city: city,
                         zipCode: zipCode,
-                        citystate: citystate,
+                        state: state,
                         emailId: emailId,
                         comments: comments,
                         phoneNumber: phoneNumber,
@@ -286,6 +294,25 @@
                 $("html, body").animate({scrollTop: 0}, 600);
             });
 
+            $(function(){
+    					$("select#countryId").click(function(){
+    						$("#countryId:first-child").text($(this).text());
+    						$("#counrtyId").val($(this).text());
+    					});
+    				});
+            $(function(){
+    					$(".stateId").click(function(){
+    						$(".stateId:first-child").text($(this).text());
+    						$(".stateId").val($(this).text());
+    					});
+    				});
+            $(function(){
+    					$(".cityId").click(function(){
+    						$(".cityId:first-child").text($(this).text());
+    						$(".cityId").val($(this).text());
+    					});
+    				});
+
 
         });
     </script>
@@ -356,9 +383,19 @@
                 <div class="formcontents">
                     <label class="label">Date:</label><br/><input type="text" id="datepicker" class="textinput" style="width: 100px;"/>
                     <label class="label">Researcher's Name:</label><br/><input type="text" id="name" class="textinput"/>
-                    <label class="label">Address:</label><br/><input type="text" id="address" class="textinput" />
-                    <label class="label">City/State:</label><br/><input type="text" id="citystate" class="textinput" />
-                    <label class="label">Zip:</label><br/><input type="text" id="zip" class="textinput" />
+                    <label class="label">Street Address:</label><br/><input type="text" id="address" class="textinput" />
+                    <!--<label class="label">City/State:</label><br/><input type="text" id="citystate" class="textinput" />-->
+                    <label class="label">Country/City/State:</label><br/><!--<input type="text" id="country" class="textinput" />-->
+                    <select name="countryId" class="countries order-alpha" id="countryId">
+                      <option value="">Select Country</option>
+                    </select>
+                    <select name="state" class="states order-alpha" id="stateId">
+                        <option value="">Select State</option>
+                    </select>
+                    <select name="city" class="cities order-alpha" id="cityId">
+                        <option value="">Select City</option>
+                    </select><br/><br/>
+                    <label class="label">Zip/Postal Code:</label><br/><input type="text" id="zip" class="textinput" />
                     <label class="label">Phone Number:</label></br><input type="text" id="phoneNo" class="textinput" />
                     <!--p><label class="label">City/State:</label><input type="text" id="citystate" class="textinputinline" style="margin-right: 20px;"/><label class="label">Zip:</label><input type="text" id="zip" class="textinputinline" style="width:125px;"/></p-->
                     <label class="label">Email:</label><br/><input type="text" id="email" class="textinput" />
