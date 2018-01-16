@@ -612,12 +612,12 @@
                 <div class="formcontents" id="2-contents" aria-readonly="true">
                     <label class="label">Date:</label><br/><input type="text" id="datepicker" class="textinput"  value = "<?php echo $date; ?>" style="width: 100px;"readonly/>
                     <label class="label">Researcher&#39;s Name:</label><br/><input type="text" id="name" class="textinput" value = "<?php echo $userName; ?>"readonly/>
-                    <label class="label">Address:</label><br/><textarea class="readonlytext" readonly><?php echo $address; ?></textarea>
+                    <label class="label">Street Address:</label><br/><textarea style="overflow:hidden" class="readonlytext" readonly><?php echo $address; ?></textarea>
                     <label class="label">Country:</label><br/><input type="text" id="country" class="textinput" value = "<?php echo $country; ?>" readonly />
           					<label class="label">State:</label><br/><input type="text" id="state" class="textinput" value = "<?php echo $state; ?>" readonly />
           					<label class="label">City:</label><br/><input type="text" id="city" class="textinput" value = "<?php echo $city; ?>" readonly />
                     <!--<label class="label">City/State:</label><br/><textarea  class="readonlytext" readonly><?php //echo $citystate; ?></textarea>-->
-                    <label class="label">Zip:</label><br/><input type="text" id="zip" class="textinput" value = "<?php echo $zipCode; ?>" readonly/>
+                    <label class="label">Zip/Postal Code:</label><br/><input type="text" id="zip" class="textinput" value = "<?php echo $zipCode; ?>" readonly/>
                     <label class="label">Phone Number:</label><br/><input type="text" id="phoneNo" class="textinput" value = "<?php echo $phoneNumber; ?>" readonly/>
                     <!--p><label class="label">Country:</label><br/><input type="text" id="country" class="textinput" value = "<?php echo $country; ?>" />
           					<label class="label">State:</label><br/><input type="text" id="state" class="textinput" value = "<?php echo $state; ?>" />
