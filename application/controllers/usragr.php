@@ -241,7 +241,7 @@ class usragr extends CI_Controller
         $this->load->model('usragr_model');
 
         //updating researcher information
-        $result = $this->usragr_model->update_researcher($_POST['userName'], $_POST['citystate'], $_POST['address'], $_POST['emailId'],
+        $result = $this->usragr_model->update_researcher($_POST['userName'], $_POST['country'], $_POST['state'], $_POST['city'], $_POST['address'], $_POST['emailId'],
             $_POST['zipCode'], $_POST['date'], $_POST['phoneNumber'], $_POST['userInitials'],$_POST['termsAndConditions'],$userId);
 
         if($result>0) {   //Deleting existing requests
@@ -313,7 +313,7 @@ class usragr extends CI_Controller
         }
 
         //updating researcher information
-            $result = $this->usragr_model->update_researcherWithStatus($_POST['userName'], $_POST['citystate'], $_POST['address'], $_POST['emailId'],
+            $result = $this->usragr_model->update_researcherWithStatus($_POST['userName'], $_POST['country'], $_POST['state'], $_POST['city'], $_POST['address'], $_POST['emailId'],
                 $_POST['zipCode'], $_POST['date'], $_POST['phoneNumber'], 2, $_POST['userInitials'], $_POST['termsAndConditions'], $userId);
 
         if($result>0) {   //Deleting existing requests
