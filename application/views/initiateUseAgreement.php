@@ -117,9 +117,7 @@
                     var phoneNumber = $('input#phoneNo').val();
                     var requestCount = $("#formcontents > div").length - 1;
                     var requestList = [];
-                    alert (state);
-                    alert (state);
-                    alert (city);
+                    //alert (state);
                     //iterating multiple requests.
                     for (var i = 1; i <= requestCount; i++) {
                         var checked = [];
