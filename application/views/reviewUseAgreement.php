@@ -6,12 +6,12 @@
             border: 1px solid black;
             background-color: transparent;
         }
-        
+
         span.click{
 			float: right;
 			margin-top: -25px;
 		}
-		
+
 		div.accordion{
 			margin-bottom: 8px;
 		}
@@ -37,21 +37,23 @@
     //researcher info
     $sizeofRequests = sizeof($requests);
     $userName = $researcher[0];
-    $citystate = $researcher[1];
-    $address =$researcher[2];
-    $emailId = $researcher[3];
-    $zipCode = $researcher[4];
-    $date = $researcher[5];
-    $phoneNumber = $researcher[6];
-    $status = $researcher[7];
-    $fileAttachment = $researcher[8];
-    $userInitials = $researcher[9];
-    $termsAndConditions = $researcher[10];
-    $emailSubject = $researcher[11];
-    $receiver = $researcher[12];
-    $requestAddedBy = $researcher[13];
-    $attachmnetLink = $researcher[14];
-    $copies_sent = $researcher[15];
+    $country = $researcher[1];
+    $state = $researcher[2];
+    $city = $researcher[3];
+    $address =$researcher[4];
+    $emailId = $researcher[5];
+    $zipCode = $researcher[6];
+    $date = $researcher[7];
+    $phoneNumber = $researcher[8];
+    $status = $researcher[9];
+    $fileAttachment = $researcher[10];
+    $userInitials = $researcher[11];
+    $termsAndConditions = $researcher[12];
+    $emailSubject = $researcher[13];
+    $receiver = $researcher[14];
+    $requestAddedBy = $researcher[15];
+    $attachmnetLink = $researcher[16];
+    $copies_sent = $researcher[17];
 
     if($status == 0){
         $formStatus = "Initiated";
@@ -292,7 +294,10 @@
                         var date = $('input#datepicker').val();
                         var userName = $('input#name').val();
                         var address = $('input#address').val();
-                        var citystate = $('input#citystate').val();
+                        var country = $('input#countryId').val();
+                				var state = $('input#stateId').val();
+                				var city = $('input#cityId').val();
+                        //var citystate = $('input#citystate').val();
                         var zipCode = $('input#zip').val();
                         var emailId = $('input#email').val();
                         var comments = $('textarea#comments').val();
@@ -344,7 +349,9 @@
                             userName: userName,
                             address: address,
                             zipCode: zipCode,
-                            citystate: citystate,
+                            country: country,
+                  					city: city,
+                  					state: state,
                             emailId: emailId,
                             comments: comments,
                             phoneNumber: phoneNumber,
@@ -389,7 +396,10 @@
                       var date = $('input#datepicker').val();
                       var userName = $('input#name').val();
                       var address = $('input#address').val();
-                      var citystate = $('input#citystate').val();
+                      var country = $('input#countryId').val();
+              				var state = $('input#stateId').val();
+              				var city = $('input#cityId').val();
+                      //var citystate = $('input#citystate').val();
                       var zipCode = $('input#zip').val();
                       var emailId = selectEmail;
                      // var emailId = $('input#email').val();
@@ -441,7 +451,9 @@
                           userName: userName,
                           address: address,
                           zipCode: zipCode,
-                          citystate: citystate,
+                          country: country,
+                					city: city,
+                					state: state,
                           emailId: emailId,
                           comments: comments,
                           phoneNumber: phoneNumber,
@@ -596,15 +608,21 @@
                         <h3 style="color: white;text-align: center; vertical-align:middle;line-height: 30px;">Request ID : <?php echo $userId ?></h3>
                     </div>
                 </div></br>
-                <div class="accordion" id="2"><h4 id="2">Section 1: Researcher's Information:</h4><span class="click">Click to Open/Close</span></div>
+                <div class="accordion" id="2"><h4 id="2">Section 1: Researcher&#39;s Information:</h4><span class="click">Click to Open/Close</span></div>
                 <div class="formcontents" id="2-contents" aria-readonly="true">
                     <label class="label">Date:</label><br/><input type="text" id="datepicker" class="textinput"  value = "<?php echo $date; ?>" style="width: 100px;"readonly/>
-                    <label class="label">Researcher's Name:</label><br/><input type="text" id="name" class="textinput" value = "<?php echo $userName; ?>"readonly/>
+                    <label class="label">Researcher&#39;s Name:</label><br/><input type="text" id="name" class="textinput" value = "<?php echo $userName; ?>"readonly/>
                     <label class="label">Address:</label><br/><textarea class="readonlytext" readonly><?php echo $address; ?></textarea>
-                    <label class="label">City/State:</label><br/><textarea  class="readonlytext" readonly><?php echo $citystate; ?></textarea>
+                    <label class="label">Country:</label><br/><input type="text" id="country" class="textinput" value = "<?php echo $country; ?>" readonly />
+          					<label class="label">State:</label><br/><input type="text" id="state" class="textinput" value = "<?php echo $state; ?>" readonly />
+          					<label class="label">City:</label><br/><input type="text" id="city" class="textinput" value = "<?php echo $city; ?>" readonly />
+                    <!--<label class="label">City/State:</label><br/><textarea  class="readonlytext" readonly><?php //echo $citystate; ?></textarea>-->
                     <label class="label">Zip:</label><br/><input type="text" id="zip" class="textinput" value = "<?php echo $zipCode; ?>" readonly/>
                     <label class="label">Phone Number:</label><br/><input type="text" id="phoneNo" class="textinput" value = "<?php echo $phoneNumber; ?>" readonly/>
-                    <!--p><label class="label">City/State:</label><input type="text" id="citystate" class="textinputinline" style="margin-right: 20px;"/><label class="label">Zip:</label><input type="text" id="zip" class="textinputinline" style="width:125px;"/></p-->
+                    <!--p><label class="label">Country:</label><br/><input type="text" id="country" class="textinput" value = "<?php echo $country; ?>" />
+          					<label class="label">State:</label><br/><input type="text" id="state" class="textinput" value = "<?php echo $state; ?>" />
+          					<label class="label">City:</label><br/><input type="text" id="city" class="textinput" value = "<?php echo $city; ?>" />
+                    <label class="label">City/State:</label><input type="text" id="citystate" class="textinputinline" style="margin-right: 20px;"/><label class="label">Zip:</label><input type="text" id="zip" class="textinputinline" style="width:125px;"/></p-->
                     <label class="label">Email:</label><br/><input type="text" id="email" class="textinput" value = "<?php echo $emailId; ?>" readonly/>
                     <!-- <option value="Archivist" class="selectinput" >Archivist</option>
                      <option value="Researcher" class="selectinput">Researcher</option>
@@ -680,7 +698,7 @@ Orders are completed in the order that they are received.
                         Collections and its staff in connection with any disputes arising from the Copyright Act, over the reproduction of material at the request of the
                         patron.</p>
                     <input type="checkbox" value="Accept" id="accept" name = "accept" class="checkbox" disabled="disabled"><span id="accept-cond" style="color: green; font-weight: bold"> I accept and agree with the conditions of use.</span></input></br></br>
-                    <label>Applicant's Initials</label><input type="text" id="name" class="textinput" value = "<?php echo $userInitials ?>" readonly/>
+                    <label>Applicant&#39;s Initials</label><input type="text" id="name" class="textinput" value = "<?php echo $userInitials ?>" readonly/>
                 </div>
 
                 <div class="accordion" id="requests"><h4 id ="requests">Section 3: Requests:</h4><span class="click">Click to Open/Close</span></div>
@@ -776,7 +794,7 @@ Orders are completed in the order that they are received.
 
             </div>
 
-               
+
         </div> <!-- content -->
     </div>
 
@@ -901,9 +919,8 @@ if(isset($_POST['submit'])){
 if($response) {
 
   //  header("Refresh:0");
-        echo "<script>
-   $('#requestStatus').show().css('background','#66cc00').append(\"\"  + \"File(s) has been uploaded and email sent to the user\");
-     document.getElementById('step1').className='completed';
+        echo "<script>$('#requestStatus').show().css('background','#66cc00').append(\"\"  + \"File(s) has been uploaded and email sent to the user\");
+        document.getElementById('step1').className='completed';
                 document.getElementById('step2').className='completed';
                 document.getElementById('step3').className='completed';
                 document.getElementById('step4').className='completed';

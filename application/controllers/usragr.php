@@ -127,7 +127,7 @@ class usragr extends CI_Controller
                 //  $data['userName'] =
                 $request = array();
                 if (sizeof($researcher) == 0) {
-                    array_push($researcher,$row['userName'], $row['citystate'],
+                    array_push($researcher,$row['userName'], $row['country'],$row['state'],$row['city'],
                         $row['address'], $row['emailId'], $row['zipCode'],
                          $row['date'], $row['phoneNumber'], $row['status'], $row['attachment'], $row['userInitials'], $row['termsAndCond'], $row['requestAddedBy'],$row['attachmentLink']);
                     $data['researcher'] = $researcher;
@@ -194,7 +194,7 @@ class usragr extends CI_Controller
                 //  $data['userName'] =
                 $request = array();
                 if (sizeof($researcher) == 0) {
-                    array_push($researcher, $row['userName'],
+                    array_push($researcher, $row['userName'], $row['country'],$row['state'],$row['city'],
                         $row['address'], $row['emailId'], $row['zipCode'],
                         $row['date'], $row['phoneNumber'], $row['status'],$row['attachment'], $row['userInitials'], $row['termsAndCond'], $row['emailSubject'], $row['receiver'], $row['requestAddedBy'],$row['attachmentLink'],$row['copies_sent']);
                     $data['researcher'] = $researcher;

@@ -5,12 +5,12 @@
 		table, tr {
 			border: 1px solid red;
 		}
-		
+
 		span.click{
 			float: right;
 			margin-top: -25px;
 		}
-		
+
 		div.accordion{
 			margin-bottom: 8px;
 		}
@@ -56,17 +56,19 @@
 	//researcher info
 	$sizeofRequests = sizeof($requests);
 	$userName = $researcher[0];
-	$citystate = $researcher[1];
-	$address =$researcher[2];
-	$emailId = $researcher[3];
-	$zipCode = $researcher[4];
-	$date = $researcher[5];
-	$phoneNumber = $researcher[6];
-	$status = $researcher[7];
-	$attachment = $researcher[8];
-	$userInitials = $researcher[9];
-	$termsAndCond = $researcher[10];
-	$attachemntLink = $researcher[12];
+	$country = $researcher[1];
+	$state = $researcher[2];
+	$city = $researcher[3];
+	$address =$researcher[4];
+	$emailId = $researcher[5];
+	$zipCode = $researcher[6];
+	$date = $researcher[7];
+	$phoneNumber = $researcher[8];
+	$status = $researcher[9];
+	$attachment = $researcher[10];
+	$userInitials = $researcher[11];
+	$termsAndCond = $researcher[12];
+	$attachemntLink = $researcher[14];
 	$user_Id = $user_Id;
 	if($status == 0){
 		$formStatus = "Initiated";
@@ -110,7 +112,7 @@
         		return false;
     			}
 			}
-			
+
 		$(document).ready(function(){
 			$('#num_error').hide();
 
@@ -171,7 +173,7 @@
 			document.getElementById("buttonAdd-request").style.display="none";
 			document.getElementById("buttonRemove-request").style.display="none";
 			document.getElementById("addOrRem").style.display="none";*/
-			
+
 	        <?php if($sizeofRequests>0){ ?>
 			for(var i=0;i <= <?php echo $sizeofRequests?>;i++ ){
 
@@ -336,7 +338,10 @@
 				var date = $('input#datepicker').val();
 				var userName = $('input#name').val();
 				var address = $('input#address').val();
-				var citystate = $('input#citystate').val();
+				var country = $('input#countryId').val();
+				var state = $('input#stateId').val();
+				var city = $('input#cityId').val();
+				//var citystate = $('input#citystate').val();
 				var zipCode = $('input#zip').val();
 				var emailId = $('input#email').val();
 				var phoneNumber = $('input#phoneNo').val();
@@ -396,8 +401,10 @@
 					date:date,
 					userName: userName,
 					address : address,
-					zipCode : zipCode,
-					citystate: citystate,
+					country: country,
+					city: city,
+					state: state,
+					zipCode: zipCode,
 					emailId: emailId,
 					phoneNumber:phoneNumber,
 					userInitials:userInitials ,
@@ -458,7 +465,10 @@
 						var date = $('input#datepicker').val();
 						var userName = $('input#name').val();
 						var address = $('input#address').val();
-						var citystate = $('input#citystate').val();
+						var country = $('input#countryId').val();
+						var state = $('input#stateId').val();
+						var city = $('input#cityId').val();
+						//var citystate = $('input#citystate').val();
 						var zipCode = $('input#zip').val();
 						var emailId = $('input#email').val();
 						var phoneNumber = $('input#phoneNo').val();
@@ -528,8 +538,10 @@
 							date: date,
 							userName: userName,
 							address: address,
+							country: country,
+							city: city,
+							state: state,
 							zipCode: zipCode,
-							citystate: citystate,
 							emailId: emailId,
 							phoneNumber: phoneNumber,
 							userInitials: userInitials,
@@ -772,7 +784,11 @@
 					<label class="label">Date:</label><br/><input type="text" id="datepicker" class="textinput" value = "<?php echo $date; ?>" style="width: 100px;" readonly/>
 					<label class="label">Researcher's Name:</label><br/><input type="text" id="name" class="textinput" value = "<?php echo $userName; ?>" readonly/>
 					<label class="label">Address:</label><br/><input type="text" id="address" class="textinput" value = "<?php echo $address; ?>"  readonly />
-					<label class="label">City/State:</label><br/><input type="text" id="citystate" class="textinput" value = "<?php echo $citystate; ?>" readonly />
+					<label class="label">Country:</label><br/><input type="text" id="country" class="textinput" value = "<?php echo $country; ?>" readonly />
+					<label class="label">State:</label><br/><input type="text" id="state" class="textinput" value = "<?php echo $state; ?>" readonly />
+					<label class="label">City:</label><br/><input type="text" id="city" class="textinput" value = "<?php echo $city; ?>" readonly />
+
+					<!--<label class="label">City/State:</label><br/><input type="text" id="citystate" class="textinput" value = "<?php //echo $citystate; ?>" readonly />-->
 					<label class="label">Zip:</label><br/><input type="text" id="zip" class="textinput" value = "<?php echo $zipCode; ?>"  readonly/>
 					<label class="label">Phone Number:</label><br/><input type="text" id="phoneNo" class="textinput" value = "<?php echo $phoneNumber; ?>" readonly />
 					<!--p><label class="label">City/State:</label><input type="text" id="citystate" class="textinputinline" style="margin-right: 20px;"/><label class="label">Zip:</label><input type="text" id="zip" class="textinputinline" style="width:125px;"/></p-->
@@ -782,7 +798,11 @@
 					<label class="label">Date:</label><br/><input type="text" id="datepicker" class="textinput" value = "<?php echo $date; ?>" style="width: 100px;"/>
 					<label class="label">Researcher's Name:</label><br/><input type="text" id="name" class="textinput" value = "<?php echo $userName; ?>"/>
 					<label class="label">Address:</label><br/><input type="text" id="address" class="textinput" value = "<?php echo $address; ?>" />
-					<label class="label">City/State:</label><br/><input type="text" id="citystate" class="textinput" value = "<?php echo $citystate; ?>" />
+					<!--<label class="label">City/State:</label><br/><input type="text" id="citystate" class="textinput" value = "<?php //echo $citystate; ?>" />-->
+					<label class="label">Country:</label><br/><input type="text" id="country" class="textinput" value = "<?php echo $country; ?>" />
+					<label class="label">State:</label><br/><input type="text" id="state" class="textinput" value = "<?php echo $state; ?>" />
+					<label class="label">City:</label><br/><input type="text" id="city" class="textinput" value = "<?php echo $city; ?>" />
+
 					<label class="label">Zip:</label><br/><input type="text" id="zip" class="textinput" value = "<?php echo $zipCode; ?>" />
 					<label class="label">Phone Number:</label><br/><input type="text" id="phoneNo" class="textinput" value = "<?php echo $phoneNumber; ?>" />
 					<!--p><label class="label">City/State:</label><input type="text" id="citystate" class="textinputinline" style="margin-right: 20px;"/><label class="label">Zip:</label><input type="text" id="zip" class="textinputinline" style="width:125px;"/></p-->
@@ -897,7 +917,7 @@ Orders are completed in the order that they are received.
 					</div>
 
 					<div class="accordion" id="requests"><h4 id ="requests">Section 3: Requests:</h4><span class="click">Click to Open/Close</span></div>
-						
+
 						<div class="formcontents" id="formcontents">
 
 							<h3 id="addOrRem">Add/Remove Requests (Optional):</h3><br/>
@@ -1086,7 +1106,7 @@ Orders are completed in the order that they are received.
 							 <a href="<?php echo $attachemntLink;?>"><?php echo $attachment ?></a></br><!--label ><!--?php echo $fileAttachment; ?></label-->
 							</div></br></br>
 						<?php } ?>
-						
+
 						<div align="left" id="messages"  >
 							<label class="label" >Message (If any) : </label><br/>
 							<div id="textarea_feedback"></div><textarea maxlength="140"  id="message" rows="5" cols="2000" style="display: inline-block;  margin-bottom: 10px; " ><?php echo null ; ?></textarea>
