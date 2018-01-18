@@ -13,6 +13,17 @@ class usragr extends CI_Controller
         $this->load->view('initiateUseAgreement', $data);
     }
 
+    public function __construct()
+    {
+
+  		parent::__construct();
+  		if(!isset($_SESSION))
+      {
+          session_start();
+  				//$_SESSION['id'] = session_id();
+      }
+    }
+
 	 public function ack(){
 	 	$this->load->view('ack');
 	 }
@@ -820,6 +831,81 @@ class usragr extends CI_Controller
 
 
     public function admin(){
+      if (isset($_SESSION['LAST_SESSION']) && (time() - $_SESSION['LAST_SESSION'] > 900)) {
+					 if(!isset($_SESSION['CAS'])) {
+							 $_SESSION['CAS'] = false; // set the CAS session to false
+					 }
+			 }
+		$authenticated = $_SESSION['CAS'];
+		$_SESSION['id'] = session_id();
+			 //URL accessable when the authentication works
+	  //$casurl = "http%3A%2F%2Flocalhost%2Frepository%2F%3Fc%3Dauth%26m%3DdbAuth";
+	  //$casurl = "http://localhost/redfoxes/Discussion/createDiscussion_view";
+		//$casurl = "http%3A%2F%2Fdev.library.marist.edu%2Fredfoxes%2F%3Fc%3DDiscussion%26m%3DcreateDiscussion_view"; //-uncomment for dev
+		$casurl = "http%3A%2F%2Flocalhost%2Fuseagreement%2F%3Fc%3Dusragr%26m%3Dadmin";
+		if (!$authenticated) {
+					 $_SESSION['LAST_SESSION'] = time(); // update last activity time stamp
+					 $_SESSION['CAS'] = true;
+					 echo '<META HTTP-EQUIV="Refresh" Content="0; URL=https://login.marist.edu/cas/?service='.$casurl.'">';
+					 exit;
+				 }
+		if ($authenticated) {
+		 //$this->session->set_userdata('ad', true); // this needs to be set when the user access is accepted by CAS
+		 if (isset($_GET["ticket"])) {
+			 //set up validation URL to ask CAS if ticket is good
+			 $_url = "https://login.marist.edu/cas/validate";
+			 //  $serviceurl = "http://localhost:9090/repository-2.0/?c=repository&m=cas_admin";
+			 // $cassvc = 'IU'; //search kb.indiana.edu for "cas application code" to determine code to use here in place of "appCode"
+			 $params = "ticket=$_GET[ticket]&service=$casurl";
+			 $urlNew = "$_url?$params";
+			// $urlNew = "$_url";
+
+			 //CAS sending response on 2 lines. First line contains "yes" or "no". If "yes", second line contains username (otherwise, it is empty).
+			 $ch = curl_init();
+			 $timeout = 5; // set to zero for no timeout
+			 curl_setopt ($ch, CURLOPT_URL, $urlNew);
+			 curl_setopt ($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+			 ob_start();
+			 curl_exec($ch);
+			 curl_close($ch);
+			 $cas_answer = ob_get_contents();
+			 ob_end_clean();
+
+			 //split CAS answer into access and user
+			 list($access,$user) = preg_split("/\n/",$cas_answer,2);
+			 $access = trim($access);
+			 $user = trim($user);
+			 //set user and session variable if CAS says YES
+			 if ($access == "yes") {
+					 $user= str_replace('@marist.edu','',$user);
+					 $_SESSION['user'] = $user;
+					 $_SESSION['access'] = $access;
+					 $_SESSION['cas_answer'] = $cas_answer;
+					 $data['cwid'] = $_SESSION['user'];
+					 //$data['uname'] = $_GET['username'];
+					 $data['cas_answer'] = $_SESSION['cas_answer'];
+           $this->load->model('usragr_model');
+           $query = $this->usragr_model->allRequests($this->limit);
+           $total_rows = $this->usragr_model->count();
+           $this->load->helper('app');
+           $pagination_links = pagination($total_rows, $this->limit);
+           $this->load->view('admin', compact('query', 'pagination_links','total_rows'));
+           //add cas auth here very very carefully
+
+					 } else {
+						 echo "<h1>UnAuthorized Access</h1>";
+					 }
+				 }//END SESSION user
+				 else{
+					 echo '<META HTTP-EQUIV="Refresh" Content="0; URL=https://login.marist.edu/cas?service='.$casurl.'">';
+				 }
+			 } else  {
+				 echo '<META HTTP-EQUIV="Refresh" Content="0; URL=https://login.marist.edu/cas?service='.$casurl.'">';
+			 }
+
+    }
+
+    public function adminbackup(){
 
         $this->load->model('usragr_model');
         $query = $this->usragr_model->allRequests($this->limit);
@@ -827,6 +913,7 @@ class usragr extends CI_Controller
         $total_rows = $this->usragr_model->count();
         $this->load->helper('app');
         $pagination_links = pagination($total_rows, $this->limit);
+        //add cas auth here very very carefully
         $this->load->view('admin_view', compact('query', 'pagination_links','total_rows'));
     }
 
@@ -856,6 +943,26 @@ class usragr extends CI_Controller
         $this->load->view('page_view', compact('query', 'pagination_links','total_rows'));
     }
     public function getRequests(){
+        //$apasscode= $this-> input-> get('pass');
+        $this->load->model('usragr_model');
+        //$passcode = $this->usragr_model -> getPasscode(1);
+        //if($passcode == $apasscode){
+        $this->load->model('usragr_model');
+        $query = $this->usragr_model->allRequests($this->limit);
+        $total_rows = $this->usragr_model->count();
+        $this->load->helper('app');
+        $pagination_links = pagination($total_rows, $this->limit);
+        $this->load->view('admin', compact('query', 'pagination_links','total_rows'));
+
+      /*  } else{
+            echo "<h1 align='center' style=\"color:#B31B1B;\" >401 - Unauthorized access</h1>";
+
+
+        }*/
+    }
+
+//used this method before CAS login setup
+    public function getRequestsbackup(){
         $apasscode= $this-> input-> get('pass');
         $this->load->model('usragr_model');
         $passcode = $this->usragr_model -> getPasscode(1);
