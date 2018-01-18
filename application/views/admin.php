@@ -41,11 +41,11 @@
     <div id="menuItems">
 
     </div><!-- /menuItems -->
-    <button id="logout"><span class="glyphicon glyphicon-log-out"></span> Logout</button>
+
 
 </div>
 <div class="container">
-
+<div align="right"><button id="logout" class="btn" align="right">Logout</button></div>
 
     <div class="row bs-wizard" style="border-bottom:0;">
 
