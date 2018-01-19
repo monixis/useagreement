@@ -336,6 +336,17 @@
         display:inline-block;
         color: #000000;
     }
+    select{
+      width: 230px;
+      height: 35px;
+      padding: 6px 12px;
+      font-size: 14px;
+      color: #555;
+      background-color: #fff;
+      vertical-align: middle;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
 
 
 </style>
@@ -384,13 +395,15 @@
                     <label class="label">Researcher's Name:</label><br/><input type="text" id="name" class="textinput"/>
                     <label class="label">Street Address:</label><br/><input type="text" id="address" class="textinput" />
                     <!--<label class="label">City/State:</label><br/><input type="text" id="citystate" class="textinput" />-->
-                    <label class="label">Country/City/State:</label><br/><!--<input type="text" id="country" class="textinput" />-->
-                    <select name="countryId" class="countries order-alpha" id="countryId">
+                    <label class="label">Country:</label><br/><!--<input type="text" id="country" class="textinput" />-->
+                    <select name="countryId" class="countries order-alpha presel-US" id="countryId">
                       <option value="">Select Country</option>
-                    </select>
+                    </select><br />
+                    <label class="label">State:</label><br/>
                     <select name="state" class="states order-alpha" id="stateId">
                         <option value="">Select State</option>
-                    </select>
+                    </select><br />
+                    <label class="label">City:</label><br/>
                     <select name="city" class="cities order-alpha" id="cityId">
                         <option value="">Select City</option>
                     </select><br/><br/>

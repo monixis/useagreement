@@ -25,7 +25,16 @@
     <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <style>
+    /* How to select a range of children
+     * (Here, 3rd-7th children, inclusive):
+     */
+    #details ul li:nth-child(n+1) {
+      outline: 1px solid #0f0;
+    }
+  </style>
 </head>
 
 <body>
@@ -227,7 +236,19 @@
 
         }
     });
+  /*  $(document).ready(function(){
+     $("#content").attr("src","http://ldap.geminiodyssey.org/login-test/casattributes.php");
+     setTimeout(getName, 1000);
+   });
+   function getName(){
+     var j = $('body ul li :nth-child(2)').text();
+     console.log(j);
+     //alert(j);
+     //$( "li" ).find( "cn" ).css( "color", "red" );
+   }*/
 </script>
-
+<div id="details" name+"details">
+<?php //echo $_SESSION['user']; ?>
+</div>
 </body>
 </html>

@@ -205,7 +205,7 @@ class usragr extends CI_Controller
                 //  $data['userName'] =
                 $request = array();
                 if (sizeof($researcher) == 0) {
-                    array_push($researcher, $row['userName'], $row['country'],$row['state'],$row['city'],
+                    array_push($researcher, $row['userName'], $row['country'], $row['state'], $row['city'],
                         $row['address'], $row['emailId'], $row['zipCode'],
                         $row['date'], $row['phoneNumber'], $row['status'],$row['attachment'], $row['userInitials'], $row['termsAndCond'], $row['emailSubject'], $row['receiver'], $row['requestAddedBy'],$row['attachmentLink'],$row['copies_sent']);
                     $data['researcher'] = $researcher;
@@ -875,13 +875,35 @@ class usragr extends CI_Controller
 			 list($access,$user) = preg_split("/\n/",$cas_answer,2);
 			 $access = trim($access);
 			 $user = trim($user);
+
+
+       /*$emptype = trim($emptype);
+			 $udc_id = trim($udc_id);
+       $cn = trim($cn);
+       $email = trim($email);
+       $id = trim($id);*/
 			 //set user and session variable if CAS says YES
 			 if ($access == "yes") {
+        /* $unameurl = "http://ldap.geminiodyssey.org/login-test/casattributes.php";
+         //getting userName
+         $chuname = curl_init();
+  			 $timeout = 5; // set to zero for no timeout
+  			 curl_setopt ($chuname, CURLOPT_URL, $unameurl);
+  			 curl_setopt ($chuname, CURLOPT_CONNECTTIMEOUT, $timeout);
+  			 ob_start();
+  			 curl_exec($chuname);
+  			 curl_close($chuname);
+  			 $user_info = ob_get_contents();
+  			 ob_end_clean();
+
+  			 //split CAS answer into access and user
+  			 $array = preg_split("/<li>/",$user_info,-1,PREG_SPLIT_DELIM_CAPTURE);
+         var_dump($array);*/
 					 $user= str_replace('@marist.edu','',$user);
-					 $_SESSION['user'] = $user;
+					// $_SESSION['user'] = $cn;
 					 $_SESSION['access'] = $access;
 					 $_SESSION['cas_answer'] = $cas_answer;
-					 $data['cwid'] = $_SESSION['user'];
+					 //$data['cwid'] = $_SESSION['user'];
 					 //$data['uname'] = $_GET['username'];
 					 $data['cas_answer'] = $_SESSION['cas_answer'];
            $this->load->model('usragr_model');
