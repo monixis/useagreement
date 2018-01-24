@@ -63,7 +63,7 @@ class usragr_model extends CI_Model
      */
     public function getresearcher($userId)
     {
-        $sql = "SELECT * FROM researcher1 LEFT JOIN request ON researcher1.userId = request.userId where researcher1.userId = $userId ;";
+        $sql = "SELECT * FROM researcher LEFT JOIN request ON researcher.userId = request.userId where researcher.userId = $userId ;";
         $results = $this->db->query($sql, array($userId));
         return $results->result();
     }
@@ -75,7 +75,7 @@ class usragr_model extends CI_Model
     public function update_researcher($userName, $country, $state, $city, $address, $emailId, $zipCode, $date, $phoneNumber,$userInitials, $termsAndConditions,$userId)
     {
 
-        $sql = "UPDATE researcher1 SET userName='$userName', country= '$country', state= '$state', city= '$city', address = '$address',
+        $sql = "UPDATE researcher SET userName='$userName', country= '$country', state= '$state', city= '$city', address = '$address',
                                  emailId ='$emailId',phoneNumber='$phoneNumber', zipCode='$zipCode', date ='$date' , userInitials = '$userInitials' ,termsAndCond ='$termsAndConditions' WHERE userId='$userId' ;";
 
         $this->db->query($sql);
@@ -93,7 +93,7 @@ class usragr_model extends CI_Model
      */
     public function update_attachment($attachment,$filepath,$userId)
     {
-        $sql = "UPDATE researcher1 SET  attachment = '$attachment' ,attachmentLink='$filepath' WHERE userId='$userId' ;";
+        $sql = "UPDATE researcher SET  attachment = '$attachment' ,attachmentLink='$filepath' WHERE userId='$userId' ;";
         $this->db->query($sql);
 
         // $this->db->where('userId', "15");
@@ -110,7 +110,7 @@ class usragr_model extends CI_Model
     */
     public function update_researcherWithStatus($userName, $country, $state, $city, $address, $emailId, $zipCode, $date, $phoneNumber,$status,$userInitials, $termsAndConditions,$userId)
     {
-        $sql = "UPDATE researcher1 SET userName='$userName', country= '$country', state= '$state', city= '$city', address = '$address',emailId ='$emailId',phoneNumber='$phoneNumber', zipCode='$zipCode', date ='$date' , status= '$status' , userInitials = '$userInitials' ,termsAndCond ='$termsAndConditions' WHERE userId='$userId' ;";
+        $sql = "UPDATE researcher SET userName='$userName', country= '$country', state= '$state', city= '$city', address = '$address',emailId ='$emailId',phoneNumber='$phoneNumber', zipCode='$zipCode', date ='$date' , status= '$status' , userInitials = '$userInitials' ,termsAndCond ='$termsAndConditions' WHERE userId='$userId' ;";
         $this->db->query($sql);
 
         // $this->db->where('userId', "15");
@@ -128,7 +128,7 @@ class usragr_model extends CI_Model
      */
     public function approveOrDisapprove_request($date,$status,$userId)
     {
-        $sql = "UPDATE researcher1 SET  date ='$date' , status= '$status' WHERE userId='$userId' ;";
+        $sql = "UPDATE researcher SET  date ='$date' , status= '$status' WHERE userId='$userId' ;";
         $this->db->query($sql);
 
         // $this->db->where('userId', "15");
@@ -185,7 +185,7 @@ public function deleteUser($userId){
     if($result>0){
         $this->db->trans_complete();
         $this->db-> where('userId', $userId);
-        $result= $this -> db -> delete('researcher1');
+        $result= $this -> db -> delete('researcher');
         if($result>0){
             $this->db->trans_complete();
         }
@@ -217,7 +217,7 @@ public function saveChat($data, $table){
   public function getUseagreementForms(){
 
         $this ->db ->trans_start();
-        $sql = "SELECT userId,userName, attachment, status from researcher1 where status in (1,2,3);";
+        $sql = "SELECT userId,userName, attachment, status from researcher where status in (1,2,3);";
         $results = $this->db->query($sql);
       if($results != null) {
           return $results->result();
@@ -229,7 +229,7 @@ public function saveChat($data, $table){
     }
  public function getUseagreementRequests($status){
      $this ->db ->trans_start();
-     $sql = "SELECT userId,userName, attachment, status from researcher1 where status in ('$status');";
+     $sql = "SELECT userId,userName, attachment, status from researcher where status in ('$status');";
      $results = $this->db->query($sql);
      if($results != null) {
          return $results->result();
@@ -247,11 +247,11 @@ public function saveChat($data, $table){
         $this->db->limit($limit);
         $this->db->offset($this ->input ->get('per_page'));
         $this->db-> order_by('userId','desc');
-        return $this->db->get('researcher1');
+        return $this->db->get('researcher');
     }
     public function count()
     {
-        return $this->db->count_all_results('researcher1');
+        return $this->db->count_all_results('researcher');
     }
 
 public function RequestsWithStatus($limit = 0, $status){
@@ -259,7 +259,7 @@ public function RequestsWithStatus($limit = 0, $status){
     $this->db->offset($this ->input ->get('per_page'));
     $this->db-> where('status',$status);
     $this->db-> order_by('userId','desc');
-    return $this->db->get('researcher1');
+    return $this->db->get('researcher');
 
 }
     public function getPasscode($id){
@@ -283,7 +283,7 @@ public function RequestsWithStatus($limit = 0, $status){
     }
 public function countWithStatus($status){
     $this ->db -> select('userId');
-    $this->db-> from('researcher1');
+    $this->db-> from('researcher');
     $this->db-> where('status',$status);
     return $this->db->count_all_results();
 
@@ -305,7 +305,7 @@ public function countWithStatus($status){
     }
     public function updateStatus($status,$userId,$files){
         $this ->db ->trans_start();
-        $sql = "UPDATE researcher1 SET status ='$status',copies_sent ='$files' where userId='$userId'";
+        $sql = "UPDATE researcher SET status ='$status',copies_sent ='$files' where userId='$userId'";
         $this->db->query($sql);
         if ($this->db->affected_rows() > 0) {
 

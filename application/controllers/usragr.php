@@ -52,7 +52,7 @@ class usragr extends CI_Controller
             'status'     => 0
         );
         $this->load->model('usragr_model');
-        $result = $this->usragr_model->insert_researcher($data, 'researcher1');
+        $result = $this->usragr_model->insert_researcher($data, 'researcher');
         if($_POST['comments']>0 ||$_POST['comments']!= null) {
             $data = array(
                 'comment' => $_POST['comments'],
