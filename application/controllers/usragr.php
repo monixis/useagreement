@@ -829,8 +829,9 @@ class usragr extends CI_Controller
           echo $authorized;
     }
 
-
-    public function admin(){
+/*The adminbackup method is used to utilise cas auth and try implementing data tables.
+*/
+    /*public function adminbackup(){
       if (isset($_SESSION['LAST_SESSION']) && (time() - $_SESSION['LAST_SESSION'] > 900)) {
 					 if(!isset($_SESSION['CAS'])) {
 							 $_SESSION['CAS'] = false; // set the CAS session to false
@@ -878,10 +879,10 @@ class usragr extends CI_Controller
 
 
        /*$emptype = trim($emptype);
-			 $udc_id = trim($udc_id);
-       $cn = trim($cn);
-       $email = trim($email);
-       $id = trim($id);*/
+			// $udc_id = trim($udc_id);
+       //$cn = trim($cn);
+       //$email = trim($email);
+       //$id = trim($id);
 			 //set user and session variable if CAS says YES
 			 if ($access == "yes") {
         /* $unameurl = "http://ldap.geminiodyssey.org/login-test/casattributes.php";
@@ -897,8 +898,8 @@ class usragr extends CI_Controller
   			 ob_end_clean();
 
   			 //split CAS answer into access and user
-  			 $array = preg_split("/<li>/",$user_info,-1,PREG_SPLIT_DELIM_CAPTURE);
-         var_dump($array);*/
+  			// $array = preg_split("/<li>/",$user_info,-1,PREG_SPLIT_DELIM_CAPTURE);
+         //var_dump($array);
 					 $user= str_replace('@marist.edu','',$user);
 					// $_SESSION['user'] = $cn;
 					 $_SESSION['access'] = $access;
@@ -925,9 +926,9 @@ class usragr extends CI_Controller
 				 echo '<META HTTP-EQUIV="Refresh" Content="0; URL=https://login.marist.edu/cas?service='.$casurl.'">';
 			 }
 
-    }
+    }*/
 
-    public function adminbackup(){
+    public function admin(){
 
         $this->load->model('usragr_model');
         $query = $this->usragr_model->allRequests($this->limit);
