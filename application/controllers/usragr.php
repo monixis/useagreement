@@ -907,11 +907,11 @@ class usragr extends CI_Controller
 					 //$data['uname'] = $_GET['username'];
 					 $data['cas_answer'] = $_SESSION['cas_answer'];
            $this->load->model('usragr_model');
-           $query = $this->usragr_model->allRequests($this->limit);
-           $total_rows = $this->usragr_model->count();
+           $data['query'] = $this->usragr_model->allRequests($this->limit);
+           $data['total_rows'] = $this->usragr_model->count();
            $this->load->helper('app');
-           $pagination_links = pagination($total_rows, $this->limit);
-           $this->load->view('admin', compact('query', 'pagination_links','total_rows'));
+           //$pagination_links = pagination($total_rows, $this->limit);
+           $this->load->view('admin', $data);
            //add cas auth here very very carefully
 
 					 } else {
