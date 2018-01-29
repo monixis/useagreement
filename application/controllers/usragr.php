@@ -324,8 +324,9 @@ class usragr extends CI_Controller
         }
 
         //updating researcher information
-            $result = $this->usragr_model->update_researcherWithStatus($_POST['userName'], $_POST['country'], $_POST['state'], $_POST['city'], $_POST['address'], $_POST['emailId'],
-                $_POST['zipCode'], $_POST['date'], $_POST['phoneNumber'], 2, $_POST['userInitials'], $_POST['termsAndConditions'], $userId);
+          // OLD CALL--> $result = $this->usragr_model->update_researcherWithStatus($_POST['userName'], $_POST['country'], $_POST['state'], $_POST['city'], $_POST['address'], $_POST['emailId'],$_POST['zipCode'], $_POST['date'], $_POST['phoneNumber'], 2, $_POST['userInitials'], $_POST['termsAndConditions'], $userId);
+
+            $result = $this->usragr_model->update_researcherWithStatus(2, $_POST['userInitials'], $_POST['termsAndConditions'], $userId);
 
         if($result>0) {   //Deleting existing requests
             $result = $this->usragr_model->deleteRequests($userId);
