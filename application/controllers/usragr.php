@@ -468,6 +468,19 @@ class usragr extends CI_Controller
         //updating researcher information
         $result = $this->usragr_model->approveOrDisapprove_request($_POST['date'],3,$userId);
 
+        if( $_POST['instructions'] != null){
+            $data = array(
+                'comment' => $_POST['instructions'],
+                'commentType' => "MESSAGE",
+                'userId' => $userId
+            );
+            $this->load->model('usragr_model');
+            $chat_result = $this->usragr_model->saveChat($data, 'chat');
+            if ($chat_result > 0) {
+                echo "success";
+            }
+        }
+
         if($result>0){
             $this->load->library('email');
             $config['protocol'] = "sendmail";
@@ -485,7 +498,7 @@ class usragr extends CI_Controller
             //  $this->email->cc('another@another-example.com');
             //$this->email->bcc('them@their-example.com');
             $this->email->subject('Approved');
-            $greeting        = "Dear ".$_POST['userName'];
+            $greeting = "Dear ".$_POST['userName'];
             $six_digit_random_string =  $this -> generateRandomString();
             $UUID=$six_digit_random_string.$userId;
             $six_digit_random_string =  $this -> generateRandomString();
@@ -1051,6 +1064,18 @@ class usragr extends CI_Controller
      $files = "";
      $this->load->model('usragr_model');
      $response = $this->usragr_model->updateStatus($status, $userId, $files);
+     if( $comment != null){
+         $data = array(
+             'comment' => $comment,
+             'commentType' => "MESSAGE",
+             'userId' => $userId
+         );
+         $this->load->model('usragr_model');
+         $chat_result = $this->usragr_model->saveChat($data, 'chat');
+         if ($chat_result > 0) {
+             echo "success";
+         }
+     }
      if ($response == 1){
          $message = '<html><body>';
 
