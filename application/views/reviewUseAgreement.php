@@ -906,7 +906,7 @@ if(isset($_POST['submit'])){
     $config['smtp_host'] = "tls://smtp.googlemail.com";
     $config['smtp_port'] = "465";
     $config['smtp_user'] = "maristarchives@gmail.com";
-    $config['smtp_pass'] = "20MaristArchives15";
+    $config['smtp_pass'] = "redfoxesArchives";
     $config['charset'] = "utf-8";
     $config['mailtype'] = "html";
     $config['newline'] = "\r\n";
