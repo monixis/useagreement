@@ -34,6 +34,18 @@
 			display:inline-block;
 			color: #000000;
 		}
+		select{
+      width: 230px;
+      height: 35px;
+      padding: 6px 12px;
+      font-size: 14px;
+      color: #555;
+      background-color: #fff;
+      vertical-align: middle;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
 	</style>
 
 	<title>Use Agreement Form</title>
@@ -45,6 +57,7 @@
 	<script src="//code.jquery.com/jquery-1.10.2.js"></script>
 	<script type="text/javascript" src="js/cloneRequests.js"></script>
 	<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+	<script src="//geodata.solutions/includes/countrystatecity.js"></script> <!--country/state/city dropdown -->
 	<link rel="stylesheet" type="text/css" href="http://library.marist.edu/archives/mainpage/mainStyles/style.css" />
 	<link rel="stylesheet" type="text/css" href="http://library.marist.edu/archives/mainpage/mainStyles/main.css" />
 	<link rel="stylesheet" type="text/css" href="styles/useagreement.css" />
@@ -57,6 +70,7 @@
 	$sizeofRequests = sizeof($requests);
 	$userName = $researcher[0];
 	$country = $researcher[1];
+	$countryy = $researcher[1];
 	$state = $researcher[2];
 	$city = $researcher[3];
 	$address =$researcher[4];
@@ -784,9 +798,11 @@
 					<label class="label">Date:</label><br/><input type="text" id="datepicker" class="textinput" value = "<?php echo $date; ?>" style="width: 100px;" readonly/>
 					<label class="label">Researcher's Name:</label><br/><input type="text" id="name" class="textinput" value = "<?php echo $userName; ?>" readonly/>
 					<label class="label">Address:</label><br/><input type="text" id="address" class="textinput" value = "<?php echo $address; ?>"  readonly />
-					<label class="label">Country:</label><br/><input type="text" id="country" class="textinput" value = "<?php echo $country; ?>" readonly />
-					<label class="label">State:</label><br/><input type="text" id="state" class="textinput" value = "<?php echo $state; ?>" readonly />
-					<label class="label">City:</label><br/><input type="text" id="city" class="textinput" value = "<?php echo $city; ?>" readonly />
+					<label class="label">Country:</label><br/><input type="text" id="countryId" class="textinput" value = "<?php echo $country; ?>" readonly />
+					<label class="label">State:</label><br/><input type="text" id="stateId" class="textinput" value = "<?php echo $state; ?>" readonly />
+					<label class="label">City:</label><br/><input type="text" id="cityId" class="textinput" value = "<?php echo $city; ?>" readonly />
+
+
 
 					<!--<label class="label">City/State:</label><br/><input type="text" id="citystate" class="textinput" value = "<?php //echo $citystate; ?>" readonly />-->
 					<label class="label">Zip:</label><br/><input type="text" id="zip" class="textinput" value = "<?php echo $zipCode; ?>"  readonly/>
@@ -799,9 +815,26 @@
 					<label class="label">Researcher's Name:</label><br/><input type="text" id="name" class="textinput" value = "<?php echo $userName; ?>"/>
 					<label class="label">Address:</label><br/><input type="text" id="address" class="textinput" value = "<?php echo $address; ?>" />
 					<!--<label class="label">City/State:</label><br/><input type="text" id="citystate" class="textinput" value = "<?php //echo $citystate; ?>" />-->
-					<label class="label">Country:</label><br/><input type="text" id="country" class="textinput" value = "<?php echo $country; ?>" />
-					<label class="label">State:</label><br/><input type="text" id="state" class="textinput" value = "<?php echo $state; ?>" />
-					<label class="label">City:</label><br/><input type="text" id="city" class="textinput" value = "<?php echo $city; ?>" />
+
+					<label class="label">Country:</label><br/><input type="text" id="countryId" class="textinput" value = "<?php echo $country; ?>" />
+					<label class="label">State:</label><br/><input type="text" id="stateId" class="textinput" value = "<?php echo $state; ?>" />
+					<label class="label">City:</label><br/><input type="text" id="cityId" class="textinput" value = "<?php echo $city; ?>" />
+					<!--After this line comes dropdowns of country city and states
+
+					<label class="label">Country: </label><br/>
+					<select name="country" class="countries order-alpha" id="countryId">
+							<option value="<?php //echo $country; ?>"><?php //echo $country; ?></option>
+					</select><br />
+					<label class="label">State: </label><br/>
+					<select name="state" class="states order-alpha" id="stateId">
+							<option value="<?php //echo $state; ?>"><?php //echo $state; ?></option>
+					</select><br />
+					<label class="label">City: </label><br/>
+					<select name="city" class="cities order-alpha" id="cityId">
+							<option value="<?php //echo $city; ?>"><?php //echo $city; ?></option>
+					</select><br/><br/>
+
+					dropdown ends here -->
 
 					<label class="label">Zip:</label><br/><input type="text" id="zip" class="textinput" value = "<?php echo $zipCode; ?>" />
 					<label class="label">Phone Number:</label><br/><input type="text" id="phoneNo" class="textinput" value = "<?php echo $phoneNumber; ?>" />

@@ -620,15 +620,15 @@
                     <label class="label">Date:</label><br/><input type="text" id="datepicker" class="textinput"  value = "<?php echo $date; ?>" style="width: 100px;"readonly/>
                     <label class="label">Researcher&#39;s Name:</label><br/><input type="text" id="name" class="textinput" value = "<?php echo $userName; ?>"readonly/>
                     <label class="label">Street Address:</label><br/><textarea class="readonlytext" readonly><?php echo $address; ?></textarea>
-                    <label class="label">Country:</label><br/><input type="text" id="country" class="textinput" value = "<?php echo $country; ?>" readonly />
-          					<label class="label">State:</label><br/><input type="text" id="state" class="textinput" value = "<?php echo $state; ?>" readonly />
-          					<label class="label">City:</label><br/><input type="text" id="city" class="textinput" value = "<?php echo $city; ?>" readonly />
+                    <label class="label">Country:</label><br/><input type="text" id="countryId" class="textinput" value = "<?php echo $country; ?>" readonly />
+          					<label class="label">State:</label><br/><input type="text" id="stateId" class="textinput" value = "<?php echo $state; ?>" readonly />
+          					<label class="label">City:</label><br/><input type="text" id="cityId" class="textinput" value = "<?php echo $city; ?>" readonly />
                     <!--<label class="label">City/State:</label><br/><textarea  class="readonlytext" readonly><?php //echo $citystate; ?></textarea>-->
                     <label class="label">Zip/Postal Code:</label><br/><input type="text" id="zip" class="textinput" value = "<?php echo $zipCode; ?>" readonly/>
                     <label class="label">Phone Number:</label><br/><input type="text" id="phoneNo" class="textinput" value = "<?php echo $phoneNumber; ?>" readonly/>
-                    <!--p><label class="label">Country:</label><br/><input type="text" id="country" class="textinput" value = "<?php echo $country; ?>" />
-          					<label class="label">State:</label><br/><input type="text" id="state" class="textinput" value = "<?php echo $state; ?>" />
-          					<label class="label">City:</label><br/><input type="text" id="city" class="textinput" value = "<?php echo $city; ?>" />
+                    <!--p><label class="label">Country:</label><br/><input type="text" id="countryId" class="textinput" value = "<?php echo $country; ?>" />
+          					<label class="label">State:</label><br/><input type="text" id="stateId" class="textinput" value = "<?php echo $state; ?>" />
+          					<label class="label">City:</label><br/><input type="text" id="cityId" class="textinput" value = "<?php echo $city; ?>" />
                     <label class="label">City/State:</label><input type="text" id="citystate" class="textinputinline" style="margin-right: 20px;"/><label class="label">Zip:</label><input type="text" id="zip" class="textinputinline" style="width:125px;"/></p-->
                     <label class="label">Email:</label><br/><input type="text" id="email" class="textinput" value = "<?php echo $emailId; ?>" readonly/>
                     <!-- <option value="Archivist" class="selectinput" >Archivist</option>

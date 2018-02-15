@@ -108,9 +108,9 @@ class usragr_model extends CI_Model
    /*
     * Function to update researcher table
     */
-    public function update_researcherWithStatus($status,$userInitials, $termsAndConditions,$userId)
+    public function update_researcherWithStatus($userName, $country, $state, $city, $address, $emailId, $zipCode, $date, $phoneNumber, $status,$userInitials, $termsAndConditions, $userId)
     {
-        $sql = "UPDATE researcher SET status= '$status' , userInitials = '$userInitials' ,termsAndCond ='$termsAndConditions' WHERE userId='$userId' ;";
+        $sql = "UPDATE researcher SET userName = '$userName', country = '$country', state = '$state', city = '$city', address = '$address', emailId = '$emailId', zipCode = '$zipCode', date = '$date', phoneNumber = '$phoneNumber',status= '$status' , userInitials = '$userInitials' ,termsAndCond ='$termsAndConditions' WHERE userId='$userId' ;";
         $this->db->query($sql);
 
         // $this->db->where('userId', "15");

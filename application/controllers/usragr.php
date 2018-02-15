@@ -324,9 +324,11 @@ class usragr extends CI_Controller
         }
 
         //updating researcher information
-          // OLD CALL--> $result = $this->usragr_model->update_researcherWithStatus($_POST['userName'], $_POST['country'], $_POST['state'], $_POST['city'], $_POST['address'], $_POST['emailId'],$_POST['zipCode'], $_POST['date'], $_POST['phoneNumber'], 2, $_POST['userInitials'], $_POST['termsAndConditions'], $userId);
+          //OLD CALL-->
+          $result = $this->usragr_model->update_researcherWithStatus($_POST['userName'], $_POST['country'], $_POST['state'],$_POST['city'], $_POST['address'], $_POST['emailId'],$_POST['zipCode'], $_POST['date'],
+          $_POST['phoneNumber'], 2, $_POST['userInitials'], $_POST['termsAndConditions'], $userId);
 
-            $result = $this->usragr_model->update_researcherWithStatus(2, $_POST['userInitials'], $_POST['termsAndConditions'], $userId);
+            //$result = $this->usragr_model->update_researcherWithStatus(2, $_POST['userInitials'], $_POST['termsAndConditions'], $userId);
 
         if($result>0) {   //Deleting existing requests
             $result = $this->usragr_model->deleteRequests($userId);
@@ -494,7 +496,7 @@ class usragr extends CI_Controller
             $this->email->initialize($config);
             $this->email->from('maristarchives@gmail.com', ' Marist Archives');
             $this->email->to($_POST['emailId']);
-            $this->email->cc('ann.sandri@marist.edu');
+          //  $this->email->cc('ann.sandri@marist.edu');
             //  $this->email->cc('another@another-example.com');
             //$this->email->bcc('them@their-example.com');
             $this->email->subject('Approved');
@@ -615,7 +617,7 @@ class usragr extends CI_Controller
         $ci->email->from('maristarchives@gmail.com', "Marist Archives");
        // $list = array('maristarchives@gmail.com');
 
-        $ci->email->to('john.ansley@marist.edu');
+       // $ci->email->to('john.ansley@marist.edu');
 		$ci->email->cc('maristarchives@gmail.com');
         $this->email->reply_to($_POST["user_email"], $user_name);
         $ci->email->message($message_body);
