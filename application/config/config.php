@@ -14,8 +14,8 @@
 | path to your installation.
 |
 */
-$config['base_url']	= 'http://localhost/useagreement/';
-
+//$config['base_url']	= 'http://localhost/useagreement/';
+$config['base_url']	= 'http://dev.library.marist.edu/useagreement/';
 
 /*
 |--------------------------------------------------------------------------
