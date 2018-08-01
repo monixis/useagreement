@@ -102,14 +102,19 @@
                 } else if (verifyEmail($('input#email').val()) == false) {
                     $('input#email').css('border', '1px solid red');
                     $("html, body").animate({scrollTop: 0}, 600);
-                }
-                else {
+                } else if ($('input#stateId').val() == "") {
+                    $('input#stateId').css('border', '1px solid red');
+                    $("html, body").animate({scrollTop: 0}, 600);
+                } else if ($('input#cityId').val() == "") {
+                    $('input#cityId').css('border', '1px solid red');
+                    $("html, body").animate({scrollTop: 0}, 600);
+                } else {
                     var date = $('input#datepicker').val();
                     var userName = $('input#name').val();
                     var address = $('input#address').val();
                     var country = $('select#countryId').val();
-                    var state = $('select#stateId').val();
-                    var city = $('select#cityId').val();
+                    var state = $('input#stateId').val();
+                    var city = $('input#cityId').val();
                     //var citystate = $('input#citystate').val();
                     var zipCode = $('input#zip').val();
                     var emailId = $('input#email').val();
@@ -299,7 +304,7 @@
     						$("#counrtyId").val($(this).text());
     					});
     				});
-            $(function(){
+            /*$(function(){
     					$(".stateId").click(function(){
     						$(".stateId:first-child").text($(this).text());
     						$(".stateId").val($(this).text());
@@ -310,7 +315,7 @@
     						$(".cityId:first-child").text($(this).text());
     						$(".cityId").val($(this).text());
     					});
-    				});
+    				});*/
 
 
         });
@@ -400,13 +405,16 @@
                       <option value="">Select Country</option>
                     </select><br />
                     <label class="label">State:</label><br/>
-                    <select name="state" class="states order-alpha" id="stateId">
+                    <input type="text" id="stateId" name="stateId" class="textinput" />
+                    <label class="label">City:</label><br/>
+                    <input type="text" id="cityId" name="cityId" class="textinput" />
+                    <!--select name="state" class="states order-alpha" id="stateId">
                         <option value="">Select State</option>
                     </select><br />
-                    <label class="label">City:</label><br/>
+                    
                     <select name="city" class="cities order-alpha" id="cityId">
                         <option value="">Select City</option>
-                    </select><br/><br/>
+                    </select><br/><br/-->
                     <label class="label">Zip/Postal Code:</label><br/><input type="text" id="zip" class="textinput" />
                     <label class="label">Phone Number:</label></br><input type="text" id="phoneNo" class="textinput" />
                     <!--p><label class="label">City/State:</label><input type="text" id="citystate" class="textinputinline" style="margin-right: 20px;"/><label class="label">Zip:</label><input type="text" id="zip" class="textinputinline" style="width:125px;"/></p-->
