@@ -94,9 +94,7 @@
                     filesize  = $('input#uploaded_file')[0].files[0].size / 1024 / 1024;
                 }
                 if (filesize <= 2 ){
-                 //   var input = document.getElementById('uploaded_file');
-                //var output = document.getElementById('fileInfo');
-                if ($('input#name').val() == "") {
+                 if ($('input#name').val() == "") {
                     $('input#name').css('border', '1px solid red');
                     $("html, body").animate({scrollTop: 0}, 600);
                 } else if (verifyEmail($('input#email').val()) == false) {
